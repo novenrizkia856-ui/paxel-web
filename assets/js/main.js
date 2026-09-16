@@ -2,6 +2,7 @@ import { initContractBar } from "./contract-bar.js";
 import { initNav } from "./nav.js";
 import { initReveal } from "./reveal.js";
 import { initTilt } from "./tilt.js";
+import { initPlay } from "./play.js";
 
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const root = document.documentElement;
@@ -27,6 +28,7 @@ function boot() {
   initNav();
   initReveal({ reduced });
   initTilt({ reduced });
+  initPlay({ reduced });
   initPlaceholders();
   root.classList.add("motion-ready");
 }

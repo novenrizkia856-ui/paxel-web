@@ -24,7 +24,9 @@ assets/js/contract-bar.js  Token address bar, reads config/contracts.config.js.
 assets/js/nav.js           Static nav, floating glass nav, mobile menu.
 assets/js/reveal.js        Fade and rise entrances on scroll.
 assets/js/tilt.js          Pointer tilt on the passport preview card.
-assets/img/                Favicon, sticker icons and the hands illustration.
+assets/js/play.js          Runs looping scenes and videos only while they are on screen.
+assets/img/                Favicon, sticker icons and the layered hands illustration.
+assets/media/              Looping videos (mp4) and their poster images.
 assets/fonts/              Notes on the typefaces. Fonts load from Google Fonts.
 config/contracts.config.js Contract addresses. All empty for now.
 vercel.json                Security headers and clean URLs only.
@@ -52,8 +54,9 @@ Only `tokenAddress` is read today. The other fields are placeholders for later p
 
 The look follows the reference build the team contributed to. Paxel keeps its own name, logo, copy and UI.
 
-Reused reference assets, all without third party branding: the sticker icons (`sticker-*.webp`) and the
-hands illustration (`illustration-hands*.webp`). Reference images that show another brand's logo, name or
+Reused reference assets: the sticker icons (`sticker-*.webp`), the hands illustration split into layers
+(`hands-*.webp`), the watching eyes and crowd animations (`assets/media/faces-*`), and the hand holding a card
+(`assets/media/card.mp4`). The card animation was edited frame by frame so the card carries the Paxel wordmark. Reference images that show another brand's logo, name or
 app screens are not used. The device mockups and app windows are HTML and CSS with Paxel content.
 
 | Token | Value | Use |
@@ -73,16 +76,18 @@ Tokens are CSS variables at the top of `assets/css/main.css`.
 
 - Purple bar on top carries the token contract address.
 - Dark hero with a laptop and phone mockup built in HTML and CSS, showing the Paxel app.
-- White rounded sheets. The problem block sits inside the hands illustration, then a sticker icon grid,
-  then four feature blocks for How it works.
-  Each block has an accent tag, a dashed info card, a tinted desktop app window and a soft glow.
-- Dark passport preview band with sparkles and a sample record card that tilts on hover.
+- White rounded sheets. The problem block sits inside the hands illustration, where both hands move and
+  coins travel along the ring. Then a sticker icon grid and four feature blocks for How it works.
+  Each block has an accent tag, a dashed info card and its own looping SVG scene: a passport gets stamped,
+  three signers attest, events stack into a locked timeline, and a magnifier verifies a passport.
+- Dark passport preview band framed by the watching eyes and crowd animations, with a sample record card.
+- A hand holding the Paxel card, in the layout of the reference hardware section.
 - Second sheet with role cards, an ecosystem split and a three column dashed grid.
 - Dark closing call to action and a dashed footer grid.
 - Floating glass nav appears past 56px when you scroll up more than 40px.
 - Mobile menu opens over 300ms on `cubic-bezier(.87,0,.13,1)`. Hovers use 150ms standard easing.
 
-`prefers-reduced-motion` turns animation off and shows all content at once.
+`prefers-reduced-motion` turns animation off, shows every scene in its finished state and keeps videos on their posters.
 If the scripts fail to load, an inline fallback reveals the page after 2.5 seconds.
 
 ## Copy rules
