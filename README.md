@@ -25,7 +25,13 @@ assets/js/nav.js           Static nav, floating glass nav, mobile menu.
 assets/js/reveal.js        Fade and rise entrances on scroll.
 assets/js/tilt.js          Pointer tilt on the passport preview card.
 assets/js/play.js          Runs looping scenes and videos only while they are on screen.
-assets/img/                Favicon, sticker icons and the layered hands illustration.
+assets/js/hero-fx.js       Hero dust rivers, floating objects, pointer and scroll parallax.
+assets/js/ring.js          Hands section: dust stream, objects riding the loop, hands closing in.
+assets/js/ring-data.js     Loop path and object positions traced from the hands illustration.
+assets/js/scroll-fx.js     Section transitions. Sets --p on [data-fx] elements as they scroll in.
+assets/img/                Favicon and the layered hands illustration.
+assets/img/stickers/       High resolution sticker icons.
+assets/img/objects/        Coins, gems, frames and planets cut out of the illustrations.
 assets/media/              Looping videos (mp4) and their poster images.
 assets/fonts/              Notes on the typefaces. Fonts load from Google Fonts.
 config/contracts.config.js Contract addresses. All empty for now.
@@ -54,7 +60,7 @@ Only `tokenAddress` is read today. The other fields are placeholders for later p
 
 The look follows the reference build the team contributed to. Paxel keeps its own name, logo, copy and UI.
 
-Reused reference assets: the sticker icons (`sticker-*.webp`), the hands illustration split into layers
+Reused reference assets: the sticker icons (`stickers/`, 144px originals), the hands illustration split into layers
 (`hands-*.webp`), the watching eyes and crowd animations (`assets/media/faces-*`), and the hand holding a card
 (`assets/media/hero-card.mp4`). The card animation was edited frame by frame so the card carries the Paxel wordmark,
 and its white paper background was replaced with the page navy so it sits in the dark hero. Reference images that show another brand's logo, name or
@@ -76,12 +82,17 @@ Tokens are CSS variables at the top of `assets/css/main.css`.
 ## Layout and motion
 
 - Purple bar on top carries the token contract address.
-- Dark hero with a hand holding the Paxel card, looping and floating gently, edges faded into the navy.
-- White rounded sheets. The problem block sits inside the hands illustration, where both hands move and
-  coins travel along the ring. Then a sticker icon grid and four feature blocks for How it works.
-  Each block has an accent tag, a dashed info card and its own looping SVG scene: a passport gets stamped,
-  three signers attest, events stack into a locked timeline, and a magnifier verifies a passport.
+- Dark hero with a hand holding the Paxel card. Rivers of gold dust and illustration objects fill the hero
+  at several depths and lean with the pointer. On scroll the copy lifts away and the card sinks back.
+- White rounded sheets rise over the section above as you scroll. The problem block sits inside the hands
+  illustration: gold dust streams along the loop, the coins and gems ride it, and the hands close in.
+  Then a sticker icon grid and four feature blocks for How it works that lift into place.
+  Each block has an accent tag, a dashed info card and its own looping SVG scene with printed grain, hard
+  shadows, stickers and floating objects: a wand issues and stamps a passport, three signers attest,
+  events stack while a bell rings and a lock closes, and a magnifier verifies a passport.
 - Dark passport preview band framed by the watching eyes and crowd animations, with a sample record card.
+  The eyes zoom in as the band arrives.
+- Headlines rise word by word.
 - Second sheet with role cards, an ecosystem split and a three column dashed grid.
 - Dark closing call to action and a dashed footer grid.
 - Floating glass nav appears past 56px when you scroll up more than 40px.

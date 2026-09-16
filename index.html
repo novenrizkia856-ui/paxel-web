@@ -38,6 +38,17 @@
         <stop offset=".8" stop-color="#FF7A45"/>
         <stop offset="1" stop-color="#F6B03C"/>
       </linearGradient>
+      <filter id="ink" x="-15%" y="-15%" width="140%" height="140%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="1" seed="4" result="noise"/>
+        <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0.035  0 0 0 0 0.063  0 0 0 0 0.11  -2.6 0 0 0 1.25" result="specks"/>
+        <feComposite in="specks" in2="SourceAlpha" operator="in" result="grain"/>
+        <feComponentTransfer in="grain" result="grainSoft"><feFuncA type="linear" slope="0.32"/></feComponentTransfer>
+        <feMerge result="textured"><feMergeNode in="SourceGraphic"/><feMergeNode in="grainSoft"/></feMerge>
+        <feDropShadow in="textured" dx="5" dy="6" stdDeviation="0" flood-color="#09101C" flood-opacity="1"/>
+      </filter>
+      <filter id="lift" x="-20%" y="-20%" width="150%" height="150%">
+        <feDropShadow dx="0" dy="10" stdDeviation="9" flood-color="#09101C" flood-opacity="0.18"/>
+      </filter>
     </defs>
     <symbol id="logo" viewBox="0 0 32 32">
       <path d="M16 0C3.6 0 0 3.6 0 16s3.6 16 16 16 16-3.6 16-16S28.4 0 16 0z" fill="url(#logo-grad)"/>
@@ -137,10 +148,12 @@
       Badge line: Paxel Genesis. The passport registry is forming.
       Visual: a hand holds the Paxel passport card, animated.
     -->
-    <section class="hero" id="top">
+    <section class="hero" id="top" data-hero>
+      <canvas class="hero-dust hero-dust--back" aria-hidden="true"></canvas>
+      <div class="hero-objects" aria-hidden="true"></div>
       <div class="container hero-grid">
         <div class="hero-copy">
-          <h1 class="hero-title" data-reveal>Every asset deserves a passport</h1>
+          <h1 class="hero-title" data-reveal data-words>Every asset deserves a passport</h1>
           <p class="hero-sub" data-reveal style="--d:80ms">Identity, history and proof for tokenized real world assets. One permanent record.</p>
 
           <div class="btn-group" data-reveal style="--d:160ms">
@@ -164,7 +177,7 @@
           </a>
         </div>
 
-        <div class="hero-visual" aria-hidden="true" data-reveal style="--d:200ms">
+        <div class="hero-visual" aria-hidden="true">
           <div class="hero-card">
             <video class="hero-card-video" muted loop playsinline preload="auto" poster="assets/media/hero-card-poster.webp" data-autoplay>
               <source src="assets/media/hero-card.mp4" type="video/mp4">
@@ -172,9 +185,10 @@
           </div>
         </div>
       </div>
+      <canvas class="hero-dust hero-dust--front" aria-hidden="true"></canvas>
     </section>
 
-    <div class="sheet">
+    <div class="sheet" data-fx="sheet" data-fx-span="0.9">
 
       <!--
         COPY · PROBLEM
@@ -194,27 +208,22 @@
         Open. A public layer for the whole ecosystem.
       -->
       <section class="why" id="why" aria-labelledby="why-title">
-        <div class="own" data-play>
+        <div class="own">
           <div class="own-stage">
             <div class="own-art" aria-hidden="true">
-              <div class="hands hands--wide">
-                <img class="hands-ring" src="assets/img/hands-ring.webp" alt="" loading="lazy" decoding="async">
+              <div class="hands hands--wide" data-ring="wide">
+                <img class="hands-ring" src="assets/img/hands-dust.webp" alt="" loading="lazy" decoding="async">
+                <canvas class="ring-canvas"></canvas>
+                <div class="ring-objects"></div>
                 <img class="hand hand--red" src="assets/img/hands-hand-red.webp" alt="" loading="lazy" decoding="async" style="left:2.438%;top:74.024%;width:38.52%">
                 <img class="hand hand--purple" src="assets/img/hands-hand-purple.webp" alt="" loading="lazy" decoding="async" style="left:58.466%;top:2.716%;width:38.121%">
-                <i class="coin"></i><i class="coin"></i><i class="coin"></i><i class="coin"></i>
-                <i class="twinkle" style="--x:14%;--y:30%;--c:#FF33A3;--t:0s"></i>
-                <i class="twinkle" style="--x:48%;--y:8%;--c:#26C6A0;--t:.8s"></i>
-                <i class="twinkle" style="--x:90%;--y:52%;--c:#7140FD;--t:1.6s"></i>
-                <i class="twinkle" style="--x:30%;--y:92%;--c:#F6B03C;--t:2.2s"></i>
               </div>
-              <div class="hands hands--tall">
+              <div class="hands hands--tall" data-ring="tall">
                 <img class="hands-ring" src="assets/img/hands-m-ring.webp" alt="" loading="lazy" decoding="async">
+                <canvas class="ring-canvas"></canvas>
+                <div class="ring-objects"></div>
                 <img class="hand hand--red" src="assets/img/hands-m-hand-red.webp" alt="" loading="lazy" decoding="async" style="left:12.424%;top:82.89%;width:61.919%">
                 <img class="hand hand--purple" src="assets/img/hands-m-hand-purple.webp" alt="" loading="lazy" decoding="async" style="left:28.384%;top:6.612%;width:58.182%">
-                <i class="coin"></i><i class="coin"></i><i class="coin"></i>
-                <i class="twinkle" style="--x:10%;--y:40%;--c:#FF33A3;--t:0s"></i>
-                <i class="twinkle" style="--x:88%;--y:30%;--c:#7140FD;--t:1s"></i>
-                <i class="twinkle" style="--x:20%;--y:72%;--c:#26C6A0;--t:1.8s"></i>
               </div>
             </div>
             <div class="own-text" data-reveal>
@@ -225,17 +234,17 @@
 
           <ul class="own-items container" data-reveal-group>
             <li data-reveal>
-              <img src="assets/img/sticker-frame.webp" alt="" width="96" height="96" loading="lazy">
+              <img src="assets/img/stickers/portrait.webp" alt="" width="96" height="92" loading="lazy">
               <h3>Scattered records</h3>
               <p>Asset data lives in silos. Nobody sees the full picture.</p>
             </li>
             <li data-reveal>
-              <img src="assets/img/sticker-megaphone.webp" alt="" width="96" height="96" loading="lazy">
+              <img src="assets/img/stickers/megaphone.webp" alt="" width="86" height="96" loading="lazy">
               <h3>Fragile trust</h3>
               <p>Buyers rely on screenshots and promises. Proof stays out of reach.</p>
             </li>
             <li data-reveal>
-              <img src="assets/img/sticker-orb.webp" alt="" width="96" height="96" loading="lazy">
+              <img src="assets/img/stickers/ghost.webp" alt="" width="89" height="96" loading="lazy">
               <h3>No lasting memory</h3>
               <p>Platforms close. Records vanish. The asset loses its past.</p>
             </li>
@@ -243,31 +252,31 @@
         </div>
 
         <div class="container built">
-          <h2 class="h-64" data-reveal>One record. Always with the asset.</h2>
+          <h2 class="h-64" data-reveal data-words>One record. Always with the asset.</h2>
 
           <ul class="grid-built" data-reveal-group>
             <li data-reveal>
-              <svg class="sticker" viewBox="0 0 48 48" aria-hidden="true"><use href="#burst" class="sticker-burst" style="--burst:#F6B03C"/><use href="#logo" x="13" y="13" width="22" height="22"/></svg>
+              <img class="sticker" src="assets/img/stickers/chain.webp" alt="" width="68" height="56" loading="lazy">
               <div class="built-text"><h3>Permanent</h3><p>A passport outlives every platform it touches.</p></div>
             </li>
             <li data-reveal>
-              <img class="sticker" src="assets/img/sticker-shield.webp" alt="" width="48" height="48" loading="lazy">
+              <img class="sticker" src="assets/img/stickers/shield.webp" alt="" width="47" height="56" loading="lazy">
               <div class="built-text"><h3>Verifiable</h3><p>Anyone can check a claim against its source.</p></div>
             </li>
             <li data-reveal>
-              <img class="sticker" src="assets/img/sticker-shapes.webp" alt="" width="48" height="48" loading="lazy">
+              <img class="sticker" src="assets/img/stickers/plane.webp" alt="" width="59" height="56" loading="lazy">
               <div class="built-text"><h3>Portable</h3><p>The record travels wherever the token goes.</p></div>
             </li>
             <li data-reveal>
-              <svg class="sticker" viewBox="0 0 48 48" aria-hidden="true"><use href="#burst" class="sticker-burst" style="--burst:#FF33A3"/><circle cx="24" cy="24" r="10.5" fill="#2A4AF5" stroke="#09101C" stroke-width="1.4"/><path d="M19.5 22h9M19.5 26h9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+              <img class="sticker" src="assets/img/stickers/shapes.webp" alt="" width="55" height="56" loading="lazy">
               <div class="built-text"><h3>Neutral</h3><p>No trading. No custody. Only identity and history.</p></div>
             </li>
             <li data-reveal>
-              <img class="sticker" src="assets/img/sticker-code.webp" alt="" width="48" height="48" loading="lazy">
+              <img class="sticker" src="assets/img/stickers/code.webp" alt="" width="54" height="56" loading="lazy">
               <div class="built-text"><h3>Ordered</h3><p>Every event is written in sequence. Nothing is overwritten.</p></div>
             </li>
             <li data-reveal>
-              <img class="sticker" src="assets/img/sticker-faces.webp" alt="" width="48" height="48" loading="lazy">
+              <img class="sticker" src="assets/img/stickers/faces.webp" alt="" width="56" height="56" loading="lazy">
               <div class="built-text"><h3>Open</h3><p>A public layer for the whole ecosystem.</p></div>
             </li>
           </ul>
@@ -292,7 +301,7 @@
         Record. Headline: Keep a history that only grows
         Supporting: Every change becomes an event. Nothing is erased or rewritten.
         Card: Ordered by design. Events stay in sequence. Forever.
-        Visual: event cards stack into a timeline that locks. Chip: +1.
+        Visual: event cards stack into a timeline, a bell rings, the lock closes. Chip: +1.
 
         Verify. Headline: Check any claim in seconds
         Supporting: Anyone can read the passport. Trust comes from proof.
@@ -303,27 +312,27 @@
 
       <section class="how" id="how" aria-labelledby="how-title">
         <div class="how-intro container">
-          <h2 class="h-27" id="how-title" data-reveal>Four steps. One lasting record.</h2>
+          <h2 class="h-27" id="how-title" data-reveal data-words>Four steps. One lasting record.</h2>
           <p class="t-27" data-reveal style="--d:80ms">A simple lifecycle. Designed to stay true for decades.</p>
         </div>
 
         <article class="feature" style="--accent:246 176 60">
           <div class="glow" aria-hidden="true"></div>
-          <div class="feature-card" data-reveal>
+          <div class="feature-card" data-fx="lift">
             <div class="feature-copy">
               <span class="tag"><svg aria-hidden="true"><use href="#i-passport"/></svg>Issue</span>
-              <h3 class="h-64">Give the asset its identity</h3>
+              <h3 class="h-64" data-reveal data-words>Give the asset its identity</h3>
               <p class="t-27">Every asset receives a passport at creation. Its identity is fixed.</p>
               <div class="info-card">
                 <p class="info-title">One asset. One passport.</p>
                 <p>No duplicates. No silent edits.</p>
               </div>
             </div>
-            <div class="feature-shot" data-play>
+            <div class="feature-shot" data-play data-fx="wipe" data-fx-span="0.9">
               <svg class="scene scene--issue" viewBox="0 0 480 380" role="img" aria-label="A passport page slides out and gets stamped">
                 <circle cx="240" cy="190" r="150" fill="rgb(246 176 60 / .14)"/>
                 <g class="dust" fill="#F6D04D"><circle cx="168.2" cy="297.7" r="1.4"/><circle cx="408.4" cy="251.8" r="2.2"/><circle cx="54.6" cy="110.3" r="1.8"/><circle cx="415.4" cy="221.6" r="1.4"/><circle cx="251.1" cy="331.2" r="1.4"/><circle cx="313.7" cy="84.6" r="1.8"/><circle cx="109.9" cy="85.3" r="1.4"/><circle cx="82.7" cy="127.9" r="1.8"/><circle cx="441.2" cy="235.5" r="2.2"/><circle cx="75.9" cy="258.5" r="2.2"/><circle cx="56.3" cy="135.2" r="1.4"/><circle cx="70.3" cy="118.4" r="2.2"/><circle cx="403.6" cy="276.1" r="1.4"/><circle cx="104.5" cy="95.8" r="2.8"/><circle cx="271.1" cy="55.1" r="2.8"/><circle cx="132.0" cy="285.9" r="1.8"/><circle cx="187.4" cy="71.1" r="2.2"/><circle cx="31.4" cy="165.0" r="2.8"/><circle cx="188.4" cy="349.3" r="1.4"/><circle cx="78.9" cy="180.9" r="2.2"/><circle cx="346.4" cy="302.8" r="1.4"/><circle cx="391.0" cy="162.4" r="2.2"/><circle cx="146.4" cy="300.5" r="2.8"/><circle cx="80.5" cy="124.3" r="1.4"/><circle cx="412.2" cy="143.2" r="1.4"/><circle cx="424.8" cy="245.6" r="2.8"/><circle cx="201.8" cy="319.6" r="2.2"/><circle cx="420.5" cy="209.3" r="1.8"/><circle cx="98.5" cy="101.2" r="1.8"/><circle cx="258.2" cy="71.5" r="1.8"/><circle cx="68.4" cy="286.1" r="2.8"/><circle cx="398.7" cy="256.0" r="2.2"/><circle cx="394.1" cy="86.0" r="2.2"/><circle cx="180.7" cy="31.8" r="2.8"/><circle cx="394.9" cy="158.4" r="1.8"/><circle cx="354.0" cy="309.7" r="1.4"/><circle cx="49.6" cy="203.5" r="2.2"/><circle cx="208.1" cy="307.7" r="2.2"/><circle cx="107.1" cy="107.7" r="1.8"/><circle cx="172.0" cy="60.1" r="1.4"/><circle cx="36.8" cy="232.6" r="2.8"/><circle cx="97.6" cy="269.6" r="2.8"/><circle cx="137.4" cy="103.5" r="1.4"/><circle cx="420.0" cy="177.0" r="1.4"/><circle cx="157.6" cy="287.3" r="1.4"/><circle cx="68.7" cy="132.7" r="2.2"/><circle cx="123.0" cy="113.9" r="1.8"/><circle cx="119.1" cy="111.0" r="2.2"/><circle cx="424.7" cy="150.2" r="2.8"/><circle cx="390.1" cy="299.5" r="2.8"/><circle cx="69.5" cy="205.8" r="1.8"/><circle cx="379.3" cy="268.1" r="2.2"/><circle cx="43.3" cy="209.9" r="1.4"/><circle cx="300.2" cy="346.1" r="2.2"/><circle cx="353.7" cy="302.3" r="1.4"/><circle cx="248.7" cy="62.0" r="1.4"/><circle cx="184.2" cy="70.9" r="2.2"/><circle cx="386.6" cy="118.5" r="1.8"/><circle cx="39.7" cy="158.8" r="2.2"/><circle cx="113.7" cy="80.6" r="1.8"/><circle cx="311.5" cy="44.1" r="1.8"/><circle cx="297.1" cy="321.6" r="1.4"/><circle cx="444.9" cy="179.9" r="2.8"/><circle cx="228.6" cy="338.6" r="2.2"/><circle cx="36.2" cy="242.6" r="2.2"/><circle cx="408.6" cy="153.3" r="1.8"/><circle cx="386.5" cy="272.1" r="2.2"/><circle cx="294.8" cy="329.3" r="1.4"/><circle cx="45.9" cy="208.9" r="1.4"/><circle cx="320.3" cy="87.6" r="2.8"/></g>
-                <g transform="translate(76 4)"><g class="s1-page">
+                <g transform="translate(76 4)"><g class="s1-page" filter="url(#ink)">
                   <rect x="150" y="96" width="210" height="160" rx="14" fill="#fff" stroke="#09101C" stroke-width="3"/>
                   <rect x="170" y="118" width="54" height="66" rx="9" fill="#FFE3B0" stroke="#09101C" stroke-width="2.5"/>
                   <circle cx="197" cy="142" r="11" fill="#fff" stroke="#09101C" stroke-width="2.5"/>
@@ -333,7 +342,7 @@
                   <path class="s1-line" pathLength="1" d="M242 168h84" stroke="#C9CFD8" stroke-width="8" stroke-linecap="round"/>
                   <path d="M170 212h170M170 232h120" stroke="#E7EAEE" stroke-width="7" stroke-linecap="round"/>
                 </g></g>
-                <g class="s1-book">
+                <g class="s1-book" filter="url(#ink)">
                   <rect x="90" y="70" width="170" height="232" rx="16" fill="#F6B03C" stroke="#09101C" stroke-width="3"/>
                   <path d="M112 72v228" stroke="#09101C" stroke-width="2" opacity=".25"/>
                   <circle cx="185" cy="160" r="44" fill="none" stroke="#fff" stroke-width="4"/>
@@ -347,6 +356,14 @@
                   <use href="#burst" x="272" y="154" width="92" height="92" fill="#FF33A3" stroke="#fff" stroke-width="2.4"/>
                   <path d="M300 200l12 12 22-26" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
                 </g></g>
+              
+                <g class="s1-wand"><image href="assets/img/stickers/wand.webp" x="360" y="26" width="92" height="95"/></g>
+                <g class="s1-sparks" fill="#F6D04D" stroke="#09101C" stroke-width="1.5">
+                  <path d="M356 46L359.36 54.64L368 58L359.36 61.36L356 70L352.64 61.36L344 58L352.64 54.64Z"/><path d="M334 88L336.24 93.76L342 96L336.24 98.24L334 104L331.76 98.24L326 96L331.76 93.76Z"/><path d="M386 119L388.52 125.48L395 128L388.52 130.52L386 137L383.48 130.52L377 128L383.48 125.48Z" fill="#FF33A3"/><path d="M312 54L313.68 58.32L318 60L313.68 61.68L312 66L310.32 61.68L306 60L310.32 58.32Z" fill="#26C6A0"/>
+                </g>
+                <g class="bit" style="--d:0s"><image href="assets/img/objects/ring-02.webp" x="22" y="286" width="70" height="69"/></g>
+                <g class="bit" style="--d:1.2s"><image href="assets/img/objects/ring-08.webp" x="430" y="300" width="28" height="46"/></g>
+                <g class="bit" style="--d:2.1s"><image href="assets/img/objects/card-02.webp" x="36" y="40" width="30" height="56"/></g>
               </svg>
             </div>
           </div>
@@ -356,33 +373,33 @@
 
         <article class="feature" style="--accent:113 64 253">
           <div class="glow" aria-hidden="true"></div>
-          <div class="feature-card" data-reveal>
+          <div class="feature-card" data-fx="lift">
             <div class="feature-copy">
               <span class="tag"><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M3 14c2-4 3.5-4 4-1.5s2 2.5 3.5-.5 2.8-1.5 3.2.4 1.6.8 2.3-.4M3 17h14"/></svg>Attest</span>
-              <h3 class="h-64">Add facts that others sign</h3>
+              <h3 class="h-64" data-reveal data-words>Add facts that others sign</h3>
               <p class="t-27">Auditors, appraisers and inspectors sign what they verify.</p>
               <div class="info-card">
                 <p class="info-title">Every signature is traceable.</p>
                 <p>You always know who confirmed what.</p>
               </div>
             </div>
-            <div class="feature-shot" data-play>
+            <div class="feature-shot" data-play data-fx="wipe" data-fx-span="0.9">
               <svg class="scene scene--attest" viewBox="0 0 480 380" role="img" aria-label="Three signers attest a document one by one">
                 <circle cx="240" cy="190" r="150" fill="rgb(113 64 253 / .12)"/>
                 <g class="dust" fill="#C9B5FF"><circle cx="282.9" cy="41.2" r="2.8"/><circle cx="385.2" cy="103.1" r="2.2"/><circle cx="434.1" cy="274.1" r="2.8"/><circle cx="33.5" cy="224.8" r="1.4"/><circle cx="213.2" cy="70.1" r="1.8"/><circle cx="437.9" cy="214.7" r="2.8"/><circle cx="298.5" cy="77.3" r="2.8"/><circle cx="139.2" cy="80.7" r="1.8"/><circle cx="454.3" cy="210.7" r="1.4"/><circle cx="17.0" cy="163.1" r="2.8"/><circle cx="411.2" cy="179.6" r="1.8"/><circle cx="410.5" cy="211.6" r="1.8"/><circle cx="255.6" cy="60.9" r="2.8"/><circle cx="321.7" cy="90.1" r="2.2"/><circle cx="405.0" cy="101.7" r="2.8"/><circle cx="343.5" cy="49.7" r="1.8"/><circle cx="47.9" cy="162.2" r="1.4"/><circle cx="389.6" cy="80.1" r="1.4"/><circle cx="267.4" cy="71.2" r="1.8"/><circle cx="32.1" cy="215.0" r="1.4"/><circle cx="150.1" cy="314.1" r="2.8"/><circle cx="275.3" cy="74.7" r="1.4"/><circle cx="241.7" cy="317.0" r="1.4"/><circle cx="41.4" cy="183.1" r="1.4"/><circle cx="50.2" cy="240.5" r="1.8"/><circle cx="172.8" cy="62.5" r="2.8"/><circle cx="64.5" cy="183.9" r="2.2"/><circle cx="437.4" cy="115.7" r="1.8"/><circle cx="329.8" cy="88.9" r="1.4"/><circle cx="99.1" cy="270.8" r="1.8"/><circle cx="84.1" cy="243.8" r="2.2"/><circle cx="287.3" cy="34.0" r="1.8"/><circle cx="430.2" cy="135.7" r="2.2"/><circle cx="378.5" cy="314.3" r="2.8"/><circle cx="283.2" cy="349.5" r="2.8"/><circle cx="367.1" cy="109.9" r="1.8"/><circle cx="339.9" cy="304.8" r="2.8"/><circle cx="148.7" cy="294.0" r="2.2"/><circle cx="394.3" cy="262.1" r="2.2"/><circle cx="61.0" cy="144.8" r="1.4"/><circle cx="93.9" cy="282.8" r="2.2"/><circle cx="78.3" cy="181.1" r="1.8"/><circle cx="402.6" cy="169.1" r="2.2"/><circle cx="209.2" cy="348.5" r="1.8"/><circle cx="218.6" cy="308.3" r="2.8"/><circle cx="361.3" cy="70.0" r="2.2"/><circle cx="76.5" cy="268.4" r="2.8"/><circle cx="189.7" cy="78.4" r="1.4"/><circle cx="292.4" cy="73.8" r="1.4"/><circle cx="221.2" cy="302.6" r="1.4"/><circle cx="292.2" cy="79.2" r="1.8"/><circle cx="441.8" cy="254.1" r="2.8"/><circle cx="470.0" cy="201.9" r="2.8"/><circle cx="398.7" cy="133.7" r="1.8"/><circle cx="442.0" cy="230.2" r="1.4"/><circle cx="413.5" cy="165.7" r="1.8"/><circle cx="293.8" cy="313.0" r="2.2"/><circle cx="70.7" cy="166.1" r="2.8"/><circle cx="69.4" cy="189.9" r="2.2"/><circle cx="316.3" cy="34.6" r="1.4"/></g>
                 <path class="s2-link s2-a" d="M112 124C140 126 152 138 172 146" fill="none" stroke="#7140FD" stroke-width="3" stroke-dasharray="6 8" stroke-linecap="round"/>
                 <path class="s2-link s2-b" d="M372 126C348 130 336 140 318 148" fill="none" stroke="#7140FD" stroke-width="3" stroke-dasharray="6 8" stroke-linecap="round"/>
                 <path class="s2-link s2-c" d="M366 280C348 272 336 264 318 258" fill="none" stroke="#7140FD" stroke-width="3" stroke-dasharray="6 8" stroke-linecap="round"/>
-                <g class="s2-doc">
+                <g class="s2-doc" filter="url(#ink)">
                   <rect x="170" y="86" width="150" height="206" rx="14" fill="#fff" stroke="#09101C" stroke-width="3"/>
                   <rect x="190" y="108" width="70" height="14" rx="7" fill="#7140FD"/>
                   <path d="M190 144h110M190 162h90M190 180h104M190 198h70" stroke="#DCE0E5" stroke-width="8" stroke-linecap="round"/>
                   <path d="M190 262h110" stroke="#E7EAEE" stroke-width="3" stroke-linecap="round"/>
                   <path class="s2-sign" pathLength="1" d="M194 252c10-20 18-22 20-9s10 13 18-4 14-9 16 4 8 9 14-2 12-7 16 2" fill="none" stroke="#7140FD" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </g>
-                <g class="s2-avatar s2-a"><circle cx="80" cy="114" r="34" fill="#F6B03C" stroke="#09101C" stroke-width="3"/><circle cx="70" cy="110" r="3.5" fill="#09101C"/><circle cx="90" cy="110" r="3.5" fill="#09101C"/><path d="M68 124q12 10 24 0" fill="none" stroke="#09101C" stroke-width="3" stroke-linecap="round"/></g>
-                <g class="s2-avatar s2-b"><circle cx="406" cy="118" r="34" fill="#26C6A0" stroke="#09101C" stroke-width="3"/><circle cx="396" cy="114" r="3.5" fill="#09101C"/><circle cx="416" cy="114" r="3.5" fill="#09101C"/><path d="M394 128q12 10 24 0" fill="none" stroke="#09101C" stroke-width="3" stroke-linecap="round"/></g>
-                <g class="s2-avatar s2-c"><circle cx="398" cy="290" r="34" fill="#FF33A3" stroke="#09101C" stroke-width="3"/><circle cx="388" cy="286" r="3.5" fill="#09101C"/><circle cx="408" cy="286" r="3.5" fill="#09101C"/><path d="M386 300q12 10 24 0" fill="none" stroke="#09101C" stroke-width="3" stroke-linecap="round"/></g>
+                <g class="s2-avatar s2-a" filter="url(#lift)"><image href="assets/img/stickers/portrait.webp" x="38" y="72" width="88" height="84"/></g>
+                <g class="s2-avatar s2-b" filter="url(#lift)"><image href="assets/img/stickers/inspector.webp" x="362" y="76" width="92" height="86"/></g>
+                <g class="s2-avatar s2-c" filter="url(#lift)"><image href="assets/img/stickers/ghost.webp" x="358" y="244" width="80" height="86"/></g>
                 <g class="s2-check s2-a"><circle cx="108" cy="88" r="14" fill="#1A9E8F" stroke="#fff" stroke-width="3"/><path d="M102 88l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>
                 <g class="s2-check s2-b"><circle cx="434" cy="92" r="14" fill="#1A9E8F" stroke="#fff" stroke-width="3"/><path d="M428 92l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>
                 <g class="s2-check s2-c"><circle cx="426" cy="264" r="14" fill="#1A9E8F" stroke="#fff" stroke-width="3"/><path d="M420 264l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>
@@ -397,6 +414,10 @@
                   <text class="s2-n2" x="245" y="57" font-size="14" font-weight="600" fill="#09101C" text-anchor="middle">2 of 3 signed</text>
                   <text class="s2-n3" x="245" y="57" font-size="14" font-weight="600" fill="#7140FD" text-anchor="middle">3 of 3 signed</text>
                 </g>
+              
+                <g class="bit" style="--d:0.4s"><image href="assets/img/objects/ring-07.webp" x="22" y="280" width="44" height="46"/></g>
+                <g class="bit" style="--d:1.6s"><image href="assets/img/objects/ring-15.webp" x="452" y="196" width="24" height="33"/></g>
+                <g class="bit" style="--d:2.4s"><image href="assets/img/objects/card-01.webp" x="128" y="318" width="40" height="39"/></g>
               </svg>
             </div>
           </div>
@@ -406,35 +427,36 @@
 
         <article class="feature" style="--accent:42 121 155">
           <div class="glow" aria-hidden="true"></div>
-          <div class="feature-card" data-reveal>
+          <div class="feature-card" data-fx="lift">
             <div class="feature-copy">
               <span class="tag"><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M4 5h12M4 10h12M4 15h7"/></svg>Record</span>
-              <h3 class="h-64">Keep a history that only grows</h3>
+              <h3 class="h-64" data-reveal data-words>Keep a history that only grows</h3>
               <p class="t-27">Every change becomes an event. Nothing is erased or rewritten.</p>
               <div class="info-card">
                 <p class="info-title">Ordered by design.</p>
                 <p>Events stay in sequence. Forever.</p>
               </div>
             </div>
-            <div class="feature-shot" data-play>
+            <div class="feature-shot" data-play data-fx="wipe" data-fx-span="0.9">
               <svg class="scene scene--record" viewBox="0 0 480 380" role="img" aria-label="Events stack into a history that only grows">
                 <circle cx="240" cy="190" r="150" fill="rgb(42 121 155 / .12)"/>
                 <g class="dust" fill="#9ED8E8"><circle cx="450.4" cy="204.5" r="1.8"/><circle cx="65.1" cy="178.8" r="2.8"/><circle cx="410.9" cy="286.3" r="2.8"/><circle cx="130.5" cy="72.5" r="2.8"/><circle cx="417.0" cy="166.1" r="1.8"/><circle cx="421.6" cy="175.6" r="1.8"/><circle cx="88.8" cy="263.7" r="1.4"/><circle cx="322.4" cy="93.3" r="2.2"/><circle cx="93.5" cy="238.7" r="2.8"/><circle cx="382.1" cy="82.7" r="2.2"/><circle cx="70.5" cy="103.4" r="1.4"/><circle cx="76.4" cy="220.4" r="2.8"/><circle cx="424.2" cy="193.0" r="2.2"/><circle cx="434.8" cy="165.8" r="1.8"/><circle cx="457.2" cy="224.1" r="1.8"/><circle cx="142.2" cy="278.2" r="2.8"/><circle cx="393.8" cy="254.0" r="1.8"/><circle cx="242.5" cy="343.2" r="1.4"/><circle cx="225.4" cy="306.7" r="2.8"/><circle cx="80.6" cy="120.9" r="2.2"/><circle cx="181.6" cy="307.5" r="1.8"/><circle cx="124.7" cy="64.5" r="2.8"/><circle cx="258.9" cy="40.3" r="2.8"/><circle cx="364.4" cy="311.5" r="1.8"/><circle cx="450.7" cy="232.5" r="2.8"/><circle cx="218.0" cy="35.7" r="1.8"/><circle cx="419.6" cy="108.5" r="1.4"/><circle cx="332.6" cy="63.0" r="1.8"/><circle cx="378.2" cy="248.4" r="2.2"/><circle cx="419.2" cy="156.7" r="2.8"/><circle cx="50.0" cy="137.7" r="1.8"/><circle cx="82.6" cy="197.6" r="1.4"/><circle cx="237.9" cy="51.1" r="1.4"/><circle cx="152.4" cy="92.4" r="2.8"/><circle cx="237.8" cy="306.4" r="2.2"/><circle cx="260.3" cy="341.5" r="1.8"/><circle cx="225.4" cy="26.6" r="2.8"/><circle cx="332.1" cy="93.8" r="2.2"/><circle cx="261.6" cy="45.9" r="1.8"/><circle cx="388.8" cy="246.2" r="2.2"/><circle cx="119.1" cy="68.7" r="1.8"/><circle cx="401.5" cy="199.1" r="2.2"/><circle cx="402.4" cy="169.8" r="1.8"/><circle cx="159.5" cy="75.9" r="2.2"/><circle cx="52.9" cy="220.2" r="1.4"/><circle cx="437.7" cy="184.1" r="2.2"/><circle cx="464.2" cy="167.9" r="1.4"/><circle cx="199.8" cy="302.9" r="2.8"/><circle cx="425.8" cy="185.0" r="1.8"/><circle cx="386.4" cy="243.0" r="2.2"/><circle cx="399.9" cy="155.0" r="2.2"/><circle cx="398.5" cy="92.5" r="1.8"/><circle cx="18.1" cy="192.1" r="2.8"/><circle cx="395.8" cy="207.5" r="2.8"/><circle cx="161.9" cy="68.4" r="1.8"/><circle cx="79.9" cy="256.5" r="1.4"/><circle cx="324.7" cy="95.0" r="2.2"/><circle cx="328.3" cy="89.3" r="1.8"/><circle cx="188.5" cy="34.5" r="2.2"/><circle cx="236.7" cy="305.9" r="2.8"/></g>
                 <path d="M112 52v290" stroke="#DCE0E5" stroke-width="4" stroke-linecap="round"/>
                 <path class="s3-rail" d="M112 52v290" stroke="#2A799B" stroke-width="4" stroke-linecap="round"/>
-                <g class="s3-ev s3-ev1"><circle cx="112" cy="60" r="12" fill="#F6B03C" stroke="#09101C" stroke-width="3"/><rect x="144" y="34" width="236" height="52" rx="12" fill="#fff" stroke="#09101C" stroke-width="3"/><path d="M162 54h96" stroke="#09101C" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M162 70h62" stroke="#C9CFD8" stroke-width="6" stroke-linecap="round"/><rect x="318" y="49" width="46" height="22" rx="11" fill="#F6B03C" opacity=".22"/><circle cx="330" cy="60" r="4" fill="#F6B03C"/></g>
-                <g class="s3-ev s3-ev2"><circle cx="112" cy="132" r="12" fill="#7140FD" stroke="#09101C" stroke-width="3"/><rect x="144" y="106" width="236" height="52" rx="12" fill="#fff" stroke="#09101C" stroke-width="3"/><path d="M162 126h120" stroke="#09101C" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M162 142h80" stroke="#C9CFD8" stroke-width="6" stroke-linecap="round"/><rect x="318" y="121" width="46" height="22" rx="11" fill="#7140FD" opacity=".22"/><circle cx="330" cy="132" r="4" fill="#7140FD"/></g>
-                <g class="s3-ev s3-ev3"><circle cx="112" cy="204" r="12" fill="#FF33A3" stroke="#09101C" stroke-width="3"/><rect x="144" y="178" width="236" height="52" rx="12" fill="#fff" stroke="#09101C" stroke-width="3"/><path d="M162 198h84" stroke="#09101C" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M162 214h110" stroke="#C9CFD8" stroke-width="6" stroke-linecap="round"/><rect x="318" y="193" width="46" height="22" rx="11" fill="#FF33A3" opacity=".22"/><circle cx="330" cy="204" r="4" fill="#FF33A3"/></g>
-                <g class="s3-ev s3-ev4"><circle cx="112" cy="276" r="12" fill="#2A4AF5" stroke="#09101C" stroke-width="3"/><rect x="144" y="250" width="236" height="52" rx="12" fill="#fff" stroke="#09101C" stroke-width="3"/><path d="M162 270h110" stroke="#09101C" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M162 286h70" stroke="#C9CFD8" stroke-width="6" stroke-linecap="round"/><rect x="318" y="265" width="46" height="22" rx="11" fill="#2A4AF5" opacity=".22"/><circle cx="330" cy="276" r="4" fill="#2A4AF5"/></g>
-                <g class="s3-lock">
-                  <path class="s3-shackle" d="M400 318v-14a14 14 0 0 1 28 0v14" fill="none" stroke="#09101C" stroke-width="4"/>
-                  <rect x="392" y="316" width="44" height="36" rx="8" fill="#F6D04D" stroke="#09101C" stroke-width="3"/>
-                  <circle cx="414" cy="332" r="4" fill="#09101C"/>
-                </g>
+                <g class="s3-ev s3-ev1" filter="url(#ink)"><circle cx="112" cy="60" r="12" fill="#F6B03C" stroke="#09101C" stroke-width="3"/><rect x="144" y="34" width="236" height="52" rx="12" fill="#fff" stroke="#09101C" stroke-width="3"/><path d="M162 54h96" stroke="#09101C" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M162 70h62" stroke="#C9CFD8" stroke-width="6" stroke-linecap="round"/><rect x="318" y="49" width="46" height="22" rx="11" fill="#F6B03C" opacity=".22"/><circle cx="330" cy="60" r="4" fill="#F6B03C"/></g>
+                <g class="s3-ev s3-ev2" filter="url(#ink)"><circle cx="112" cy="132" r="12" fill="#7140FD" stroke="#09101C" stroke-width="3"/><rect x="144" y="106" width="236" height="52" rx="12" fill="#fff" stroke="#09101C" stroke-width="3"/><path d="M162 126h120" stroke="#09101C" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M162 142h80" stroke="#C9CFD8" stroke-width="6" stroke-linecap="round"/><rect x="318" y="121" width="46" height="22" rx="11" fill="#7140FD" opacity=".22"/><circle cx="330" cy="132" r="4" fill="#7140FD"/></g>
+                <g class="s3-ev s3-ev3" filter="url(#ink)"><circle cx="112" cy="204" r="12" fill="#FF33A3" stroke="#09101C" stroke-width="3"/><rect x="144" y="178" width="236" height="52" rx="12" fill="#fff" stroke="#09101C" stroke-width="3"/><path d="M162 198h84" stroke="#09101C" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M162 214h110" stroke="#C9CFD8" stroke-width="6" stroke-linecap="round"/><rect x="318" y="193" width="46" height="22" rx="11" fill="#FF33A3" opacity=".22"/><circle cx="330" cy="204" r="4" fill="#FF33A3"/></g>
+                <g class="s3-ev s3-ev4" filter="url(#ink)"><circle cx="112" cy="276" r="12" fill="#2A4AF5" stroke="#09101C" stroke-width="3"/><rect x="144" y="250" width="236" height="52" rx="12" fill="#fff" stroke="#09101C" stroke-width="3"/><path d="M162 270h110" stroke="#09101C" stroke-width="7" stroke-linecap="round" opacity=".85"/><path d="M162 286h70" stroke="#C9CFD8" stroke-width="6" stroke-linecap="round"/><rect x="318" y="265" width="46" height="22" rx="11" fill="#2A4AF5" opacity=".22"/><circle cx="330" cy="276" r="4" fill="#2A4AF5"/></g>
+                <g class="s3-lock" filter="url(#lift)"><image href="assets/img/objects/card-00.webp" x="394" y="268" width="62" height="78"/></g>
                 <g class="s3-plus">
                   <rect x="392" y="40" width="54" height="30" rx="15" fill="#2A799B"/>
                   <text x="419" y="60" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">+1</text>
                 </g>
+              
+                <g class="s3-bell"><image href="assets/img/stickers/bell.webp" x="398" y="126" width="68" height="69"/></g>
+                <g class="s3-chain" filter="url(#lift)"><image href="assets/img/stickers/chain.webp" x="10" y="286" width="84" height="69"/></g>
+                <g class="bit" style="--d:0.8s"><image href="assets/img/objects/ring-05.webp" x="18" y="30" width="66" height="41"/></g>
+                <g class="bit" style="--d:1.9s"><image href="assets/img/objects/ring-14.webp" x="448" y="214" width="26" height="23"/></g>
               </svg>
             </div>
           </div>
@@ -444,16 +466,16 @@
 
         <article class="feature" style="--accent:42 74 245">
           <div class="glow" aria-hidden="true"></div>
-          <div class="feature-card" data-reveal>
+          <div class="feature-card" data-fx="lift">
             <div class="feature-copy">
               <span class="tag"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="5.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M13 13l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Verify</span>
-              <h3 class="h-64">Check any claim in seconds</h3>
+              <h3 class="h-64" data-reveal data-words>Check any claim in seconds</h3>
               <p class="t-27">Anyone can read the passport. Trust comes from proof.</p>
               <div class="feature-cta">
                 <a class="btn btn--primary" href="#passport"><svg class="btn-icon" aria-hidden="true"><use href="#i-passport"/></svg>Explore the passport</a>
               </div>
             </div>
-            <div class="feature-shot" data-play>
+            <div class="feature-shot" data-play data-fx="wipe" data-fx-span="0.9">
               <svg class="scene scene--verify" viewBox="0 0 480 380" role="img" aria-label="A magnifier scans a passport and it gets verified">
                 <defs>
                   <clipPath id="s4-clip"><rect x="60" y="60" width="250" height="160" rx="16"/></clipPath>
@@ -462,7 +484,7 @@
                 <circle cx="240" cy="190" r="150" fill="rgb(42 74 245 / .10)"/>
                 <g class="dust" fill="#A9B8FF"><circle cx="440.8" cy="188.9" r="2.2"/><circle cx="430.1" cy="121.3" r="1.4"/><circle cx="209.1" cy="303.1" r="2.2"/><circle cx="128.6" cy="99.8" r="2.2"/><circle cx="73.6" cy="240.3" r="2.2"/><circle cx="281.4" cy="58.3" r="1.4"/><circle cx="317.4" cy="55.3" r="1.8"/><circle cx="209.4" cy="77.0" r="2.8"/><circle cx="37.2" cy="236.2" r="2.2"/><circle cx="16.4" cy="204.5" r="1.8"/><circle cx="329.8" cy="308.0" r="2.2"/><circle cx="177.4" cy="334.5" r="2.2"/><circle cx="94.5" cy="259.5" r="2.8"/><circle cx="65.5" cy="143.1" r="1.8"/><circle cx="138.6" cy="98.8" r="2.8"/><circle cx="58.7" cy="147.6" r="2.2"/><circle cx="430.5" cy="187.0" r="1.8"/><circle cx="72.4" cy="152.9" r="1.8"/><circle cx="150.3" cy="288.2" r="1.8"/><circle cx="93.2" cy="304.1" r="1.8"/><circle cx="401.4" cy="91.2" r="2.8"/><circle cx="82.7" cy="291.8" r="1.8"/><circle cx="109.6" cy="281.0" r="1.4"/><circle cx="40.3" cy="191.7" r="2.2"/><circle cx="376.8" cy="288.8" r="1.8"/><circle cx="426.7" cy="277.7" r="2.8"/><circle cx="86.2" cy="270.1" r="2.2"/><circle cx="368.8" cy="61.1" r="1.4"/><circle cx="371.6" cy="286.7" r="2.8"/><circle cx="429.7" cy="162.6" r="1.4"/><circle cx="64.8" cy="291.5" r="2.8"/><circle cx="413.1" cy="168.2" r="1.4"/><circle cx="267.6" cy="308.9" r="1.4"/><circle cx="436.5" cy="135.9" r="2.8"/><circle cx="424.7" cy="268.0" r="1.4"/><circle cx="275.2" cy="67.8" r="1.4"/><circle cx="130.2" cy="88.3" r="1.8"/><circle cx="102.5" cy="89.9" r="2.8"/><circle cx="187.4" cy="77.7" r="1.4"/><circle cx="169.4" cy="344.0" r="1.8"/><circle cx="107.3" cy="270.3" r="1.4"/><circle cx="419.3" cy="198.4" r="2.8"/><circle cx="207.7" cy="317.0" r="1.8"/><circle cx="67.3" cy="209.3" r="1.8"/><circle cx="424.6" cy="214.5" r="2.2"/><circle cx="401.5" cy="231.8" r="2.8"/><circle cx="392.1" cy="250.7" r="2.8"/><circle cx="395.3" cy="133.6" r="1.4"/><circle cx="169.8" cy="48.4" r="2.2"/><circle cx="169.3" cy="78.0" r="2.2"/><circle cx="226.7" cy="51.3" r="1.8"/><circle cx="67.8" cy="193.3" r="1.8"/><circle cx="260.9" cy="313.2" r="2.2"/><circle cx="397.5" cy="281.9" r="1.8"/><circle cx="393.7" cy="106.5" r="1.4"/><circle cx="399.6" cy="152.0" r="2.8"/><circle cx="390.0" cy="228.1" r="1.8"/><circle cx="59.3" cy="265.9" r="1.8"/><circle cx="64.8" cy="289.2" r="2.2"/><circle cx="215.0" cy="26.1" r="1.8"/></g>
                 <g class="s4-card">
-                  <rect x="60" y="60" width="250" height="160" rx="16" fill="#fff" stroke="#09101C" stroke-width="3"/>
+                  <rect x="60" y="60" width="250" height="160" rx="16" fill="#fff" stroke="#09101C" stroke-width="3" filter="url(#ink)"/>
                   <path d="M60 94V76a16 16 0 0 1 16-16h218a16 16 0 0 1 16 16v18z" fill="#2A4AF5" stroke="#09101C" stroke-width="3"/>
                   <use href="#logo" x="72" y="66" width="22" height="22"/>
                   <text x="102" y="83" font-size="12" font-weight="700" letter-spacing="2" fill="#fff">PASSPORT</text>
@@ -475,7 +497,7 @@
                 <g class="s4-row s4-r1"><circle cx="78" cy="258" r="12" fill="#1A9E8F"/><path d="M73 258l4 4 7-8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M102 258h120" stroke="#C9CFD8" stroke-width="8" stroke-linecap="round"/></g>
                 <g class="s4-row s4-r2"><circle cx="78" cy="292" r="12" fill="#1A9E8F"/><path d="M73 292l4 4 7-8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M102 292h96" stroke="#C9CFD8" stroke-width="8" stroke-linecap="round"/></g>
                 <g class="s4-row s4-r3"><circle cx="78" cy="326" r="12" fill="#1A9E8F"/><path d="M73 326l4 4 7-8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M102 326h140" stroke="#C9CFD8" stroke-width="8" stroke-linecap="round"/></g>
-                <g class="s4-shield"><image href="assets/img/sticker-shield.webp" x="338" y="150" width="104" height="104"/></g>
+                <g class="s4-shield" filter="url(#lift)"><image href="assets/img/stickers/shield.webp" x="344" y="140" width="92" height="109"/></g>
                 <g class="s4-pill">
                   <rect x="330" y="266" width="120" height="36" rx="18" fill="#1A9E8F"/>
                   <text x="390" y="290" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">Verified</text>
@@ -486,6 +508,10 @@
                   <path d="M30 30l32 32" stroke="#09101C" stroke-width="14" stroke-linecap="round"/>
                   <path d="M30 30l32 32" stroke="#2A4AF5" stroke-width="7" stroke-linecap="round"/>
                 </g>
+              
+                <g class="bit" style="--d:0.3s"><image href="assets/img/objects/card-01.webp" x="404" y="32" width="50" height="49"/></g>
+                <g class="bit" style="--d:1.4s"><image href="assets/img/objects/ring-12.webp" x="18" y="150" width="24" height="41"/></g>
+                <g class="bit" style="--d:2.2s"><image href="assets/img/objects/card-03.webp" x="262" y="316" width="40" height="39"/></g>
               </svg>
             </div>
           </div>
@@ -509,7 +535,7 @@
       Callouts: Proof. Signed attestations from trusted parties.
     -->
     <section class="band" id="passport" aria-labelledby="passport-title">
-      <div class="faces faces--top" aria-hidden="true">
+      <div class="faces faces--top" aria-hidden="true" data-fx="zoom" data-fx-span="1">
         <video class="faces-video" muted loop playsinline preload="none" poster="assets/media/faces-top-poster.webp" data-autoplay>
           <source src="assets/media/faces-top.mp4" type="video/mp4">
         </video>
@@ -517,7 +543,7 @@
 
       <div class="container band-inner">
         <div class="band-head">
-          <h2 class="h-27" id="passport-title" data-reveal>Everyone sees the same record</h2>
+          <h2 class="h-27" id="passport-title" data-reveal data-words>Everyone sees the same record</h2>
           <p class="t-19" data-reveal style="--d:80ms">One shared passport. No one can quietly change it.</p>
         </div>
 
@@ -565,14 +591,14 @@
         <p class="band-note">Sample record. Illustrative data only.</p>
       </div>
 
-      <div class="faces faces--bottom" aria-hidden="true">
+      <div class="faces faces--bottom" aria-hidden="true" data-fx="rise-soft">
         <video class="faces-video" muted loop playsinline preload="none" poster="assets/media/faces-bottom-poster.webp" data-autoplay>
           <source src="assets/media/faces-bottom.mp4" type="video/mp4">
         </video>
       </div>
     </section>
 
-    <div class="sheet sheet--second">
+    <div class="sheet sheet--second" data-fx="sheet" data-fx-span="0.9">
 
       <!--
         COPY · ROLES
@@ -597,7 +623,8 @@
               <span class="card-meta"><i class="avatar" style="--av:#F6B03C">I</i><b>Issuers</b><span>writes passports</span></span>
             </div>
             <div class="card-art" style="--a:#F6B03C;--b:#FF33A3">
-              <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="8" width="22" height="32" rx="4"/><circle cx="24" cy="21" r="5"/><path d="M18 31h12"/></svg>
+              <img class="card-sticker" src="assets/img/stickers/wand.webp" alt="" width="115" height="119" loading="lazy">
+              <img class="card-bit" src="assets/img/objects/ring-08.webp" alt="" width="39" height="64" loading="lazy">
             </div>
           </li>
           <li class="card" data-reveal>
@@ -607,7 +634,8 @@
               <span class="card-meta"><i class="avatar" style="--av:#7140FD">A</i><b>Attestors</b><span>signs facts</span></span>
             </div>
             <div class="card-art" style="--a:#7140FD;--b:#2A4AF5">
-              <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 32c5-10 9-10 10-4s5 6 9-1 7-4 8 1 4 2 6-1M8 38h32"/></svg>
+              <img class="card-sticker" src="assets/img/stickers/inspector.webp" alt="" width="114" height="106" loading="lazy">
+              <img class="card-bit" src="assets/img/objects/ring-07.webp" alt="" width="50" height="52" loading="lazy">
             </div>
           </li>
           <li class="card" data-reveal>
@@ -617,7 +645,8 @@
               <span class="card-meta"><i class="avatar" style="--av:#2A799B">H</i><b>Holders</b><span>owns the record</span></span>
             </div>
             <div class="card-art" style="--a:#2A799B;--b:#26C6A0">
-              <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="13" width="34" height="23" rx="5"/><circle cx="18" cy="24.5" r="4.5"/><path d="M27 21.5h8M27 27.5h6"/></svg>
+              <img class="card-sticker" src="assets/img/stickers/plane.webp" alt="" width="136" height="130" loading="lazy">
+              <img class="card-bit" src="assets/img/objects/ring-02.webp" alt="" width="104" height="103" loading="lazy">
             </div>
           </li>
           <li class="card" data-reveal>
@@ -627,7 +656,8 @@
               <span class="card-meta"><i class="avatar" style="--av:#2A4AF5">V</i><b>Verifiers</b><span>reads and checks</span></span>
             </div>
             <div class="card-art" style="--a:#2A4AF5;--b:#F6B03C">
-              <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="21" cy="21" r="11"/><path d="M29 29l9 9M16.5 21l3.5 3.5 6-6.5"/></svg>
+              <img class="card-sticker" src="assets/img/stickers/shield.webp" alt="" width="108" height="128" loading="lazy">
+              <img class="card-bit" src="assets/img/objects/card-01.webp" alt="" width="67" height="65" loading="lazy">
             </div>
           </li>
         </ul>
@@ -646,9 +676,16 @@
       <div class="rule" aria-hidden="true"></div>
 
       <section class="split" id="ecosystem" aria-labelledby="eco-title">
-        <div class="split-art" aria-hidden="true" data-reveal>
+        <div class="split-art" aria-hidden="true" data-fx="lift">
           <div class="orbit">
             <span class="orbit-core"><svg class="brand-logo"><use href="#logo"/></svg></span>
+            <img class="orbit-bit" src="assets/img/objects/ring-01.webp" alt="" style="--x:31%;--y:40%;--w:70px;--t:0s">
+            <img class="orbit-bit" src="assets/img/objects/ring-04.webp" alt="" style="--x:88%;--y:24%;--w:64px;--t:.8s">
+            <img class="orbit-bit" src="assets/img/objects/card-02.webp" alt="" style="--x:30%;--y:66%;--w:34px;--t:1.4s">
+            <img class="orbit-bit" src="assets/img/objects/ring-09.webp" alt="" style="--x:90%;--y:64%;--w:26px;--t:.4s">
+            <img class="orbit-bit" src="assets/img/stickers/bubble.webp" alt="" style="--x:46%;--y:92%;--w:66px;--t:1.1s">
+            <img class="orbit-bit" src="assets/img/objects/card-03.webp" alt="" style="--x:6%;--y:32%;--w:40px;--t:1.8s">
+            <img class="orbit-bit" src="assets/img/stickers/chain.webp" alt="" style="--x:94%;--y:84%;--w:62px;--t:.6s">
             <span class="eco-chip" style="--x:8%;--y:14%;--dot:#F6B03C;--t:0s">Tokenization platforms</span>
             <span class="eco-chip" style="--x:58%;--y:6%;--dot:#7140FD;--t:.6s">Marketplaces</span>
             <span class="eco-chip" style="--x:66%;--y:40%;--dot:#2A799B;--t:1.2s">Custodians</span>
@@ -659,7 +696,7 @@
           </div>
         </div>
         <div class="split-copy">
-          <h2 class="h-64" id="eco-title" data-reveal>A layer beneath the market</h2>
+          <h2 class="h-64" id="eco-title" data-reveal data-words>A layer beneath the market</h2>
           <p class="t-19" data-reveal style="--d:80ms">Paxel works with the platforms you already use.</p>
           <a class="btn btn--outline" href="#" data-placeholder data-reveal style="--d:160ms">Read the docs</a>
         </div>
@@ -705,7 +742,7 @@
   <footer class="footer" id="docs">
     <div class="cta container">
       <svg class="cta-logo" aria-hidden="true" data-reveal><use href="#logo"/></svg>
-      <h2 class="h-88" data-reveal>Give every asset a passport</h2>
+      <h2 class="h-88" data-reveal data-words>Give every asset a passport</h2>
       <p class="t-19" data-reveal style="--d:80ms">The permanent record for tokenized real world assets.</p>
       <div class="btn-group" data-reveal style="--d:160ms">
         <a class="btn btn--primary" href="#" data-placeholder><svg class="btn-icon" aria-hidden="true"><use href="#i-doc"/></svg>Read the docs</a>

@@ -3,6 +3,9 @@ import { initNav } from "./nav.js";
 import { initReveal } from "./reveal.js";
 import { initTilt } from "./tilt.js";
 import { initPlay } from "./play.js";
+import { initRing } from "./ring.js";
+import { initHeroFx } from "./hero-fx.js";
+import { initScrollFx } from "./scroll-fx.js";
 
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const root = document.documentElement;
@@ -23,12 +26,33 @@ function initPlaceholders() {
   });
 }
 
+// Headlines rise word by word
+function splitWords() {
+  document.querySelectorAll("[data-words]").forEach((el) => {
+    const words = el.textContent.trim().split(/\s+/);
+    el.textContent = "";
+    words.forEach((word, i) => {
+      const outer = document.createElement("span");
+      outer.className = "word";
+      const inner = document.createElement("span");
+      inner.textContent = word;
+      inner.style.setProperty("--i", i);
+      outer.append(inner);
+      el.append(outer, document.createTextNode(i < words.length - 1 ? " " : ""));
+    });
+  });
+}
+
 function boot() {
+  splitWords();
   initContractBar();
   initNav();
   initReveal({ reduced });
   initTilt({ reduced });
   initPlay({ reduced });
+  initRing({ reduced });
+  initHeroFx({ reduced });
+  initScrollFx({ reduced });
   initPlaceholders();
   root.classList.add("motion-ready");
 }
