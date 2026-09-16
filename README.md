@@ -92,7 +92,7 @@ No dashes or semicolons in visible text.
 
 ## Placeholder links
 
-Docs, GitHub, X and Telegram use `href="#"` with `data-placeholder`. Clicking one shows a small
+Docs, Learn more and Telegram use `href="#"` with `data-placeholder`. Clicking one shows a small
 "Link coming soon" toast. Replace the `href` and remove the attribute when the real links exist.
 
 ## Deploy to Vercel

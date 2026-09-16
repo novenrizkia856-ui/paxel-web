@@ -6,7 +6,7 @@ import { initTilt } from "./tilt.js";
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const root = document.documentElement;
 
-// Docs, GitHub and social links are placeholders until they exist
+// Docs and social links are placeholders until they exist
 function initPlaceholders() {
   const toast = document.querySelector("[data-toast]");
   let timer;

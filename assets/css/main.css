@@ -289,7 +289,6 @@ b { font-weight: 600; }
 .nav-actions .btn { height: 32px; border-radius: 10px; }
 .nav-actions .btn--icon { width: 32px; }
 .nav-actions .btn--icon svg { width: 16px; height: 16px; }
-.nav-social { display: none; }
 
 .nav-toggle {
   display: inline-grid;
@@ -336,7 +335,6 @@ b { font-weight: 600; }
 @media (max-width: 639px) { .nav-docs { display: none; } }
 @media (min-width: 1150px) {
   .nav-links { display: flex; }
-  .nav-social { display: inline-flex; }
   .nav-toggle, .nav-panel { display: none; }
 }
 
