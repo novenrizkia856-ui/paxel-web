@@ -104,16 +104,23 @@
       Primary button: Explore the passport
       Secondary button: Read the docs
       Pillars: Identity. History. Verification.
-      Seal: IDH 0001
+
+      COPY · HERO PHONE
+      Status bar: 9:41
+      App name: Identhify
+      Section label: My passports
+      Card: Asset Passport. Warehouse Unit 14. IDH 0001 7342. Class, Real estate. Issued, 2026.03.14. Verified.
+      Stats: 3 Attestations. 4 Events. SG Jurisdiction.
+      Label: History
+      Rows: Ownership transferred 07.08. Title verified 05.19. Appraisal attested 04.02. Passport issued 03.14.
+      Fingerprint: 0x7f3a 9b21 44d0 c91e
+      Button: Verify record
+      Floating chips: Attestation signed. History intact.
     -->
     <section class="hero" id="top" data-hero>
       <div class="hero-glow" aria-hidden="true"></div>
       <div class="hero-art" data-hero-art aria-hidden="true">
         <canvas data-rosette></canvas>
-        <div class="hero-seal">
-          <svg class="brand-mark" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13.5"/><circle cx="16" cy="16" r="9" opacity=".45"/><path d="M16 14v7"/><circle cx="16" cy="10.8" r="1.2" class="fill"/></svg>
-          <span>IDH 0001</span>
-        </div>
       </div>
 
       <div class="container hero-inner">
@@ -137,6 +144,85 @@
             <li>Verification</li>
           </ul>
         </div>
+      </div>
+
+      <div class="hero-device" aria-hidden="true">
+        <div class="device-rise" data-reveal style="--d:300ms">
+          <div class="device-tilt">
+            <div class="phone">
+              <span class="phone-btn phone-btn--power"></span>
+              <span class="phone-btn phone-btn--vol"></span>
+              <div class="phone-screen">
+                <span class="phone-island"></span>
+
+                <div class="ph-status">
+                  <span>9:41</span>
+                  <span class="ph-status-icons">
+                    <svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+                    <svg viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".5"/><rect x="2.5" y="2.5" width="16" height="7" rx="2"/><rect x="24" y="4" width="2" height="4" rx="1" opacity=".5"/></svg>
+                  </span>
+                </div>
+
+                <div class="ph-head">
+                  <span class="ph-brand">
+                    <svg class="brand-mark" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13.5"/><circle cx="16" cy="16" r="9" opacity=".45"/><path d="M16 14v7"/><circle cx="16" cy="10.8" r="1.2" class="fill"/></svg>
+                    Identhify
+                  </span>
+                  <span class="ph-scan-btn">
+                    <svg viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M4 12h16"/></svg>
+                  </span>
+                </div>
+
+                <span class="ph-label">My passports</span>
+
+                <div class="ph-card">
+                  <canvas class="ph-guilloche" data-rosette-static></canvas>
+                  <div class="ph-card-top">
+                    <span class="ph-k">Asset Passport</span>
+                    <span class="ph-seal"></span>
+                  </div>
+                  <span class="ph-title">Warehouse Unit 14</span>
+                  <span class="ph-id">IDH 0001 7342</span>
+                  <span class="ph-fields">
+                    <span><span class="ph-k">Class</span>Real estate</span>
+                    <span><span class="ph-k">Issued</span>2026.03.14</span>
+                  </span>
+                  <span class="ph-status-chip"><i></i>Verified</span>
+                  <span class="ph-scanline"></span>
+                </div>
+
+                <div class="ph-stats">
+                  <span><b>3</b>Attestations</span>
+                  <span><b>4</b>Events</span>
+                  <span><b>SG</b>Jurisdiction</span>
+                </div>
+
+                <span class="ph-label">History</span>
+                <ul class="ph-history">
+                  <li data-reveal style="--d:900ms"><i></i><span>Ownership transferred</span><time>07.08</time></li>
+                  <li data-reveal style="--d:1000ms"><i></i><span>Title verified</span><time>05.19</time></li>
+                  <li data-reveal style="--d:1100ms"><i></i><span>Appraisal attested</span><time>04.02</time></li>
+                  <li data-reveal style="--d:1200ms"><i></i><span>Passport issued</span><time>03.14</time></li>
+                </ul>
+
+                <div class="ph-fp">
+                  <span class="ph-label">Fingerprint</span>
+                  <span class="ph-fp-v">0x7f3a 9b21 44d0 c91e</span>
+                </div>
+
+                <span class="ph-button">Verify record</span>
+                <span class="ph-home"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <span class="device-chip device-chip--a" data-reveal style="--d:800ms">
+          <i><svg viewBox="0 0 16 16"><path d="M4 8.5l2.5 2.5L12 5.5"/></svg></i>Attestation signed
+        </span>
+        <span class="device-chip device-chip--b" data-reveal style="--d:1000ms">
+          <i><svg viewBox="0 0 16 16"><path d="M3 5h10M3 8h10M3 11h6"/></svg></i>History intact
+        </span>
       </div>
 
       <div class="hero-scroll" aria-hidden="true"><span></span></div>

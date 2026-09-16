@@ -9,6 +9,7 @@ export function initScrollFx({ reduced }) {
   const sheets = [...document.querySelectorAll("[data-sheet]")];
   const track = document.querySelector("[data-how-track]");
   const steps = track ? [...track.querySelectorAll("[data-step]")] : [];
+  const hero = document.querySelector("[data-hero]");
   const heroArt = document.querySelector("[data-hero-art]");
   const wide = window.matchMedia("(min-width: 1024px)");
 
@@ -28,7 +29,11 @@ export function initScrollFx({ reduced }) {
 
       if (heroArt) {
         const y = window.scrollY;
-        if (y < vh * 1.5) heroArt.style.setProperty("--parallax", `${(y * 0.18).toFixed(1)}px`);
+        if (y < vh * 1.5) {
+          heroArt.style.setProperty("--parallax", `${(y * 0.18).toFixed(1)}px`);
+          // The phone reads the raw offset and moves less, so it feels closer than the rosette
+          hero.style.setProperty("--hero-y", y.toFixed(1));
+        }
       }
     }
 

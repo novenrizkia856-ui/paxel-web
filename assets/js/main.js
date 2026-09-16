@@ -13,8 +13,13 @@ function initHeroGlow() {
   if (!hero || reduced || !window.matchMedia("(pointer: fine)").matches) return;
   hero.addEventListener("pointermove", (event) => {
     const rect = hero.getBoundingClientRect();
-    hero.style.setProperty("--mx", `${(((event.clientX - rect.left) / rect.width) * 100).toFixed(1)}%`);
-    hero.style.setProperty("--my", `${(((event.clientY - rect.top) / rect.height) * 100).toFixed(1)}%`);
+    const x = (event.clientX - rect.left) / rect.width;
+    const y = (event.clientY - rect.top) / rect.height;
+    hero.style.setProperty("--mx", `${(x * 100).toFixed(1)}%`);
+    hero.style.setProperty("--my", `${(y * 100).toFixed(1)}%`);
+    // Drives the phone tilt and the floating chips
+    hero.style.setProperty("--px", (x - 0.5).toFixed(3));
+    hero.style.setProperty("--py", (y - 0.5).toFixed(3));
   });
 }
 

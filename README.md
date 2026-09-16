@@ -77,6 +77,9 @@ Taken from the reference build and restyled:
 Added for Identhify:
 
 - Guilloché rosette canvas in the hero. Runs at 30fps and pauses offscreen or in a hidden tab.
+- Hero phone mockup built in HTML and CSS, showing the Identhify passport app. It rises in on load,
+  tilts toward the pointer, and has a scan line over the passport card. On small screens it sits
+  below the headline and slides under the paper sheet, like the reference device image.
 - Masked headline lines and staggered fade and rise entrances.
 - How it works progress line. Nodes light up and line drawings trace in as you scroll.
 - Passport card with pointer tilt, moving sheen and a foil seal.

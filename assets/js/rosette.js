@@ -49,7 +49,8 @@ function draw(ctx, size, rings, { time = 0, steps, rgb, breathe = 0, offsetX = 0
 
 function fitCanvas(canvas) {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const size = Math.round(canvas.getBoundingClientRect().width);
+  // Layout width, so 3D tilted parents do not distort the canvas size
+  const size = Math.round(canvas.clientWidth);
   if (!size) return null;
   canvas.width = size * dpr;
   canvas.height = size * dpr;
