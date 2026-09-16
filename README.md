@@ -56,8 +56,9 @@ The look follows the reference build the team contributed to. Paxel keeps its ow
 
 Reused reference assets: the sticker icons (`sticker-*.webp`), the hands illustration split into layers
 (`hands-*.webp`), the watching eyes and crowd animations (`assets/media/faces-*`), and the hand holding a card
-(`assets/media/card.mp4`). The card animation was edited frame by frame so the card carries the Paxel wordmark. Reference images that show another brand's logo, name or
-app screens are not used. The device mockups and app windows are HTML and CSS with Paxel content.
+(`assets/media/hero-card.mp4`). The card animation was edited frame by frame so the card carries the Paxel wordmark,
+and its white paper background was replaced with the page navy so it sits in the dark hero. Reference images that show another brand's logo, name or
+app screens are not used.
 
 | Token | Value | Use |
 | --- | --- | --- |
@@ -75,13 +76,12 @@ Tokens are CSS variables at the top of `assets/css/main.css`.
 ## Layout and motion
 
 - Purple bar on top carries the token contract address.
-- Dark hero with a laptop and phone mockup built in HTML and CSS, showing the Paxel app.
+- Dark hero with a hand holding the Paxel card, looping and floating gently, edges faded into the navy.
 - White rounded sheets. The problem block sits inside the hands illustration, where both hands move and
   coins travel along the ring. Then a sticker icon grid and four feature blocks for How it works.
   Each block has an accent tag, a dashed info card and its own looping SVG scene: a passport gets stamped,
   three signers attest, events stack into a locked timeline, and a magnifier verifies a passport.
 - Dark passport preview band framed by the watching eyes and crowd animations, with a sample record card.
-- A hand holding the Paxel card, in the layout of the reference hardware section.
 - Second sheet with role cards, an ecosystem split and a three column dashed grid.
 - Dark closing call to action and a dashed footer grid.
 - Floating glass nav appears past 56px when you scroll up more than 40px.
