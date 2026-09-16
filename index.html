@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Identhify · The passport for tokenized assets</title>
+  <meta name="description" content="A permanent digital passport for tokenized real world assets. Identity, history, and proof in one record.">
+  <meta name="theme-color" content="#07070A">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Identhify">
+  <meta property="og:description" content="Every asset deserves a passport. Identity, history, and proof for tokenized real world assets.">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+  <link rel="stylesheet" href="assets/css/main.css">
+
+  <script>
+    // Motion classes. If the module never boots, reveal everything after a short grace period.
+    document.documentElement.classList.replace('no-js', 'js');
+    setTimeout(function () {
+      if (!document.documentElement.classList.contains('motion-ready')) {
+        document.documentElement.classList.add('reveal-all');
+      }
+    }, 2500);
+  </script>
+  <script type="module" src="assets/js/main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!--
+    COPY · CONTRACT ADDRESS BAR
+    Label: Token Contract Address
+    Value: Coming soon
+    Button: Copy
+    Button, after copy: Copied
+    The value is read from config/contracts.config.js (tokenAddress). Never hardcode it here.
+  -->
+  <div class="ca-bar" id="contract-bar" role="region" aria-label="Token contract address">
+    <div class="ca-inner">
+      <span class="ca-label"><span class="ca-dot" aria-hidden="true"></span>Token Contract Address</span>
+      <span class="ca-value" data-ca-value>Coming soon</span>
+      <button class="ca-copy" type="button" data-ca-copy hidden disabled aria-label="Copy token contract address">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="2"/><path d="M10.5 3.5v-.5a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5"/></svg>
+        <span data-ca-copy-label>Copy</span>
+      </button>
+      <span class="sr-only" aria-live="polite" data-ca-status></span>
+    </div>
+  </div>
+
+  <!--
+    COPY · NAVIGATION
+    Brand: Identhify
+    Links: Why. How it works. Passport. Roles.
+    Button: Docs
+    Mobile toggle: Menu
+  -->
+  <header class="site-header">
+    <nav class="nav container" aria-label="Main" data-nav>
+      <div class="nav-bar">
+        <a class="brand" href="#top" aria-label="Identhify home">
+          <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13.5"/><circle cx="16" cy="16" r="9" opacity=".45"/><path d="M16 14v7"/><circle cx="16" cy="10.8" r="1.2" class="fill"/></svg>
+          <span>Identhify</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#why">Why</a></li>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#passport">Passport</a></li>
+          <li><a href="#roles">Roles</a></li>
+        </ul>
+        <div class="nav-actions">
+          <a class="btn btn--ghost btn--sm nav-docs" href="#" data-placeholder>Docs</a>
+          <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="nav-panel">
+            <span class="sr-only">Menu</span>
+            <span class="nav-toggle-lines" aria-hidden="true"><i></i><i></i></span>
+          </button>
+        </div>
+      </div>
+      <div class="nav-panel" id="nav-panel" data-nav-panel>
+        <div class="nav-panel-inner">
+          <ul>
+            <li><a href="#why">Why</a></li>
+            <li><a href="#how">How it works</a></li>
+            <li><a href="#passport">Passport</a></li>
+            <li><a href="#roles">Roles</a></li>
+            <li><a href="#" data-placeholder>Docs</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+
+    <!--
+      COPY · HERO
+      Badge: Genesis
+      Badge line: The passport layer is forming
+      Headline: Every asset deserves a passport.
+      Supporting: Identity, history, and proof for tokenized real world assets. Permanent by design.
+      Primary button: Explore the passport
+      Secondary button: Read the docs
+      Pillars: Identity. History. Verification.
+      Seal: IDH 0001
+    -->
+    <section class="hero" id="top" data-hero>
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="hero-art" data-hero-art aria-hidden="true">
+        <canvas data-rosette></canvas>
+        <div class="hero-seal">
+          <svg class="brand-mark" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13.5"/><circle cx="16" cy="16" r="9" opacity=".45"/><path d="M16 14v7"/><circle cx="16" cy="10.8" r="1.2" class="fill"/></svg>
+          <span>IDH 0001</span>
+        </div>
+      </div>
+
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <p class="hero-badge" data-reveal>
+            <span class="badge-grad">Genesis</span>
+            <span>The passport layer is forming</span>
+          </p>
+          <h1 class="hero-title" data-reveal data-lines>
+            <span class="line"><span>Every asset</span></span>
+            <span class="line" style="--d:120ms"><span>deserves a <em>passport.</em></span></span>
+          </h1>
+          <p class="hero-sub" data-reveal style="--d:240ms">Identity, history, and proof for tokenized real world assets. Permanent by design.</p>
+          <div class="hero-actions" data-reveal style="--d:340ms">
+            <a class="btn btn--gold btn--lg" href="#passport">Explore the passport</a>
+            <a class="btn btn--ghost btn--lg" href="#" data-placeholder>Read the docs</a>
+          </div>
+          <ul class="hero-pillars" data-reveal style="--d:440ms">
+            <li>Identity</li>
+            <li>History</li>
+            <li>Verification</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="hero-scroll" aria-hidden="true"><span></span></div>
+    </section>
+
+    <div class="sheet" data-sheet>
+
+      <!--
+        COPY · PROBLEM
+        Tag: The problem
+        Headline: Tokens move. Their story gets lost.
+        Supporting: A token proves ownership. It rarely proves what the asset is.
+        01 Scattered records. Asset data lives in silos. Nobody sees the full picture.
+        02 Fragile trust. Buyers rely on screenshots and promises. Proof stays out of reach.
+        03 No lasting memory. Platforms close. Records vanish. The asset loses its past.
+
+        COPY · VALUE
+        Tag: The value
+        Headline: One record. Always with the asset.
+        Supporting: Identhify gives every tokenized asset a single source of truth.
+        Permanent. A passport outlives every platform it touches.
+        Verifiable. Anyone can check a claim against its source.
+        Portable. The record travels wherever the token goes.
+        Neutral. No trading. No custody. Only identity and history.
+        Ordered. Every event is written in sequence. Nothing is overwritten.
+        Open. A public layer for the whole ecosystem.
+      -->
+      <section class="section problem" id="why" aria-labelledby="why-title">
+        <div class="container">
+          <span class="tag" data-reveal><i aria-hidden="true"></i>The problem</span>
+          <h2 class="h2" id="why-title" data-reveal data-lines>
+            <span class="line"><span>Tokens move.</span></span>
+            <span class="line" style="--d:100ms"><span>Their story gets lost.</span></span>
+          </h2>
+          <p class="lead" data-reveal style="--d:200ms">A token proves ownership. It rarely proves what the asset is.</p>
+
+          <ol class="problem-grid" data-reveal-group>
+            <li data-reveal>
+              <span class="num">01</span>
+              <h3>Scattered records</h3>
+              <p>Asset data lives in silos. Nobody sees the full picture.</p>
+            </li>
+            <li data-reveal>
+              <span class="num">02</span>
+              <h3>Fragile trust</h3>
+              <p>Buyers rely on screenshots and promises. Proof stays out of reach.</p>
+            </li>
+            <li data-reveal>
+              <span class="num">03</span>
+              <h3>No lasting memory</h3>
+              <p>Platforms close. Records vanish. The asset loses its past.</p>
+            </li>
+          </ol>
+
+          <div class="value-head">
+            <div>
+              <span class="tag" data-reveal><i aria-hidden="true"></i>The value</span>
+              <h2 class="h2" data-reveal data-lines>
+                <span class="line"><span>One record.</span></span>
+                <span class="line" style="--d:100ms"><span>Always with the asset.</span></span>
+              </h2>
+            </div>
+            <p class="lead" data-reveal style="--d:200ms">Identhify gives every tokenized asset a single source of truth.</p>
+          </div>
+
+          <ul class="value-grid" data-reveal-group>
+            <li data-reveal>
+              <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".9" class="fill"/></svg></span>
+              <h3>Permanent</h3>
+              <p>A passport outlives every platform it touches.</p>
+            </li>
+            <li data-reveal>
+              <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.2-3 7.8-7 9.5-4-1.7-7-5.3-7-9.5V6z"/><path d="M8.8 12.2l2.2 2.2 4.3-4.6"/></svg></span>
+              <h3>Verifiable</h3>
+              <p>Anyone can check a claim against its source.</p>
+            </li>
+            <li data-reveal>
+              <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="7" width="7" height="10" rx="1.5"/><path d="M13.5 12H20.5M17.5 9l3 3-3 3"/></svg></span>
+              <h3>Portable</h3>
+              <p>The record travels wherever the token goes.</p>
+            </li>
+            <li data-reveal>
+              <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M7.5 10h9M7.5 14h9"/></svg></span>
+              <h3>Neutral</h3>
+              <p>No trading. No custody. Only identity and history.</p>
+            </li>
+            <li data-reveal>
+              <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 6.5h14M5 12h14M5 17.5h8"/><circle cx="18" cy="17.5" r="1.4" class="fill"/></svg></span>
+              <h3>Ordered</h3>
+              <p>Every event is written in sequence. Nothing is overwritten.</p>
+            </li>
+            <li data-reveal>
+              <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.5 4.5v4h-4"/></svg></span>
+              <h3>Open</h3>
+              <p>A public layer for the whole ecosystem.</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="rule" aria-hidden="true"></div>
+
+      <!--
+        COPY · HOW IT WORKS
+        Tag: How it works
+        Headline: Four steps. One lasting record.
+        Supporting: A simple lifecycle. Designed to stay true for decades.
+        01 Issue. An asset receives its passport. Its identity is fixed.
+        02 Attest. Trusted parties add signed facts. Audits, appraisals, inspections.
+        03 Record. Every change becomes an event. The history only grows.
+        04 Verify. Anyone can read the passport. Trust comes from proof.
+      -->
+      <section class="section how" id="how" aria-labelledby="how-title">
+        <div class="orb orb--light" aria-hidden="true"></div>
+        <div class="container">
+          <div class="section-head">
+            <span class="tag" data-reveal><i aria-hidden="true"></i>How it works</span>
+            <h2 class="h2" id="how-title" data-reveal data-lines>
+              <span class="line"><span>Four steps.</span></span>
+              <span class="line" style="--d:100ms"><span>One lasting record.</span></span>
+            </h2>
+            <p class="lead" data-reveal style="--d:200ms">A simple lifecycle. Designed to stay true for decades.</p>
+          </div>
+
+          <div class="how-track" data-how-track>
+            <div class="how-line" aria-hidden="true"><span></span></div>
+            <ol class="how-steps">
+            <li class="how-step" data-step data-reveal>
+              <span class="how-node">01</span>
+              <div class="how-visual" aria-hidden="true">
+                <svg viewBox="0 0 160 110">
+                  <rect x="46" y="14" width="68" height="84" rx="8" pathLength="1"/>
+                  <circle cx="80" cy="46" r="14" pathLength="1"/>
+                  <path d="M60 76h40M66 86h28" pathLength="1"/>
+                </svg>
+              </div>
+              <h3>Issue</h3>
+              <p>An asset receives its passport. Its identity is fixed.</p>
+            </li>
+            <li class="how-step" data-step data-reveal style="--d:100ms">
+              <span class="how-node">02</span>
+              <div class="how-visual" aria-hidden="true">
+                <svg viewBox="0 0 160 110">
+                  <rect x="40" y="16" width="80" height="78" rx="8" pathLength="1"/>
+                  <path d="M54 36h52M54 48h36" pathLength="1"/>
+                  <path d="M54 76c8-14 14-14 16-4s8 8 14-6 10-6 12 2 6 4 10-2" pathLength="1"/>
+                </svg>
+              </div>
+              <h3>Attest</h3>
+              <p>Trusted parties add signed facts. Audits, appraisals, inspections.</p>
+            </li>
+            <li class="how-step" data-step data-reveal style="--d:200ms">
+              <span class="how-node">03</span>
+              <div class="how-visual" aria-hidden="true">
+                <svg viewBox="0 0 160 110">
+                  <rect x="18" y="40" width="30" height="30" rx="6" pathLength="1"/>
+                  <rect x="65" y="40" width="30" height="30" rx="6" pathLength="1"/>
+                  <rect x="112" y="40" width="30" height="30" rx="6" pathLength="1"/>
+                  <path d="M48 55h17M95 55h17" pathLength="1"/>
+                </svg>
+              </div>
+              <h3>Record</h3>
+              <p>Every change becomes an event. The history only grows.</p>
+            </li>
+            <li class="how-step" data-step data-reveal style="--d:300ms">
+              <span class="how-node">04</span>
+              <div class="how-visual" aria-hidden="true">
+                <svg viewBox="0 0 160 110">
+                  <circle cx="72" cy="50" r="28" pathLength="1"/>
+                  <path d="M92 70l24 24" pathLength="1"/>
+                  <path d="M60 50l8 8 16-17" pathLength="1"/>
+                </svg>
+              </div>
+              <h3>Verify</h3>
+              <p>Anyone can read the passport. Trust comes from proof.</p>
+            </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!--
+      COPY · PASSPORT PREVIEW
+      Tag: Passport preview
+      Headline: A record built to last.
+      Supporting: This is how a passport reads. Clear. Complete. Permanent.
+      01 Identity. Fixed at issuance. Never rewritten.
+      02 History. An ordered log of every event.
+      03 Proof. Signed attestations from trusted parties.
+      Card: Asset Passport. Passport No. IDH 0001 7342. Verified. Warehouse Unit 14.
+      Card fields: Class, Real estate. Jurisdiction, Singapore. Issued, 2026.03.14.
+      Card fields: Issuer, Licensed issuer. Attestations, 3 signed. Network, Pending.
+      Card history: Passport issued. Appraisal attested. Title verified. Ownership transferred.
+      Card footer: Fingerprint 0x7f3a 9b21 44d0 c91e
+      Caption: Sample record. Illustrative data only.
+    -->
+    <section class="section passport" id="passport" aria-labelledby="passport-title">
+      <div class="orb orb--gold" aria-hidden="true"></div>
+      <div class="container passport-grid">
+        <div class="passport-copy">
+          <span class="tag tag--dark" data-reveal><i aria-hidden="true"></i>Passport preview</span>
+          <h2 class="h2" id="passport-title" data-reveal data-lines>
+            <span class="line"><span>A record</span></span>
+            <span class="line" style="--d:100ms"><span>built to <em>last.</em></span></span>
+          </h2>
+          <p class="lead" data-reveal style="--d:200ms">This is how a passport reads. Clear. Complete. Permanent.</p>
+
+          <ol class="pp-callouts" data-reveal-group>
+            <li data-reveal><span class="num">01</span><div><h3>Identity</h3><p>Fixed at issuance. Never rewritten.</p></div></li>
+            <li data-reveal><span class="num">02</span><div><h3>History</h3><p>An ordered log of every event.</p></div></li>
+            <li data-reveal><span class="num">03</span><div><h3>Proof</h3><p>Signed attestations from trusted parties.</p></div></li>
+          </ol>
+        </div>
+
+        <div class="pp-stage" data-tilt data-reveal style="--d:150ms">
+          <article class="pp-card" aria-label="Sample asset passport">
+            <canvas class="pp-guilloche" data-rosette-static aria-hidden="true"></canvas>
+            <div class="pp-sheen" aria-hidden="true"></div>
+
+            <header class="pp-head">
+              <span class="pp-brand">
+                <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13.5"/><circle cx="16" cy="16" r="9" opacity=".45"/><path d="M16 14v7"/><circle cx="16" cy="10.8" r="1.2" class="fill"/></svg>
+                Identhify
+              </span>
+              <span class="pp-type">Asset Passport</span>
+            </header>
+
+            <div class="pp-id">
+              <div>
+                <span class="pp-k">Passport No.</span>
+                <span class="pp-v mono">IDH 0001 7342</span>
+              </div>
+              <div class="pp-seal" aria-hidden="true"><span></span></div>
+            </div>
+
+            <div class="pp-title-row">
+              <h3 class="pp-asset">Warehouse Unit 14</h3>
+              <span class="pp-status"><i aria-hidden="true"></i>Verified</span>
+            </div>
+
+            <dl class="pp-grid">
+              <div><dt class="pp-k">Class</dt><dd class="pp-v">Real estate</dd></div>
+              <div><dt class="pp-k">Jurisdiction</dt><dd class="pp-v">Singapore</dd></div>
+              <div><dt class="pp-k">Issued</dt><dd class="pp-v mono">2026.03.14</dd></div>
+              <div><dt class="pp-k">Issuer</dt><dd class="pp-v">Licensed issuer</dd></div>
+              <div><dt class="pp-k">Attestations</dt><dd class="pp-v">3 signed</dd></div>
+              <div><dt class="pp-k">Network</dt><dd class="pp-v">Pending</dd></div>
+            </dl>
+
+            <div class="pp-history">
+              <span class="pp-k">History</span>
+              <ol data-reveal-group>
+                <li data-reveal><i aria-hidden="true"></i><span>Passport issued</span><time class="mono" datetime="2026-03-14">03.14</time></li>
+                <li data-reveal><i aria-hidden="true"></i><span>Appraisal attested</span><time class="mono" datetime="2026-04-02">04.02</time></li>
+                <li data-reveal><i aria-hidden="true"></i><span>Title verified</span><time class="mono" datetime="2026-05-19">05.19</time></li>
+                <li data-reveal><i aria-hidden="true"></i><span>Ownership transferred</span><time class="mono" datetime="2026-07-08">07.08</time></li>
+              </ol>
+            </div>
+
+            <div class="pp-fp">
+              <span class="pp-k">Fingerprint</span>
+              <span class="pp-v mono">0x7f3a 9b21 44d0 c91e</span>
+            </div>
+
+            <div class="pp-mrz mono" aria-hidden="true">
+              <span>IDH&lt;PASSPORT&lt;&lt;0001&lt;7342&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>
+              <span>RWA&lt;REALESTATE&lt;&lt;SG&lt;&lt;260314&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>
+            </div>
+          </article>
+          <p class="pp-caption">Sample record. Illustrative data only.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="sheet" data-sheet>
+
+      <!--
+        COPY · ROLES
+        Tag: Roles
+        Headline: Every role has a clear place.
+        Supporting: Access follows role. Each party writes only what it should.
+        Issuers. Create passports for the assets they bring onchain. Permission: Issues passports
+        Attestors. Auditors, appraisers, and inspectors. They sign the facts. Permission: Signs attestations
+        Holders. Carry the passport with the asset. Share it freely. Permission: Holds the record
+        Verifiers. Buyers, lenders, and regulators. They check before they trust. Permission: Reads and checks
+
+        COPY · ECOSYSTEM
+        Tag: Ecosystem
+        Headline: A layer beneath the market.
+        Supporting: Identhify works with the platforms you already use. It never replaces them.
+        Marquee: Tokenization platforms. Marketplaces. Custodians. Lenders. Registries. Auditors. Insurers. Wallets.
+        Statements: Not a marketplace. Not a custodian. Not an exchange.
+        Closing: Only identity. Only history. Only proof.
+      -->
+      <section class="section roles" id="roles" aria-labelledby="roles-title">
+        <div class="container">
+          <div class="value-head">
+            <div>
+              <span class="tag" data-reveal><i aria-hidden="true"></i>Roles</span>
+              <h2 class="h2" id="roles-title" data-reveal data-lines>
+                <span class="line"><span>Every role has</span></span>
+                <span class="line" style="--d:100ms"><span>a clear place.</span></span>
+              </h2>
+            </div>
+            <p class="lead" data-reveal style="--d:200ms">Access follows role. Each party writes only what it should.</p>
+          </div>
+
+          <ul class="roles-grid" data-reveal-group>
+            <li class="role" data-reveal>
+              <div class="role-top">
+                <span class="num">01</span>
+                <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4.5" y="4.5" width="15" height="15" rx="3"/><path d="M12 8.5v7M8.5 12h7"/></svg></span>
+              </div>
+              <h3>Issuers</h3>
+              <p>Create passports for the assets they bring onchain.</p>
+              <span class="role-perm">Issues passports</span>
+            </li>
+            <li class="role" data-reveal>
+              <div class="role-top">
+                <span class="num">02</span>
+                <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 17c2.5-5 4.5-5 5-1.5s2.5 3 4.5-1 3.5-2 4 .5 2 1 2.5-.5"/><path d="M4 20.5h16"/></svg></span>
+              </div>
+              <h3>Attestors</h3>
+              <p>Auditors, appraisers, and inspectors. They sign the facts.</p>
+              <span class="role-perm">Signs attestations</span>
+            </li>
+            <li class="role" data-reveal>
+              <div class="role-top">
+                <span class="num">03</span>
+                <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="12" rx="2.5"/><circle cx="9" cy="12" r="2.2"/><path d="M13.5 10.5h4M13.5 13.5h3"/></svg></span>
+              </div>
+              <h3>Holders</h3>
+              <p>Carry the passport with the asset. Share it freely.</p>
+              <span class="role-perm">Holds the record</span>
+            </li>
+            <li class="role" data-reveal>
+              <div class="role-top">
+                <span class="num">04</span>
+                <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg></span>
+              </div>
+              <h3>Verifiers</h3>
+              <p>Buyers, lenders, and regulators. They check before they trust.</p>
+              <span class="role-perm">Reads and checks</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="rule" aria-hidden="true"></div>
+
+      <section class="section ecosystem" aria-labelledby="eco-title">
+        <div class="container">
+          <div class="value-head">
+            <div>
+              <span class="tag" data-reveal><i aria-hidden="true"></i>Ecosystem</span>
+              <h2 class="h2" id="eco-title" data-reveal data-lines>
+                <span class="line"><span>A layer beneath</span></span>
+                <span class="line" style="--d:100ms"><span>the market.</span></span>
+              </h2>
+            </div>
+            <p class="lead" data-reveal style="--d:200ms">Identhify works with the platforms you already use. It never replaces them.</p>
+          </div>
+        </div>
+
+        <div class="marquee" data-reveal>
+          <ul class="marquee-track">
+            <li>Tokenization platforms</li><li>Marketplaces</li><li>Custodians</li><li>Lenders</li>
+            <li>Registries</li><li>Auditors</li><li>Insurers</li><li>Wallets</li>
+            <li aria-hidden="true">Tokenization platforms</li><li aria-hidden="true">Marketplaces</li><li aria-hidden="true">Custodians</li><li aria-hidden="true">Lenders</li>
+            <li aria-hidden="true">Registries</li><li aria-hidden="true">Auditors</li><li aria-hidden="true">Insurers</li><li aria-hidden="true">Wallets</li>
+          </ul>
+        </div>
+
+        <div class="container">
+          <ul class="not-list" data-reveal-group>
+            <li data-reveal><span>Not a marketplace</span></li>
+            <li data-reveal><span>Not a custodian</span></li>
+            <li data-reveal><span>Not an exchange</span></li>
+          </ul>
+          <p class="not-closing" data-reveal>Only identity. Only history. <em>Only proof.</em></p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!--
+    COPY · FOOTER
+    Headline: Give every asset its passport.
+    Supporting: The registry is forming. Follow the build.
+    Buttons: Read the docs. View on GitHub.
+    Brand line: The permanent passport for tokenized real world assets.
+    Column Build: Docs. GitHub.
+    Column Follow: X. Telegram.
+    Legal: © 2026 Identhify
+    Note: Contracts not yet deployed.
+    Toast for placeholder links: Link coming soon.
+  -->
+  <footer class="footer" id="docs">
+    <div class="orb orb--gold orb--footer" aria-hidden="true"></div>
+    <div class="container footer-cta">
+      <svg class="brand-mark footer-mark" viewBox="0 0 32 32" aria-hidden="true" data-reveal><circle cx="16" cy="16" r="13.5"/><circle cx="16" cy="16" r="9" opacity=".45"/><path d="M16 14v7"/><circle cx="16" cy="10.8" r="1.2" class="fill"/></svg>
+      <h2 class="h2 h2--xl" data-reveal data-lines>
+        <span class="line"><span>Give every asset</span></span>
+        <span class="line" style="--d:100ms"><span>its <em>passport.</em></span></span>
+      </h2>
+      <p class="lead" data-reveal style="--d:200ms">The registry is forming. Follow the build.</p>
+      <div class="hero-actions" data-reveal style="--d:300ms">
+        <a class="btn btn--gold btn--lg" href="#" data-placeholder>Read the docs</a>
+        <a class="btn btn--ghost btn--lg" href="#" data-placeholder>View on GitHub</a>
+      </div>
+    </div>
+
+    <div class="footer-grid">
+      <div class="footer-col footer-brand">
+        <a class="brand" href="#top" aria-label="Identhify home">
+          <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13.5"/><circle cx="16" cy="16" r="9" opacity=".45"/><path d="M16 14v7"/><circle cx="16" cy="10.8" r="1.2" class="fill"/></svg>
+          <span>Identhify</span>
+        </a>
+        <p>The permanent passport for tokenized real world assets.</p>
+      </div>
+      <div class="footer-col">
+        <span class="footer-h">Build</span>
+        <ul>
+          <li><a href="#" data-placeholder>Docs</a></li>
+          <li><a href="#" data-placeholder>GitHub</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <span class="footer-h">Follow</span>
+        <ul>
+          <li><a href="#" data-placeholder>X</a></li>
+          <li><a href="#" data-placeholder>Telegram</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Identhify</span>
+      <span>Contracts not yet deployed.</span>
+    </div>
+
+    <div class="footer-word" aria-hidden="true">Identhify</div>
+  </footer>
+
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+</body>
+</html>
