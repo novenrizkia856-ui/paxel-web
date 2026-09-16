@@ -22,10 +22,8 @@ assets/css/main.css        Design tokens, layout and motion.
 assets/js/main.js          Boots every module.
 assets/js/contract-bar.js  Token address bar, reads config/contracts.config.js.
 assets/js/nav.js           Static nav, floating glass nav, mobile menu.
-assets/js/reveal.js        Scroll entrances and headline line masks.
-assets/js/scroll-fx.js     Sheet rise, How it works progress line, hero parallax.
-assets/js/rosette.js       Guilloché canvas art for the hero and the passport card.
-assets/js/tilt.js          Pointer tilt and sheen on the passport card.
+assets/js/reveal.js        Fade and rise entrances on scroll.
+assets/js/tilt.js          Pointer tilt on the passport preview card.
 assets/img/                Favicon.
 assets/fonts/              Notes on the typefaces. Fonts load from Google Fonts.
 config/contracts.config.js Contract addresses. All empty for now.
@@ -52,38 +50,32 @@ Only `tokenAddress` is read today. The other fields are placeholders for later p
 
 ## Design system
 
-Palette directions considered:
+The look follows the reference build the team contributed to. Identhify keeps its own name, logo, copy and UI.
 
-| Option | Base | Accent | Verdict |
-| --- | --- | --- | --- |
-| Graphite and cyan | `#111316` | `#5FE3E0` | Precise, but reads as generic crypto |
-| **Obsidian and gold** | `#07070A` | `#D4B272` on bone paper `#F1EDE4` | **Chosen.** Passport foil, archive paper, guilloché |
-| Ink blue and chrome | `#0A1024` | `#C9D1DC` | Institutional, colder, less artistic |
+| Token | Value | Use |
+| --- | --- | --- |
+| Navy | `#09101C`, `#131D2F`, `#1B273D` | Page, dark buttons, dashed lines on dark |
+| White sheets | `#FFFFFF`, 24px radius | Content panels over the navy page |
+| Blue | `#2A4AF5` | Primary buttons |
+| Purple | `#7140FD` | Contract address bar, Attest accent |
+| Orange, teal | `#F6B03C`, `#2A799B` | Issue and Record accents |
+| Neutrals | `#647084`, `#A1ABBD`, `#DCE0E5`, `#E7EAEE`, `#F0F2F5` | Secondary text, borders |
+
+Type: Inter. Scale 13, 15, 19, 27, 40, 64, 88 with the reference tracking. JetBrains Mono for hashes.
 
 Tokens are CSS variables at the top of `assets/css/main.css`.
 
-Type: Instrument Serif for display, Geist for body, Geist Mono for record data.
+## Layout and motion
 
-## Motion
-
-Taken from the reference build and restyled:
-
-- Floating glass nav. Appears past 56px when you scroll up more than 40px. Hides on scroll down.
-- Mobile menu reveal. 300ms on `cubic-bezier(.87,0,.13,1)`, the reference accordion curve.
-- Rounded paper sheets over a dark page, with dashed full bleed rules between blocks.
-- Large radial glow orbs, 676px scaled 1.75, drifting slowly.
-- Tag pills, the animated gradient badge, hover dimming on nav links, 150ms standard easing on hovers.
-
-Added for Identhify:
-
-- Guilloché rosette canvas in the hero. Runs at 30fps and pauses offscreen or in a hidden tab.
-- Hero phone mockup built in HTML and CSS, showing the Identhify passport app. It rises in on load,
-  tilts toward the pointer, and has a scan line over the passport card. On small screens it sits
-  below the headline and slides under the paper sheet, like the reference device image.
-- Masked headline lines and staggered fade and rise entrances.
-- How it works progress line. Nodes light up and line drawings trace in as you scroll.
-- Passport card with pointer tilt, moving sheen and a foil seal.
-- Ecosystem marquee that pauses on hover.
+- Purple bar on top carries the token contract address.
+- Dark hero with a laptop and phone mockup built in HTML and CSS, showing the Identhify app.
+- White rounded sheets with a sticker icon grid, then four feature blocks for How it works.
+  Each block has an accent tag, a dashed info card, a tinted app window and a soft glow.
+- Dark passport preview band with sparkles and a sample record card that tilts on hover.
+- Second sheet with role cards, an ecosystem split and a three column dashed grid.
+- Dark closing call to action and a dashed footer grid.
+- Floating glass nav appears past 56px when you scroll up more than 40px.
+- Mobile menu opens over 300ms on `cubic-bezier(.87,0,.13,1)`. Hovers use 150ms standard easing.
 
 `prefers-reduced-motion` turns animation off and shows all content at once.
 If the scripts fail to load, an inline fallback reveals the page after 2.5 seconds.
