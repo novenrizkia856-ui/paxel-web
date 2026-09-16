@@ -1,6 +1,6 @@
-# Identhify Web
+# Paxel Web
 
-Marketing site for Identhify, the permanent digital passport for tokenized real world assets.
+Marketing site for Paxel, the permanent digital passport for tokenized real world assets.
 
 Plain HTML, CSS and ES modules. No build step, no framework, no backend, no wallet or contract calls.
 
@@ -24,7 +24,7 @@ assets/js/contract-bar.js  Token address bar, reads config/contracts.config.js.
 assets/js/nav.js           Static nav, floating glass nav, mobile menu.
 assets/js/reveal.js        Fade and rise entrances on scroll.
 assets/js/tilt.js          Pointer tilt on the passport preview card.
-assets/img/                Favicon.
+assets/img/                Favicon, sticker icons and the hands illustration.
 assets/fonts/              Notes on the typefaces. Fonts load from Google Fonts.
 config/contracts.config.js Contract addresses. All empty for now.
 vercel.json                Security headers and clean URLs only.
@@ -50,7 +50,11 @@ Only `tokenAddress` is read today. The other fields are placeholders for later p
 
 ## Design system
 
-The look follows the reference build the team contributed to. Identhify keeps its own name, logo, copy and UI.
+The look follows the reference build the team contributed to. Paxel keeps its own name, logo, copy and UI.
+
+Reused reference assets, all without third party branding: the sticker icons (`sticker-*.webp`) and the
+hands illustration (`illustration-hands*.webp`). Reference images that show another brand's logo, name or
+app screens are not used. The device mockups and app windows are HTML and CSS with Paxel content.
 
 | Token | Value | Use |
 | --- | --- | --- |
@@ -68,9 +72,10 @@ Tokens are CSS variables at the top of `assets/css/main.css`.
 ## Layout and motion
 
 - Purple bar on top carries the token contract address.
-- Dark hero with a laptop and phone mockup built in HTML and CSS, showing the Identhify app.
-- White rounded sheets with a sticker icon grid, then four feature blocks for How it works.
-  Each block has an accent tag, a dashed info card, a tinted app window and a soft glow.
+- Dark hero with a laptop and phone mockup built in HTML and CSS, showing the Paxel app.
+- White rounded sheets. The problem block sits inside the hands illustration, then a sticker icon grid,
+  then four feature blocks for How it works.
+  Each block has an accent tag, a dashed info card, a tinted desktop app window and a soft glow.
 - Dark passport preview band with sparkles and a sample record card that tilts on hover.
 - Second sheet with role cards, an ecosystem split and a three column dashed grid.
 - Dark closing call to action and a dashed footer grid.

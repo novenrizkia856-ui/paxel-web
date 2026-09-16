@@ -1,5 +1,5 @@
 /*
- * Identhify contract configuration.
+ * Paxel contract configuration.
  *
  * Every value is an empty string until the contracts are deployed.
  * The site reads this file at runtime. No markup changes are needed.
