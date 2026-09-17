@@ -64,33 +64,46 @@ Tests:
 
 ## Deploy
 
+Target network: **Robinhood Chain mainnet**, chain id `4663`, RPC
+`https://rpc.mainnet.chain.robinhood.com` (public and rate limited), explorer
+`https://robinhoodchain.blockscout.com`, gas token ETH. The chain id was confirmed by querying the RPC.
+
 `script/Deploy.s.sol` deploys the registry, then the event log wired to it. It reads:
 
 | Variable | Meaning |
 | --- | --- |
 | `RPC_URL` | RPC endpoint, passed as `--rpc-url` |
-| `PRIVATE_KEY` | Deployer key. The deployer becomes the registry admin. |
+| `PRIVATE_KEY` | Deployer key. The deployer becomes the registry admin. Optional for a dry run with `--sender`. |
 | `CHAIN_ID` | Expected chain id. The script stops if the RPC reports another one. |
+| `DEPLOY_NETWORK` | Output name, `deployments/<DEPLOY_NETWORK>.json` |
+| `NETWORK_NAME` | Network label written to the export |
+| `EXPLORER_BASE_URL` | Explorer base URL written to the export |
 
-Copy `.env.example` to `.env`, fill it in, then:
+`.env` is gitignored. Copy `.env.example` to `.env` (the example already holds the Robinhood Chain
+values) and paste the deployer key into `PRIVATE_KEY`. Forge loads `.env` automatically.
 
 ```bash
-source .env
-forge script script/Deploy.s.sol --rpc-url $RPC_URL
-forge script script/Deploy.s.sol --rpc-url $RPC_URL --broadcast
+set -a; . ./.env; set +a
+forge script script/Deploy.s.sol --rpc-url "$RPC_URL"
+forge script script/Deploy.s.sol --rpc-url "$RPC_URL" --broadcast
 ```
 
-The first command only simulates. The second one sends the transactions. The script prints the
-addresses and the lines to paste into the web config.
+The first command only simulates against the live chain. The second one sends the transactions and
+writes `deployments/mainnet.json` with the network, chain id, deployer and both addresses. A dry run
+on Robinhood Chain mainnet estimated about 1.8M gas, roughly 0.0002 ETH at 0.095 gwei.
+
+Verify both contracts on Blockscout:
+
+```bash
+forge verify-contract <PaxelRegistry> src/PaxelRegistry.sol:PaxelRegistry --chain-id 4663 --verifier blockscout --verifier-url https://robinhoodchain.blockscout.com/api
+forge verify-contract <PaxelEventLog> src/PaxelEventLog.sol:PaxelEventLog --chain-id 4663 --verifier blockscout --verifier-url https://robinhoodchain.blockscout.com/api --constructor-args $(cast abi-encode "constructor(address)" <PaxelRegistry>)
+```
 
 After deploying, grant issuers from the admin key:
 
 ```bash
-cast send <PaxelRegistry> "grantRole(bytes32,address)" $(cast keccak "ISSUER_ROLE") <issuer> --rpc-url $RPC_URL --private-key $PRIVATE_KEY
+cast send <PaxelRegistry> "grantRole(bytes32,address)" $(cast keccak "ISSUER_ROLE") <issuer> --rpc-url "$RPC_URL" --private-key "$PRIVATE_KEY"
 ```
-
-The script has been run against a local Anvil node only. Mainnet deployment is triggered manually
-by the operator.
 
 ## Web handoff
 

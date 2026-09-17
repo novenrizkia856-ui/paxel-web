@@ -3,8 +3,8 @@ src = "src"
 out = "out"
 libs = ["lib"]
 
-# Pinned compiler. The target network is chosen by the operator at deploy time, so the bytecode
-# targets Shanghai, which every mainstream EVM chain supports.
+# Pinned compiler. Target network is Robinhood Chain mainnet (Arbitrum Orbit, chain id 4663). Its
+# Cancun opcode support is not verified here, so the bytecode targets Shanghai.
 solc = "0.8.28"
 evm_version = "shanghai"
 optimizer = true
@@ -15,6 +15,9 @@ remappings = [
     "forge-std/=lib/forge-std/src/",
 ]
 
+# Deploy writes deployments/<network>.json after a broadcast.
+fs_permissions = [{ access = "read-write", path = "./deployments" }]
+
 [fuzz]
 runs = 512
 
@@ -23,8 +26,9 @@ deploy = "${RPC_URL}"
 
 [lint]
 # `registry` on PaxelEventLog is a public getter read by name. Renaming it to REGISTRY would
-# change the ABI the web frontend calls.
-exclude_lints = ["screaming-snake-case-immutable"]
+# change the ABI the web frontend calls. writeFile in Deploy.s.sol is the reviewed deployment
+# export, scoped to ./deployments by fs_permissions.
+exclude_lints = ["screaming-snake-case-immutable", "unsafe-cheatcode"]
 
 [profile.ci.fuzz]
 runs = 1024
