@@ -1,4 +1,5 @@
 import { CONTRACTS } from "../../config/contracts.config.js";
+import { CHAINS } from "./app/chain.js";
 
 const COPIED_MS = 1600;
 
@@ -27,11 +28,6 @@ async function copyText(text) {
   if (!ok) throw new Error("Copy failed");
 }
 
-// Block explorers by chain id, used to link the deployed registry
-const EXPLORERS = {
-  4663: "https://robinhoodchain.blockscout.com",
-};
-
 // Once the registry is deployed, the hero note and footer say where the contracts live
 function initDeployStatus() {
   const registry = String(CONTRACTS.passportRegistry ?? "").trim();
@@ -45,7 +41,7 @@ function initDeployStatus() {
   if (legal) legal.textContent = `Contracts live${where}.`;
 
   const link = document.querySelector("[data-deploy-link]");
-  const explorer = EXPLORERS[String(CONTRACTS.chainId ?? "").trim()];
+  const explorer = CHAINS[String(CONTRACTS.chainId ?? "").trim()]?.explorerUrl;
   if (!link || !explorer) return;
   link.href = `${explorer}/address/${registry}`;
   link.target = "_blank";

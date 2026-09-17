@@ -1,6 +1,11 @@
+node_modules
+dist
+.vite
+.env
+.env.local
+.env.*.local
 .vercel
 .claude
-node_modules
 *.log
 .DS_Store
 Thumbs.db

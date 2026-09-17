@@ -34,7 +34,7 @@ export function initHeroFx({ reduced }) {
 
   const objects = OBJECTS.map((o, i) => {
     const img = document.createElement("img");
-    img.src = `assets/img/${o.src}`;
+    img.src = `/assets/img/${o.src}`;
     img.alt = "";
     img.decoding = "async";
     img.className = "card-object" + (o.front ? " is-front" : "") + (o.far ? " is-far" : "");

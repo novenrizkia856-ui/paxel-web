@@ -64,7 +64,7 @@ function mount(root, { reduced }) {
   const defs = tall ? TALL_OBJECTS : WIDE_OBJECTS;
   const objects = defs.map((d, i) => {
     const img = document.createElement("img");
-    img.src = `assets/img/objects/${d.src}`;
+    img.src = `/assets/img/objects/${d.src}`;
     img.alt = "";
     img.decoding = "async";
     img.className = "ring-object";

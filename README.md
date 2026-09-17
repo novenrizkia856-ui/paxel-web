@@ -1,25 +1,35 @@
 # Paxel Web
 
-Marketing site for Paxel, the permanent digital passport for tokenized real world assets.
+Landing site and passport console for Paxel, the permanent digital passport for tokenized real world assets.
 
-Plain HTML, CSS and ES modules. No build step, no framework, no backend, no wallet or contract calls.
+Vite with plain HTML, CSS and ES modules. No framework, no backend. Two pages:
+
+| Route | File | Purpose |
+| --- | --- | --- |
+| `/` | `index.html` | Landing page |
+| `/app` | `app.html` | Passport console: look up passports, issuer actions, issuer role management |
+| any other | `public/404.html` | Not found page, served by Vercel |
 
 ## Run locally
 
-ES modules need a server. Opening `index.html` from disk will not load the scripts.
+Requires Node 22.
 
 ```bash
-python -m http.server 5210
+npm install
+npm run dev
 ```
 
-Or `npx serve .`. Then open http://localhost:5210.
+Then open http://localhost:5173 and http://localhost:5173/app.html. `npm run build` writes the site to
+`dist`, and `npm run preview` serves that build.
 
 ## Structure
 
 ```
-index.html                 Page markup. Copy for each section sits in a comment above it.
+index.html                 Landing markup. Copy for each section sits in a comment above it.
+app.html                   Passport console markup.
 assets/css/main.css        Design tokens, layout and motion.
-assets/js/main.js          Boots every module.
+assets/css/app.css         Console styles. Imports main.css for tokens and buttons.
+assets/js/main.js          Boots every landing module.
 assets/js/contract-bar.js  Token address block in the hero, reads config/contracts.config.js.
 assets/js/nav.js           Static nav, floating glass nav, mobile menu.
 assets/js/reveal.js        Fade and rise entrances on scroll.
@@ -29,13 +39,19 @@ assets/js/hero-fx.js       Hero passport card: cursor tilt, sheen, floating obje
 assets/js/ring.js          Hands section: dust stream, objects riding the loop, hands closing in.
 assets/js/ring-data.js     Loop path and object positions traced from the hands illustration.
 assets/js/scroll-fx.js     Section transitions. Sets --p on [data-fx] elements as they scroll in.
-assets/img/                Favicon and the layered hands illustration.
-assets/img/stickers/       High resolution sticker icons.
-assets/img/objects/        Coins, gems, frames and planets cut out of the illustrations.
-assets/media/              Looping videos (mp4) and their poster images.
-assets/fonts/              Notes on the typefaces. Fonts load from Google Fonts.
-config/contracts.config.js Contract addresses. All empty for now.
-vercel.json                Security headers and clean URLs only.
+assets/js/app/app.js       Console page: look up, recent passports, issuer and admin forms.
+assets/js/app/paxel.js     Contract client. Reads over the public RPC, writes simulate first, then send.
+assets/js/app/wallet.js    Wallet store on Reown AppKit, loaded after first paint.
+assets/js/app/appkit.js    AppKit and wagmi setup for the active chain.
+assets/js/app/wallet-config.js  WalletConnect project id and app metadata.
+assets/js/app/chain.js     RPC, explorer and deploy block per chain id.
+assets/js/app/abi.js       PaxelRegistry and PaxelEventLog ABIs from paxel-contracts.
+public/assets/img/         Hands illustration, stickers and cut out objects.
+public/assets/media/       Looping videos (mp4) and their poster images.
+public/                    Favicon, robots.txt and the 404 page.
+config/contracts.config.js Network and contract addresses.
+vite.config.js             Two page build. Hashed bundles go to /bundle.
+vercel.json                Vite build, clean URLs, cache and security headers.
 ```
 
 ## Contracts
@@ -57,6 +73,31 @@ Put the address in the file and redeploy. The hero shows the short form, and the
 Once `passportRegistry` is set, the hero note and footer say the contracts are live on `network`, and the
 note button links to the registry on the block explorer for `chainId`. `tokenAddress` and
 `attestationRegistry` are not used yet.
+
+### Wallet
+
+The console connects wallets through Reown AppKit (WalletConnect): browser extensions, the WalletConnect
+QR code and mobile wallets, with a network switch to Robinhood Chain. The Paxel project id
+`ff24e7c4e7d10744e3ccd080e4307cad` is set in `assets/js/app/wallet-config.js`.
+`VITE_WALLETCONNECT_PROJECT_ID` overrides it at build time.
+
+Add every domain the site runs on (the Vercel domain, any custom domain, and `localhost` for development)
+to the project's allowlist at https://dashboard.reown.com. Without it the connect modal refuses to load.
+
+The landing page never loads AppKit. It only links to the console.
+
+### Passport console
+
+- **Look up a passport.** No wallet needed. Enter an asset reference (hashed with keccak256 into the asset
+  id) or a 0x asset id. Shows status, issuer, tokenization time, metadata URI and the full history.
+  `app.html?asset=<reference or id>` opens a passport directly.
+- **Recent passports.** The latest `AssetRegistered` events since the registry deploy block.
+- **Issuer console.** Register, publish, update status and record events. Event data can be a file, text or a
+  0x hash. Files are hashed in the browser and never uploaded. Every write is simulated first, so a call
+  that would revert shows a plain explanation before the wallet opens.
+- **Manage issuers.** Visible only to the registry admin. Grant or revoke `ISSUER_ROLE` and check any address.
+
+The ABIs in `assets/js/app/abi.js` come from `paxel-contracts/out`. Regenerate them if the contracts change.
 
 ### Current deployment
 
@@ -122,5 +163,10 @@ Docs, Learn more and Telegram use `href="#"` with `data-placeholder`. Clicking o
 
 ## Deploy to Vercel
 
-Import the repo. Leave the framework preset as **Other**. No build command and no output directory.
-Vercel serves the root as static files.
+1. Import the repository in Vercel. `vercel.json` sets the Vite framework, `npm ci`, `npm run build` and `dist`
+   as the output directory. Node 22 comes from `package.json`.
+2. No environment variables are required. Optional, both public:
+   `VITE_WALLETCONNECT_PROJECT_ID` and `VITE_RPC_URL` (see `.env.example`).
+3. After the first deploy, add the Vercel domain to the Reown project allowlist.
+
+Hashed bundles under `/bundle` are cached for a year. Images and videos under `/assets` are cached for a day.

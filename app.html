@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Paxel App · Passport console</title>
+  <meta name="description" content="Look up any Paxel asset passport. Issuers register, publish and record history on Robinhood Chain.">
+  <meta name="theme-color" content="#FFFFFF">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <script type="module" src="assets/js/app/app.js"></script>
+</head>
+<body class="app">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="logo-grad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#2E3036"/>
+        <stop offset="1" stop-color="#0B0B0D"/>
+      </linearGradient>
+      <linearGradient id="logo-gold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#F1E6CF"/>
+        <stop offset=".5" stop-color="#C9B28A"/>
+        <stop offset="1" stop-color="#A88F63"/>
+      </linearGradient>
+    </defs>
+    <symbol id="logo" viewBox="0 0 32 32">
+      <path d="M16 0C3.6 0 0 3.6 0 16s3.6 16 16 16 16-3.6 16-16S28.4 0 16 0z" fill="url(#logo-grad)"/>
+      <path fill="url(#logo-gold)" fill-rule="evenodd" d="M10.5 7.5h6.8a5.6 5.6 0 0 1 0 11.2h-3v5.8h-3.8zm3.8 3.4v4.4h2.8a2.2 2.2 0 0 0 0-4.4z"/>
+    </symbol>
+    <symbol id="i-arrow" viewBox="0 0 20 20"><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M7 13l6-6M8 7h5v5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 20 20"><circle cx="9" cy="9" r="5.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M13 13l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 16 16"><rect x="5.5" y="5.5" width="8" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 3.5v-.5a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5" fill="none" stroke="currentColor" stroke-width="1.3"/></symbol>
+  </svg>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!--
+    COPY · APP HEADER
+    Brand: paxel
+    Links: Look up. Issuer. Admin.
+    Network badge: Robinhood Chain. Wrong network.
+    Wallet button: Connect wallet. Waiting for wallet. Switch network. Short address when connected.
+  -->
+  <header class="app-header">
+    <div class="app-bar">
+      <a class="brand" href="/" aria-label="Paxel home">
+        <svg class="brand-logo" aria-hidden="true"><use href="#logo"/></svg>
+        <span>paxel</span>
+      </a>
+      <nav class="app-nav" aria-label="Console">
+        <a href="#lookup">Look up</a>
+        <a href="#issuer">Issuer</a>
+        <a href="#admin" data-admin-link hidden>Admin</a>
+      </nav>
+      <div class="app-actions">
+        <span class="net-badge" data-net-badge><i aria-hidden="true"></i><span data-net-label>Robinhood Chain</span></span>
+        <button class="btn btn--primary btn--sm wallet-btn" type="button" data-wallet>Connect wallet</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="app-main">
+    <!--
+      COPY · APP INTRO
+      Headline: Passport console
+      Supporting: Look up any asset passport. Issuers register, publish and record history.
+      Contract links: Registry. Event log.
+    -->
+    <section class="app-intro container">
+      <h1>Passport console</h1>
+      <p>Look up any asset passport. Issuers register, publish and record history.</p>
+      <ul class="contract-chips" data-contract-chips></ul>
+    </section>
+
+    <div class="container app-grid">
+      <!--
+        COPY · LOOK UP
+        Headline: Look up a passport
+        Field label: Asset reference or id
+        Placeholder: PXL 0001 7342 or 0x id
+        Hint: Text is hashed with keccak256 into the asset id.
+        Button: Look up
+        Empty result: No passport found for this asset id.
+        Result labels: Asset id. Issuer. Tokenized. Metadata. History.
+        Empty history: No events recorded yet.
+        Result button: Use in issuer console
+      -->
+      <section class="panel" id="lookup" aria-labelledby="lookup-h">
+        <div class="panel-head">
+          <h2 id="lookup-h">Look up a passport</h2>
+          <span class="panel-note">No wallet needed</span>
+        </div>
+        <form class="lookup-form" data-lookup-form novalidate>
+          <label class="field">
+            <span class="field-label">Asset reference or id</span>
+            <span class="field-row">
+              <input class="input" name="asset" autocomplete="off" spellcheck="false" placeholder="PXL 0001 7342 or 0x id" data-asset-input>
+              <button class="btn btn--primary" type="submit"><svg class="btn-icon" aria-hidden="true"><use href="#i-search"/></svg>Look up</button>
+            </span>
+            <span class="field-hint" data-asset-preview>Text is hashed with keccak256 into the asset id.</span>
+          </label>
+        </form>
+        <div class="lookup-result" data-lookup-result aria-live="polite"></div>
+      </section>
+
+      <!--
+        COPY · RECENT PASSPORTS
+        Headline: Recent passports
+        Loading: Loading recent passports
+        Empty: No passports registered yet.
+        Error: Recent passports could not load.
+      -->
+      <section class="panel" aria-labelledby="recent-h">
+        <div class="panel-head">
+          <h2 id="recent-h">Recent passports</h2>
+          <button class="btn btn--darkgrey btn--sm" type="button" data-recent-refresh>Refresh</button>
+        </div>
+        <ul class="recent-list" data-recent-list aria-live="polite"></ul>
+      </section>
+
+      <!--
+        COPY · ISSUER CONSOLE
+        Headline: Issuer console
+        Gate, no wallet: Connect a wallet to manage passports.
+        Gate, wrong network: Switch to Robinhood Chain to continue.
+        Role line: Issuer. Admin. No role yet. Ask the Paxel admin for the issuer role.
+        Cards: Register a passport. Publish a passport. Update status. Record an event.
+        Register fields: Asset reference or id. Metadata URI. Button: Register.
+        Publish button: Publish.
+        Status button: Update status.
+        Event fields: Event type. File, text or 0x hash. Button: Add event.
+        Event hint: Files are hashed in your browser. Nothing is uploaded.
+        Progress: Confirm in your wallet. Waiting for confirmation. Done. View transaction.
+      -->
+      <section class="panel panel--wide" id="issuer" aria-labelledby="issuer-h">
+        <div class="panel-head">
+          <h2 id="issuer-h">Issuer console</h2>
+          <span class="role-pill" data-role-pill>Not connected</span>
+        </div>
+        <p class="gate" data-gate>Connect a wallet to manage passports.</p>
+
+        <div class="action-grid">
+          <form class="action" data-action="register" novalidate>
+            <h3>Register a passport</h3>
+            <p>Opens a new passport in Draft. You become its issuer.</p>
+            <label class="field">
+              <span class="field-label">Asset reference or id</span>
+              <input class="input" name="asset" autocomplete="off" spellcheck="false" placeholder="PXL 0001 7342" data-asset-field>
+              <span class="field-hint" data-id-preview></span>
+            </label>
+            <label class="field">
+              <span class="field-label">Metadata URI</span>
+              <input class="input" name="uri" autocomplete="off" spellcheck="false" placeholder="ipfs:// or https://">
+            </label>
+            <button class="btn btn--primary" type="submit">Register</button>
+            <p class="action-status" data-status aria-live="polite"></p>
+          </form>
+
+          <form class="action" data-action="publish" novalidate>
+            <h3>Publish a passport</h3>
+            <p>Moves a Draft passport to Issued. Only its issuer can publish.</p>
+            <label class="field">
+              <span class="field-label">Asset reference or id</span>
+              <input class="input" name="asset" autocomplete="off" spellcheck="false" placeholder="PXL 0001 7342" data-asset-field>
+              <span class="field-hint" data-id-preview></span>
+            </label>
+            <button class="btn btn--primary" type="submit">Publish</button>
+            <p class="action-status" data-status aria-live="polite"></p>
+          </form>
+
+          <form class="action" data-action="status" novalidate>
+            <h3>Update status</h3>
+            <p>For published passports. The issuer or an admin can change it.</p>
+            <label class="field">
+              <span class="field-label">Asset reference or id</span>
+              <input class="input" name="asset" autocomplete="off" spellcheck="false" placeholder="PXL 0001 7342" data-asset-field>
+              <span class="field-hint" data-id-preview></span>
+            </label>
+            <label class="field">
+              <span class="field-label">New status</span>
+              <select class="input" name="status" data-status-select></select>
+            </label>
+            <button class="btn btn--primary" type="submit">Update status</button>
+            <p class="action-status" data-status aria-live="polite"></p>
+          </form>
+
+          <form class="action" data-action="event" novalidate>
+            <h3>Record an event</h3>
+            <p>Adds a permanent entry to the passport history.</p>
+            <label class="field">
+              <span class="field-label">Asset reference or id</span>
+              <input class="input" name="asset" autocomplete="off" spellcheck="false" placeholder="PXL 0001 7342" data-asset-field>
+              <span class="field-hint" data-id-preview></span>
+            </label>
+            <label class="field">
+              <span class="field-label">Event type</span>
+              <select class="input" name="type" data-type-select></select>
+            </label>
+            <label class="field">
+              <span class="field-label">Text or 0x hash</span>
+              <input class="input" name="data" autocomplete="off" spellcheck="false" placeholder="Deed signed by the custodian">
+            </label>
+            <label class="field">
+              <span class="field-label">Or choose a file</span>
+              <input class="input input--file" name="file" type="file">
+              <span class="field-hint" data-hash-preview>Files are hashed in your browser. Nothing is uploaded.</span>
+            </label>
+            <button class="btn btn--primary" type="submit">Add event</button>
+            <p class="action-status" data-status aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <!--
+        COPY · ADMIN
+        Headline: Manage issuers
+        Supporting: Only the registry admin sees this panel.
+        Field: Wallet address
+        Live check: Holds the issuer role. Has no issuer role.
+        Buttons: Grant issuer role. Revoke issuer role.
+      -->
+      <section class="panel panel--wide" id="admin" aria-labelledby="admin-h" data-admin-panel hidden>
+        <div class="panel-head">
+          <h2 id="admin-h">Manage issuers</h2>
+          <span class="panel-note">Admin only</span>
+        </div>
+        <form class="action action--inline" data-action="role" novalidate>
+          <label class="field">
+            <span class="field-label">Wallet address</span>
+            <input class="input" name="account" autocomplete="off" spellcheck="false" placeholder="0x wallet address" data-role-account>
+            <span class="field-hint" data-role-check></span>
+          </label>
+          <div class="btn-row">
+            <button class="btn btn--primary" type="submit" name="op" value="grant">Grant issuer role</button>
+            <button class="btn btn--outline-dark" type="submit" name="op" value="revoke">Revoke issuer role</button>
+          </div>
+          <p class="action-status" data-status aria-live="polite"></p>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <!--
+    COPY · APP FOOTER
+    Legal: © 2026 Paxel. Contracts live on Robinhood Chain.
+    Link: Back to paxel
+  -->
+  <footer class="app-footer container">
+    <span>© 2026 Paxel · <span data-footer-network>Contracts live on Robinhood Chain.</span></span>
+    <a href="/">Back to paxel<svg class="btn-icon btn-icon--end" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+  </footer>
+
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+</body>
+</html>
