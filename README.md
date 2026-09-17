@@ -8,6 +8,7 @@ Vite with plain HTML, CSS and ES modules. No framework, no backend. Two pages:
 | --- | --- | --- |
 | `/` | `index.html` | Landing page |
 | `/app` | `app.html` | Passport console: look up passports, issuer actions, issuer role management |
+| `/docs` | `docs/*.html`, generated | Documentation, built from `content/docs/*.md` |
 | any other | `public/404.html` | Not found page, served by Vercel |
 
 ## Run locally
@@ -19,7 +20,7 @@ npm install
 npm run dev
 ```
 
-Then open http://localhost:5173 and http://localhost:5173/app.html. `npm run build` writes the site to
+Then open http://localhost:5173, http://localhost:5173/app.html and http://localhost:5173/docs/. `npm run build` writes the site to
 `dist`, and `npm run preview` serves that build.
 
 ## Structure
@@ -49,6 +50,10 @@ assets/js/app/abi.js       PaxelRegistry and PaxelEventLog ABIs from paxel-contr
 public/assets/img/         Hands illustration, stickers and cut out objects.
 public/assets/media/       Looping videos (mp4) and their poster images.
 public/                    Favicon, robots.txt and the 404 page.
+content/docs/               Docs source, one markdown file per page.
+scripts/build-docs.mjs     Renders content/docs into docs/*.html and the search index. Runs before dev and build.
+assets/css/docs.css        Docs layout: sidebar, article, on this page, search.
+assets/js/docs/docs.js     Docs behaviour: mobile menu, section highlighting, code copy, search.
 config/contracts.config.js Network and contract addresses.
 vite.config.js             Two page build. Hashed bundles go to /bundle.
 vercel.json                Vite build, clean URLs, cache and security headers.
@@ -156,10 +161,25 @@ If the scripts fail to load, an inline fallback reveals the page after 2.5 secon
 Short statements. One idea per sentence. Headlines under eight words. Supporting lines under twenty.
 No dashes or semicolons in visible text.
 
+## Docs
+
+Pages live in `content/docs` as markdown. `scripts/build-docs.mjs` renders them into `docs/` (gitignored)
+with a layout modelled on the ethereum.org developer docs: grouped navigation on the left, the article in
+the middle, an on this page list on the right, previous and next cards, and search (Ctrl K or /). Below
+1024px the navigation opens from a sticky Documentation bar and the on this page list folds into the article.
+
+- Sidebar groups and page order are set in `GROUPS` at the top of the script. Every markdown file must be listed.
+- Titles come from `content/docs/SUMMARY.md`.
+- Links to `other-page.md` become `/docs/other-page`.
+- `{{passportRegistry}}`, `{{eventLog}}`, `{{network}}` and the other config keys are filled from
+  `config/contracts.config.js`. `live-contracts.md` uses them.
+- The two mermaid diagrams (lifecycle and architecture) render as responsive HTML diagrams defined in the script.
+- Visible docs text follows the copy rules below, so hyphenated words are written as separate words.
+
 ## Placeholder links
 
-Docs, Learn more and Telegram use `href="#"` with `data-placeholder`. Clicking one shows a small
-"Link coming soon" toast. Replace the `href` and remove the attribute when the real links exist.
+Telegram uses `href="#"` with `data-placeholder`. Clicking it shows a small "Link coming soon" toast.
+Replace the `href` and remove the attribute when the real link exists.
 
 ## Deploy to Vercel
 

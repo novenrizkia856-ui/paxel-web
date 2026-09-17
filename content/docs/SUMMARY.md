@@ -1,0 +1,15 @@
+# Table of contents
+
+* [Introduction](README.md)
+* [Overview](overview.md)
+* [Core Concepts](core-concepts.md)
+* [Data Model](data-model.md)
+* [System Architecture](architecture.md)
+* [Roles & Actors](roles-and-actors.md)
+* [Trust & Verification Model](trust-and-verification.md)
+* [Smart Contract Design](smart-contracts.md)
+* [API & SDK Concepts](api-and-sdk.md)
+* [Interoperability & Standards](interoperability-and-standards.md)
+* [Security & Compliance](security-and-compliance.md)
+* [MVP Scope: Two Day Build](mvp-scope.md)
+* [Glossary](glossary.md)

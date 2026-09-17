@@ -1,5 +1,17 @@
+import { existsSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
+
+const dir = import.meta.dirname;
+
+// Docs pages are generated into docs/ by scripts/build-docs.mjs before Vite runs.
+const docsPages = existsSync(resolve(dir, "docs"))
+  ? Object.fromEntries(
+      readdirSync(resolve(dir, "docs"))
+        .filter((file) => file.endsWith(".html"))
+        .map((file) => [`docs-${file.replace(/\.html$/, "")}`, resolve(dir, "docs", file)]),
+    )
+  : {};
 
 export default defineConfig({
   build: {
@@ -9,8 +21,9 @@ export default defineConfig({
     chunkSizeWarningLimit: 900,
     rollupOptions: {
       input: {
-        main: resolve(import.meta.dirname, "index.html"),
-        app: resolve(import.meta.dirname, "app.html"),
+        main: resolve(dir, "index.html"),
+        app: resolve(dir, "app.html"),
+        ...docsPages,
       },
     },
   },
