@@ -27,7 +27,36 @@ async function copyText(text) {
   if (!ok) throw new Error("Copy failed");
 }
 
+// Block explorers by chain id, used to link the deployed registry
+const EXPLORERS = {
+  4663: "https://robinhoodchain.blockscout.com",
+};
+
+// Once the registry is deployed, the hero note and footer say where the contracts live
+function initDeployStatus() {
+  const registry = String(CONTRACTS.passportRegistry ?? "").trim();
+  if (!registry) return;
+  const network = String(CONTRACTS.network ?? "").trim();
+  const where = network ? ` on ${network}` : "";
+
+  const note = document.querySelector("[data-deploy-note]");
+  if (note) note.textContent = `Contracts are live${where}.`;
+  const legal = document.querySelector("[data-deploy-legal]");
+  if (legal) legal.textContent = `Contracts live${where}.`;
+
+  const link = document.querySelector("[data-deploy-link]");
+  const explorer = EXPLORERS[String(CONTRACTS.chainId ?? "").trim()];
+  if (!link || !explorer) return;
+  link.href = `${explorer}/address/${registry}`;
+  link.target = "_blank";
+  link.rel = "noopener";
+  link.removeAttribute("data-placeholder");
+  const label = link.querySelector("[data-deploy-link-label]");
+  if (label) label.textContent = "View the registry";
+}
+
 export function initContractBar() {
+  initDeployStatus();
   const bar = document.getElementById("contract-bar");
   if (!bar) return;
 

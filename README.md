@@ -54,7 +54,18 @@ Every contract value lives in `config/contracts.config.js`. Nothing is hardcoded
 
 While `tokenAddress` is empty the hero shows **Coming soon** and the copy button stays hidden and disabled.
 Put the address in the file and redeploy. The hero shows the short form, and the copy button copies the full address.
-Only `tokenAddress` is read today. The other fields are placeholders for later phases.
+Once `passportRegistry` is set, the hero note and footer say the contracts are live on `network`, and the
+note button links to the registry on the block explorer for `chainId`. `tokenAddress` and
+`attestationRegistry` are not used yet.
+
+### Current deployment
+
+Robinhood Chain mainnet, chain id 4663.
+
+| Contract | Address |
+| --- | --- |
+| PaxelRegistry (`passportRegistry`, `accessControl`) | [`0x864427fd9De98a71eFFd239178726254E83054ed`](https://robinhoodchain.blockscout.com/address/0x864427fd9De98a71eFFd239178726254E83054ed) |
+| PaxelEventLog (`eventLog`) | [`0xB783c3b4119b2ed1290BC827727D1Aab8Ea6D985`](https://robinhoodchain.blockscout.com/address/0xB783c3b4119b2ed1290BC827727D1Aab8Ea6D985) |
 
 ## Design system
 

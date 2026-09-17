@@ -125,8 +125,11 @@
       Supporting: Identity, history and proof for tokenized real world assets. One permanent record.
       Primary button: Explore the passport
       Secondary button: Read the docs
-      Note: Contracts are not deployed yet.
-      Note button: Follow the build
+      Note, before deploy: Contracts are not deployed yet.
+      Note button, before deploy: Follow the build
+      Note, after deploy: Contracts are live on Robinhood Chain.
+      Note button, after deploy: View the registry
+      The note switches automatically when passportRegistry is set in config/contracts.config.js.
       Contract address sits below the supporting line.
       Visual: a large obsidian passport card floats and tilts toward the cursor, objects drift around it.
       Card: paxel. Asset passport. PXL 0001 7342.
@@ -165,8 +168,8 @@
           </div>
 
           <div class="hero-note" data-reveal style="--d:260ms">
-            <p>Contracts are not deployed yet.</p>
-            <a class="btn btn--darkgrey btn--sm" href="#" data-placeholder>Follow the build<svg class="btn-icon btn-icon--end" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            <p data-deploy-note>Contracts are not deployed yet.</p>
+            <a class="btn btn--darkgrey btn--sm" href="#" data-placeholder data-deploy-link><span data-deploy-link-label>Follow the build</span><svg class="btn-icon btn-icon--end" aria-hidden="true"><use href="#i-arrow"/></svg></a>
           </div>
         </div>
 
@@ -757,6 +760,7 @@
     Buttons: Read the docs. Explore the passport.
     Columns: Product, Passport, How it works, Roles. Build, Docs. Follow, Telegram.
     Legal: © 2026 Paxel. Contracts not yet deployed.
+    Legal, after deploy: © 2026 Paxel. Contracts live on Robinhood Chain.
     Toast for placeholder links: Link coming soon.
   -->
   <footer class="footer" id="docs">
@@ -803,7 +807,7 @@
       <div class="footer-legal">
         <span>© 2026 Paxel</span>
         <span class="footer-sep" aria-hidden="true">·</span>
-        <span>Contracts not yet deployed.</span>
+        <span data-deploy-legal>Contracts not yet deployed.</span>
       </div>
       <div class="footer-social">
         <a href="#" data-placeholder aria-label="Telegram"><svg aria-hidden="true"><use href="#i-telegram"/></svg></a>
