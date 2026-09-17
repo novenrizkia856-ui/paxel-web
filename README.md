@@ -6,6 +6,25 @@ verification layer for those assets. This repo holds the on chain registry and e
 Every supported asset gets one passport. A passport is opened once by its issuer and never deleted.
 Every change is a new entry in an append only history. Nothing is overwritten.
 
+## Deployment
+
+Robinhood Chain mainnet (chain id 4663), deployed 2026-09-17. Deployer and registry admin:
+`0x28d836E46c698Ccc530B4D981b089eC14bE39757`.
+
+| Contract | Address | Deploy transaction |
+| --- | --- | --- |
+| PaxelRegistry | [`0x864427fd9De98a71eFFd239178726254E83054ed`](https://robinhoodchain.blockscout.com/address/0x864427fd9De98a71eFFd239178726254E83054ed) | [`0x833c777c…5a2780`](https://robinhoodchain.blockscout.com/tx/0x833c777ce2bb3af0e60565ed1d1c4f68ab45edb1c2a3a234887087ec8e5a2780) |
+| PaxelEventLog | [`0xB783c3b4119b2ed1290BC827727D1Aab8Ea6D985`](https://robinhoodchain.blockscout.com/address/0xB783c3b4119b2ed1290BC827727D1Aab8Ea6D985) | [`0xc625a254…ea1348`](https://robinhoodchain.blockscout.com/tx/0xc625a2543995915c05c9240ecae2f7b4e679d570358c9a995f862eaba8ea1348) |
+
+`deployments/mainnet.json` holds the same values. Checked on chain after deploy: the deployer holds
+`DEFAULT_ADMIN_ROLE`, and `PaxelEventLog.registry()` returns the registry address.
+
+Source verification: Blockscout's API sits behind a Cloudflare challenge, so `forge verify-contract`
+could not reach it. Verify through the Blockscout UI with **Solidity (Standard JSON input)**, compiler
+`v0.8.28`, using `deployments/verify/PaxelRegistry.standard-input.json` and
+`deployments/verify/PaxelEventLog.standard-input.json`. The event log's constructor argument is in
+`deployments/verify/PaxelEventLog.constructor-args.txt`.
+
 ## Contracts
 
 | Contract | Purpose |
