@@ -1,196 +1,142 @@
-// Hero immersion: rivers of gold dust sweep across the whole hero, illustration objects float
-// at different depths, everything leans with the pointer and drifts on scroll.
+// Hero: one large passport card that floats, tilts toward the cursor and catches the light.
+// Toned illustration objects drift around the card only, and a fine champagne dust orbits it.
 const TAU = Math.PI * 2;
-const DUST_COLORS = ["#FFE45C", "#F6D04D", "#FFF3A6", "#F2C230", "#FFD84A", "#FFFFFF"];
-const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const DUST_COLORS = ["#C9B28A", "#B89B6E", "#A88F63", "#D9C7A3", "#8C7650"];
+const clamp = (v, a = -1, b = 1) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
 
-// Dust rivers as cubic curves in hero space (0..1). Wide and tall screens get their own flow.
-const RIVERS = {
-  wide: [
-    { p: [[-0.05, 1.04], [0.28, 0.8], [0.5, 1.1], [0.74, 0.7]], width: 0.06, share: 0.24 },
-    { p: [[0.52, 0.08], [0.72, -0.08], [1.02, 0.12], [0.98, 0.52]], width: 0.06, share: 0.16 },
-    { p: [[0.98, 0.52], [0.95, 0.95], [0.66, 1.05], [0.56, 0.78]], width: 0.06, share: 0.16 },
-    { p: [[0.56, 0.78], [0.44, 0.52], [0.5, 0.2], [0.52, 0.08]], width: 0.05, share: 0.14 },
-    { p: [[-0.04, 0.08], [0.12, 0.02], [0.3, 0.06], [0.46, -0.03]], width: 0.04, share: 0.08 },
-  ],
-  tall: [
-    { p: [[-0.1, 0.74], [0.3, 0.64], [0.7, 0.86], [1.1, 0.7]], width: 0.045, share: 0.28 },
-    { p: [[1.1, 0.84], [0.8, 1.02], [0.3, 0.92], [-0.1, 1.02]], width: 0.045, share: 0.28 },
-    { p: [[-0.05, 0.03], [0.3, -0.01], [0.7, 0.05], [1.05, 0.0]], width: 0.022, share: 0.08 },
-  ],
-};
-
-// Floating objects: x, y in percent of the hero, w in px at 1440 wide, z is depth (bigger is closer)
-const OBJECTS = {
-  wide: [
-    { src: "objects/ring-00.webp", x: 93, y: 13, w: 118, z: 0.9, r: 12 },
-    { src: "objects/ring-01.webp", x: 56, y: 86, w: 86, z: 1.1, r: -10 },
-    { src: "objects/ring-02.webp", x: 50, y: 12, w: 70, z: 0.6, r: 8 },
-    { src: "objects/ring-03.webp", x: 5, y: 97, w: 96, z: 1.2, r: -6 },
-    { src: "objects/ring-04.webp", x: 97, y: 74, w: 78, z: 0.7, r: 10 },
-    { src: "objects/card-01.webp", x: 53, y: 55, w: 46, z: 0.5, r: 0 },
-    { src: "objects/card-03.webp", x: 88, y: 93, w: 52, z: 1.0, r: 0 },
-    { src: "objects/card-02.webp", x: 62, y: 26, w: 40, z: 0.4, r: 14 },
-    { src: "objects/ring-08.webp", x: 44, y: 74, w: 30, z: 0.45, r: -18 },
-    { src: "objects/ring-07.webp", x: 74, y: 7, w: 34, z: 0.8, r: 20 },
-    { src: "objects/ring-15.webp", x: 2, y: 48, w: 28, z: 0.5, r: 0 },
-    { src: "objects/ring-14.webp", x: 36, y: 6, w: 30, z: 0.35, r: 0 },
-    { src: "stickers/plane.webp", x: 43, y: 93, w: 92, z: 1.3, r: -12 },
-    { src: "objects/ring-05.webp", x: 24, y: 96, w: 84, z: 0.9, r: 16 },
-  ],
-  tall: [
-    { src: "objects/ring-00.webp", x: 90, y: 71, w: 62, z: 0.9, r: 12 },
-    { src: "objects/ring-02.webp", x: 9, y: 73, w: 46, z: 0.7, r: -8 },
-    { src: "objects/ring-03.webp", x: 9, y: 97, w: 58, z: 1.1, r: -6 },
-    { src: "objects/card-03.webp", x: 91, y: 97, w: 34, z: 1.0, r: 0 },
-    { src: "objects/ring-08.webp", x: 93, y: 3, w: 20, z: 0.5, r: 0 },
-    { src: "objects/ring-07.webp", x: 6, y: 3, w: 22, z: 0.6, r: 0 },
-    { src: "stickers/plane.webp", x: 58, y: 99, w: 56, z: 1.2, r: -12 },
-  ],
-};
-
-function bezier(p, t) {
-  const u = 1 - t;
-  const x = u * u * u * p[0][0] + 3 * u * u * t * p[1][0] + 3 * u * t * t * p[2][0] + t * t * t * p[3][0];
-  const y = u * u * u * p[0][1] + 3 * u * u * t * p[1][1] + 3 * u * t * t * p[2][1] + t * t * t * p[3][1];
-  return [x, y];
-}
+// Positions are percent of the card stage. front sits above the card, z is parallax depth.
+const OBJECTS = [
+  { src: "objects/card-00.webp", x: 62, y: 7, w: 12, z: 0.8, r: 8 },
+  { src: "objects/ring-00.webp", x: 93, y: 14, w: 15, z: 0.5, r: 14, far: true },
+  { src: "objects/ring-01.webp", x: 9, y: 24, w: 12, z: 1.1, r: -12, front: true },
+  { src: "objects/card-01.webp", x: 28, y: 12, w: 7, z: 0.6, r: 0 },
+  { src: "objects/ring-02.webp", x: 95, y: 62, w: 11, z: 1.2, r: 10, front: true },
+  { src: "objects/card-03.webp", x: 76, y: 90, w: 8, z: 1.0, r: 0, front: true },
+  { src: "objects/ring-03.webp", x: 14, y: 84, w: 14, z: 0.9, r: -8 },
+  { src: "objects/card-02.webp", x: 3, y: 56, w: 5.5, z: 0.4, r: 16, far: true },
+  { src: "objects/ring-04.webp", x: 46, y: 95, w: 11, z: 1.3, r: -6, front: true },
+  { src: "stickers/plane.webp", x: 88, y: 38, w: 12, z: 0.7, r: -14 },
+  { src: "objects/ring-08.webp", x: 36, y: 80, w: 4, z: 0.5, r: -18, far: true },
+];
 
 export function initHeroFx({ reduced }) {
   const hero = document.querySelector("[data-hero]");
-  if (!hero) return;
-  const back = hero.querySelector(".hero-dust--back");
-  const front = hero.querySelector(".hero-dust--front");
-  const layer = hero.querySelector(".hero-objects");
+  const stage = hero?.querySelector("[data-card-stage]");
+  if (!stage) return;
+  const card = stage.querySelector("[data-card3d]");
+  const shadow = stage.querySelector(".card-shadow");
+  const canvas = stage.querySelector(".card-dust");
+  const layer = stage.querySelector(".card-objects");
   const copy = hero.querySelector(".hero-copy");
-  const card = hero.querySelector(".hero-visual");
-  const bctx = back.getContext("2d");
-  const fctx = front.getContext("2d");
+  const visual = hero.querySelector(".hero-visual");
+  const ctx = canvas.getContext("2d");
 
-  let mode = "", W = 0, H = 0, dpr = 1, dust = [], stars = [], objects = [];
-  const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+  const objects = OBJECTS.map((o, i) => {
+    const img = document.createElement("img");
+    img.src = `assets/img/${o.src}`;
+    img.alt = "";
+    img.decoding = "async";
+    img.className = "card-object" + (o.front ? " is-front" : "") + (o.far ? " is-far" : "");
+    img.style.left = `${o.x}%`;
+    img.style.top = `${o.y}%`;
+    img.style.width = `${o.w}%`;
+    layer.append(img);
+    return { ...o, img, phase: i * 1.37 };
+  });
 
-  const build = () => {
-    const r = hero.getBoundingClientRect();
-    W = r.width; H = r.height;
+  const dust = Array.from({ length: 520 }, () => ({
+    a: Math.random() * TAU,
+    r: 0.3 + Math.random() * 0.2 + (Math.random() - 0.5) * 0.12,
+    speed: (0.02 + Math.random() * 0.06) * (Math.random() < 0.5 ? 1 : 0.6),
+    size: Math.random() < 0.08 ? 1.8 + Math.random() * 1.4 : 0.6 + Math.random() * 1.1,
+    color: DUST_COLORS[(Math.random() * DUST_COLORS.length) | 0],
+    phase: Math.random() * TAU,
+    lift: (Math.random() - 0.5) * 0.1,
+  }));
+
+  let W = 0, H = 0, dpr = 1;
+  const resize = () => {
+    const r = canvas.getBoundingClientRect();
     dpr = Math.min(window.devicePixelRatio || 1, 2);
-    for (const c of [back, front]) { c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); }
-    const next = W < 900 ? "tall" : "wide";
-    if (next === mode) return;
-    mode = next;
-
-    const rivers = RIVERS[mode];
-    const total = mode === "wide" ? 2600 : 1200;
-    dust = [];
-    rivers.forEach((river) => {
-      const n = Math.round(total * river.share);
-      for (let i = 0; i < n; i++) {
-        dust.push({
-          river, t: Math.random(),
-          off: ((Math.random() + Math.random() + Math.random()) / 1.5 - 1) * river.width,
-          speed: 0.006 + Math.random() * 0.018,
-          size: Math.random() < 0.06 ? 2.4 + Math.random() * 1.8 : 0.7 + Math.random() * 1.5,
-          z: 0.3 + Math.random() * 0.9,
-          color: DUST_COLORS[(Math.random() * DUST_COLORS.length) | 0],
-          phase: Math.random() * TAU,
-          front: Math.random() < 0.12,
-        });
-      }
-    });
-    stars = Array.from({ length: mode === "wide" ? 260 : 120 }, () => ({
-      x: Math.random(), y: Math.random(), size: 0.5 + Math.random() * 1.3, phase: Math.random() * TAU, z: 0.2 + Math.random() * 0.5,
-    }));
-
-    layer.replaceChildren();
-    const scale = mode === "wide" ? Math.min(1.25, Math.max(0.75, W / 1440)) : Math.max(0.8, W / 390);
-    objects = OBJECTS[mode].map((o, i) => {
-      const img = document.createElement("img");
-      img.src = `assets/img/${o.src}`;
-      img.alt = "";
-      img.decoding = "async";
-      img.className = "hero-object";
-      img.style.width = `${Math.round(o.w * scale)}px`;
-      img.style.left = `${o.x}%`;
-      img.style.top = `${o.y}%`;
-      if (o.z < 0.5) img.classList.add("is-far");
-      layer.append(img);
-      return { ...o, img, phase: i * 1.3 };
-    });
+    W = r.width; H = r.height;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
   };
+  resize();
+  new ResizeObserver(resize).observe(stage);
+
+  // Pointer, relative to the card stage centre, in -1..1
+  const target = { x: 0, y: 0 };
+  const cur = { x: 0, y: 0 };
+  let lastMove = -1e9;
+  const finePointer = window.matchMedia("(pointer: fine)").matches;
+  if (finePointer && !reduced) {
+    window.addEventListener("pointermove", (e) => {
+      const r = stage.getBoundingClientRect();
+      target.x = clamp((e.clientX - (r.left + r.width / 2)) / (r.width * 0.75));
+      target.y = clamp((e.clientY - (r.top + r.height / 2)) / (r.height * 0.75));
+      lastMove = performance.now();
+    }, { passive: true });
+    document.addEventListener("pointerleave", () => { target.x = 0; target.y = 0; });
+  }
 
   const draw = (time) => {
     const s = time / 1000;
-    const scrollY = window.scrollY;
-    const leave = clamp(scrollY / Math.max(1, H));
-    pointer.x += (pointer.tx - pointer.x) * 0.06;
-    pointer.y += (pointer.ty - pointer.y) * 0.06;
+    // When the cursor rests, the card sways on its own
+    const idle = clamp((time - lastMove - 1500) / 1500, 0, 1);
+    const tx = lerp(target.x, Math.sin(s * 0.45) * 0.45, finePointer ? idle : 1);
+    const ty = lerp(target.y, Math.cos(s * 0.38) * 0.35, finePointer ? idle : 1);
+    cur.x = lerp(cur.x, reduced ? 0 : tx, 0.08);
+    cur.y = lerp(cur.y, reduced ? 0 : ty, 0.08);
 
-    bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    fctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    bctx.clearRect(0, 0, W, H);
-    fctx.clearRect(0, 0, W, H);
+    const float = reduced ? 0 : Math.sin(s * 1.1) * 10;
+    card.style.setProperty("--ry", `${(-16 + cur.x * 22).toFixed(2)}deg`);
+    card.style.setProperty("--rx", `${(16 - cur.y * 16).toFixed(2)}deg`);
+    card.style.setProperty("--lift", `${float.toFixed(1)}px`);
+    card.style.setProperty("--shift-x", `${(cur.x * 14).toFixed(1)}px`);
+    card.style.setProperty("--gx", `${(35 + cur.x * 40).toFixed(1)}%`);
+    card.style.setProperty("--gy", `${(25 + cur.y * 35).toFixed(1)}%`);
+    card.style.setProperty("--glare", `${(cur.x * 30 - cur.y * 10).toFixed(1)}%`);
+    shadow.style.setProperty("--shadow-x", `${(-cur.x * 24).toFixed(1)}px`);
+    shadow.style.setProperty("--shadow-s", (1 - float / 90).toFixed(3));
 
-    for (const st of stars) {
-      bctx.globalAlpha = (0.25 + 0.35 * Math.sin(s * 1.6 + st.phase)) * (1 - leave * 0.5);
-      bctx.fillStyle = "#FFF3A6";
-      bctx.fillRect(st.x * W + pointer.x * 20 * st.z, st.y * H + pointer.y * 14 * st.z - scrollY * 0.1 * st.z, st.size, st.size);
-    }
-
-    const boost = 1 + leave * 3;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    const cx = W / 2 + cur.x * 10, cy = H / 2;
     for (const p of dust) {
-      if (!reduced) p.t += (p.speed / 60) * boost;
-      if (p.t > 1) p.t -= 1;
-      const [x, y] = bezier(p.river.p, p.t);
-      const [x2, y2] = bezier(p.river.p, Math.min(1, p.t + 0.01));
-      const dx = x2 - x, dy = y2 - y, len = Math.hypot(dx, dy) || 1;
-      const wob = Math.sin(s * 0.9 + p.phase) * 0.006;
-      const px = (x - (dy / len) * (p.off + wob)) * W + pointer.x * 36 * p.z;
-      const py = (y + (dx / len) * (p.off + wob)) * H + pointer.y * 24 * p.z - scrollY * 0.2 * p.z;
-      const fade = Math.min(1, p.t * 12, (1 - p.t) * 12);
-      // keep the foreground layer clear of the headline and buttons
-      const overCopy = mode === "wide" ? px < W * 0.5 && py > H * 0.1 && py < H * 0.93 : py < H * 0.64;
-      const ctx = p.front && !overCopy ? fctx : bctx;
-      ctx.globalAlpha = fade * (0.55 + 0.45 * Math.sin(s * 2.2 + p.phase));
+      if (!reduced) p.a += (p.speed / 60) * 0.5;
+      const rr = p.r + Math.sin(s * 0.7 + p.phase) * 0.015;
+      const x = cx + Math.cos(p.a) * rr * W;
+      const y = cy + Math.sin(p.a) * rr * H * 0.62 + p.lift * H - Math.cos(p.a) * H * 0.08;
+      ctx.globalAlpha = 0.35 + 0.35 * Math.sin(s * 1.8 + p.phase);
       ctx.fillStyle = p.color;
       ctx.beginPath();
-      ctx.arc(px, py, p.size * (p.front && !overCopy ? 1.5 : 1), 0, TAU);
+      ctx.arc(x, y, p.size, 0, TAU);
       ctx.fill();
     }
-    bctx.globalAlpha = 1;
-    fctx.globalAlpha = 1;
+    ctx.globalAlpha = 1;
 
     for (const o of objects) {
-      const bob = reduced ? 0 : Math.sin(s * 0.9 + o.phase) * 10;
-      const rot = o.r + (reduced ? 0 : Math.sin(s * 0.6 + o.phase) * 8);
-      const tx = pointer.x * 40 * o.z;
-      const ty = pointer.y * 28 * o.z + bob - scrollY * 0.35 * o.z;
-      o.img.style.transform = `translate(-50%, -50%) translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px) rotate(${rot.toFixed(1)}deg)`;
+      const bob = reduced ? 0 : Math.sin(s * 0.9 + o.phase) * 9;
+      const rot = o.r + (reduced ? 0 : Math.sin(s * 0.55 + o.phase) * 7);
+      const px = cur.x * 30 * o.z;
+      const py = cur.y * 22 * o.z + bob;
+      o.img.style.transform = `translate(-50%, -50%) translate(${px.toFixed(1)}px, ${py.toFixed(1)}px) rotate(${rot.toFixed(1)}deg)`;
     }
 
-    // Leaving the hero: copy lifts and fades, the card sinks back
-    if (copy) {
-      copy.style.transform = `translateY(${(-leave * 90).toFixed(1)}px)`;
-      copy.style.opacity = (1 - leave * 0.9).toFixed(3);
-    }
-    if (card) {
-      card.style.transform = `translateY(${(leave * 60).toFixed(1)}px) scale(${(1 - leave * 0.08).toFixed(3)})`;
-      card.style.opacity = (1 - leave * 0.6).toFixed(3);
-    }
+    // Leaving the hero: the copy lifts away and the card stage sinks back
+    const leave = clamp(window.scrollY / Math.max(1, hero.offsetHeight), 0, 1);
+    copy.style.transform = `translateY(${(-leave * 80).toFixed(1)}px)`;
+    copy.style.opacity = (1 - leave * 0.9).toFixed(3);
+    visual.style.transform = `translateY(${(leave * 70).toFixed(1)}px) scale(${(1 - leave * 0.1).toFixed(3)})`;
+    visual.style.opacity = (1 - leave * 0.7).toFixed(3);
   };
-
-  build();
-  new ResizeObserver(() => { build(); if (reduced) draw(0); }).observe(hero);
 
   if (reduced) {
     draw(0);
+    new ResizeObserver(() => draw(0)).observe(stage);
     return;
-  }
-
-  if (window.matchMedia("(pointer: fine)").matches) {
-    window.addEventListener("pointermove", (e) => {
-      pointer.tx = e.clientX / window.innerWidth - 0.5;
-      pointer.ty = e.clientY / window.innerHeight - 0.5;
-    }, { passive: true });
   }
 
   let running = false;

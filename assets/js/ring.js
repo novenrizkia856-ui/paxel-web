@@ -3,7 +3,7 @@
 import { WIDE_PATH, TALL_PATH, WIDE_OBJECTS } from "./ring-data.js";
 
 const TAU = Math.PI * 2;
-const DUST_COLORS = ["#FFE45C", "#F6D04D", "#FFF3A6", "#F2C230", "#FFD84A", "#FFFFFF"];
+const DUST_COLORS = ["#C9B28A", "#B89B6E", "#D9C7A3", "#A88F63", "#E4D6BC", "#8C7650"];
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 
 function loop(points) {

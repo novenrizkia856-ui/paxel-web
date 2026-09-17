@@ -20,12 +20,12 @@ Or `npx serve .`. Then open http://localhost:5210.
 index.html                 Page markup. Copy for each section sits in a comment above it.
 assets/css/main.css        Design tokens, layout and motion.
 assets/js/main.js          Boots every module.
-assets/js/contract-bar.js  Token address bar, reads config/contracts.config.js.
+assets/js/contract-bar.js  Token address block in the hero, reads config/contracts.config.js.
 assets/js/nav.js           Static nav, floating glass nav, mobile menu.
 assets/js/reveal.js        Fade and rise entrances on scroll.
 assets/js/tilt.js          Pointer tilt on the passport preview card.
 assets/js/play.js          Runs looping scenes and videos only while they are on screen.
-assets/js/hero-fx.js       Hero dust rivers, floating objects, pointer and scroll parallax.
+assets/js/hero-fx.js       Hero passport card: cursor tilt, sheen, floating objects, orbiting dust.
 assets/js/ring.js          Hands section: dust stream, objects riding the loop, hands closing in.
 assets/js/ring-data.js     Loop path and object positions traced from the hands illustration.
 assets/js/scroll-fx.js     Section transitions. Sets --p on [data-fx] elements as they scroll in.
@@ -52,38 +52,36 @@ Every contract value lives in `config/contracts.config.js`. Nothing is hardcoded
 | `accessControl` | Role manager |
 | `attestationRegistry` | Attestation registry |
 
-While `tokenAddress` is empty the bar shows **Coming soon** and the copy button stays hidden and disabled.
-Put the address in the file and redeploy. The bar shows it, shortens it on phones, and the copy button turns on.
+While `tokenAddress` is empty the hero shows **Coming soon** and the copy button stays hidden and disabled.
+Put the address in the file and redeploy. The hero shows the short form, and the copy button copies the full address.
 Only `tokenAddress` is read today. The other fields are placeholders for later phases.
 
 ## Design system
 
-The look follows the reference build the team contributed to. Paxel keeps its own name, logo, copy and UI.
-
-Reused reference assets: the sticker icons (`stickers/`, 144px originals), the hands illustration split into layers
-(`hands-*.webp`), the watching eyes and crowd animations (`assets/media/faces-*`), and the hand holding a card
-(`assets/media/hero-card.mp4`). The card animation was edited frame by frame so the card carries the Paxel wordmark,
-and its white paper background was replaced with the page navy so it sits in the dark hero. Reference images that show another brand's logo, name or
-app screens are not used.
+Restrained and institutional. White pages with obsidian type, graphite structure, champagne gold accents
+and platinum lines.
 
 | Token | Value | Use |
 | --- | --- | --- |
-| Navy | `#09101C`, `#131D2F`, `#1B273D` | Page, dark buttons, dashed lines on dark |
-| White sheets | `#FFFFFF`, 24px radius | Content panels over the navy page |
-| Blue | `#2A4AF5` | Primary buttons |
-| Purple | `#7140FD` | Contract address bar, Attest accent |
-| Orange, teal | `#F6B03C`, `#2A799B` | Issue and Record accents |
-| Neutrals | `#647084`, `#A1ABBD`, `#DCE0E5`, `#E7EAEE`, `#F0F2F5` | Secondary text, borders |
+| Obsidian | `#0B0B0D` | Type, the passport card, the dark preview band |
+| Graphite | `#2E3036`, `#4A4D55`, `#6E7078` | Secondary type, icons, quiet surfaces |
+| Champagne gold | `#C9B28A`, deep `#A88F63`, light `#E9DDC6` | Primary button, chip, accents |
+| Platinum | `#E4E3DF`, light `#F4F3EF` | Borders, dividers, quiet fills |
+| White | `#FFFFFF` | Page background |
 
-Type: Inter. Scale 13, 15, 19, 27, 40, 64, 88 with the reference tracking. JetBrains Mono for hashes.
+Type: Manrope. JetBrains Mono for addresses and ids.
+
+The reused illustrations (stickers, objects, hands) are toned to champagne and graphite in the image files
+themselves, and the eyes and crowd videos get a matching sepia filter, so the page reads as one system.
 
 Tokens are CSS variables at the top of `assets/css/main.css`.
 
 ## Layout and motion
 
-- Purple bar on top carries the token contract address.
-- Dark hero with a hand holding the Paxel card. Rivers of gold dust and illustration objects fill the hero
-  at several depths and lean with the pointer. On scroll the copy lifts away and the card sinks back.
+- White hero. The token contract address sits below the supporting line.
+- A large obsidian passport card with a champagne chip floats, tilts toward the cursor and catches the light.
+  Toned illustration objects drift around the card only, and fine champagne dust orbits it.
+  On scroll the copy lifts away and the card sinks back.
 - White rounded sheets rise over the section above as you scroll. The problem block sits inside the hands
   illustration: gold dust streams along the loop, the coins and gems ride it, and the hands close in.
   Then a sticker icon grid and four feature blocks for How it works that lift into place.
