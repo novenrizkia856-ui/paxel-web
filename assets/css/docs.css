@@ -39,7 +39,8 @@ body.docs.nav-locked { overflow: hidden; }
   margin-inline: auto;
   padding-inline: 16px;
 }
-.docs-bar .brand { font-size: 22px; margin-right: 0; }
+.docs-bar .brand { margin-right: 0; }
+.docs-bar .brand-lockup { width: 97px; height: 23px; }
 .docs-badge {
   display: inline-flex;
   align-items: center;
@@ -244,6 +245,15 @@ kbd {
 .crumbs .i { width: 14px; height: 14px; color: var(--neutral-40); }
 .crumbs [aria-current] { color: var(--graphite-2); }
 
+/* Brand banner, docs home only. */
+.docs-banner {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 24px;
+  border-radius: 14px;
+  background: var(--obsidian);
+}
 .doc-title {
   margin-top: 12px;
   font-size: 2.125rem;

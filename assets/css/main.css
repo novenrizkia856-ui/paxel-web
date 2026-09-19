@@ -5,6 +5,7 @@
  * champagne gold for the few things that deserve attention, platinum for lines and quiet surfaces.
  *   obsidian   #0B0B0D  type, dark surfaces, the passport card
  *   graphite   #2E3036  secondary surfaces and icons
+ *   orange     #FF6702  the brand colour, carried by the Paxel mark and the sticker
  *   champagne  #C9B28A  primary action and accents, deep #A88F63, light #E9DDC6
  *   platinum   #E4E3DF  borders and quiet fills, light #F4F3EF
  *   type       Manrope. Scale 13, 15, 19, 27, 40, 64, 88.
@@ -17,6 +18,8 @@
   --graphite: #2e3036;
   --graphite-2: #4a4d55;
   --slate: #6e7078;
+  --brand: #ff6702;
+  --brand-deep: #e25a00;
   --champagne: #c9b28a;
   --champagne-deep: #a88f63;
   --champagne-light: #e9ddc6;
@@ -37,7 +40,7 @@
   --blue: #a88f63;
   --blue-hover: #8c7650;
   --purple: #2e3036;
-  --orange: #c9b28a;
+  --orange: var(--brand);
   --teal: #6e7078;
   --pink: #8c7650;
   --green: #4a4d55;
@@ -270,7 +273,8 @@ b { font-weight: 600; }
   font-weight: 700;
   letter-spacing: -0.04em;
 }
-.brand-logo { width: 28px; height: 28px; }
+.brand-logo { width: 45px; height: 28px; color: var(--brand); }
+.brand-lockup { display: block; width: 110px; height: 26px; color: var(--obsidian); }
 
 .nav-links { display: none; align-items: center; }
 .nav-links a {
@@ -356,7 +360,7 @@ b { font-weight: 600; }
 .nav-float.is-visible { opacity: 1; pointer-events: auto; }
 .nav-float .nav-bar { height: 48px; padding-inline: 8px; gap: 8px; }
 .nav-float .brand { font-size: 20px; margin-right: 12px; }
-.nav-float .brand-logo { width: 24px; height: 24px; }
+.nav-float .brand-lockup { width: 93px; height: 22px; }
 .nav-float .nav-links a { padding: 8px 10px; }
 
 /* Hero */
@@ -521,7 +525,7 @@ b { font-weight: 600; }
   align-items: center;
   gap: 2.4cqw;
 }
-.card3d-mark { width: 8.5cqw; height: 8.5cqw; color: #d9c9a6; }
+.card3d-mark { width: 13cqw; height: 8.2cqw; color: var(--white); }
 .card3d-brand span {
   writing-mode: vertical-rl;
   font-size: 7cqw;
@@ -1157,7 +1161,7 @@ b { font-weight: 600; }
   box-shadow: var(--shadow-3), 0 0 0 28px rgb(255 255 255 / 0.4), 0 0 0 70px rgb(255 255 255 / 0.25);
   transform: translate(-50%, -50%);
 }
-.orbit-core .brand-logo { width: 64px; height: 64px; }
+.orbit-core .brand-logo { width: 102px; height: 64px; }
 .split-art::before {
   content: "";
   position: absolute;
@@ -1207,7 +1211,7 @@ b { font-weight: 600; }
 @media (max-width: 479px) {
   .eco-chip { height: 32px; padding: 0 12px 0 10px; font-size: 13px; }
   .orbit-core { width: 88px; height: 88px; }
-  .orbit-core .brand-logo { width: 48px; height: 48px; }
+  .orbit-core .brand-logo { width: 76px; height: 48px; }
 }
 
 .split-copy {
@@ -1260,7 +1264,7 @@ b { font-weight: 600; }
   border-bottom: 1px dashed var(--platinum);
 }
 @media (min-width: 1024px) { .cta { border-bottom: 0; } }
-.cta-logo { width: 80px; height: 80px; }
+.cta-logo { width: 96px; height: 60px; color: var(--brand); }
 .cta .h-88 { padding: 20px 0 12px; }
 @media (min-width: 1024px) { .cta .h-88 { padding-bottom: 20px; } }
 .cta .btn-group { margin-top: 32px; }
@@ -1280,7 +1284,7 @@ b { font-weight: 600; }
     background: linear-gradient(180deg, transparent 0%, var(--white));
   }
 }
-.footer .brand { font-size: 24px; }
+.footer .brand-lockup { width: 127px; height: 30px; }
 .footer-h { display: block; margin-bottom: 12px; color: var(--neutral-50); font-size: 13px; }
 .footer-col ul { display: grid; gap: 4px; }
 .footer-col ul a {

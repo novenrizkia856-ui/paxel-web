@@ -49,7 +49,8 @@ assets/js/app/chain.js     RPC, explorer and deploy block per chain id.
 assets/js/app/abi.js       PaxelRegistry and PaxelEventLog ABIs from paxel-contracts.
 public/assets/img/         Hands illustration, stickers and cut out objects.
 public/assets/media/       Looping videos (mp4) and their poster images.
-public/                    Favicon, robots.txt and the 404 page.
+public/assets/brand/       Logo, mark, banner and social card. See Brand assets.
+public/                    Favicon, app icon, robots.txt and the 404 page.
 content/docs/               Docs source, one markdown file per page.
 scripts/build-docs.mjs     Renders content/docs into docs/*.html and the search index. Runs before dev and build.
 assets/css/docs.css        Docs layout: sidebar, article, on this page, search.
@@ -58,6 +59,39 @@ config/contracts.config.js Network and contract addresses.
 vite.config.js             Two page build. Hashed bundles go to /bundle.
 vercel.json                Vite build, clean URLs, cache and security headers.
 ```
+
+## Brand assets
+
+Everything lives in `public/assets/brand/`. The page chrome uses the vector versions; the PNGs are there for
+anything off the site (decks, partner kits, app stores).
+
+| File | Use |
+| --- | --- |
+| `paxel-logo.svg` | Full lockup. Orange mark, wordmark in `currentColor`, so it works on light and dark. |
+| `paxel-logo-white.svg` | Full lockup, all white, for dark or orange surfaces. |
+| `paxel-mark.svg` | Mark on its own, in `currentColor`. |
+| `paxel-mark-orange.svg` | Mark locked to brand orange. |
+| `paxel-logo-light/dark/mono-white.png` | Raster lockups at 1200px, for anything that cannot take SVG. |
+| `paxel-mark-black/orange/white.png` | Raster marks at 640px. |
+| `paxel-banner.webp` / `.png` | 3:1 brand banner. On the docs home, and sized for an X header. |
+| `paxel-og.png` | 1200x630 social card, referenced by `og:image` and `twitter:image`. |
+| `icon-192.png`, `icon-512.png` | App icons, white mark on an orange tile. |
+
+`public/favicon.svg` and `public/apple-touch-icon.png` carry the same orange tile.
+
+In the pages the logo is an SVG sprite, not an `<img>`. Two symbols are defined once per entry point
+(`index.html`, `app.html`, the template in `scripts/build-docs.mjs`):
+
+- `#logo-lockup` — mark plus wordmark, for the header and footer brand. Class `.brand-lockup`.
+- `#logo` — the mark alone, for illustrations and small spots. Class `.brand-logo`.
+
+Both take their colour from the element that uses them, so a white mark on a dark surface is
+`<use href="#logo" color="#fff"/>` and nothing else. The mark is 1.593:1 and the lockup 4.231:1, so
+any new placement needs a box in that ratio, not a square. Brand orange is `#FF6702`, the `--brand` token
+in `assets/css/main.css`.
+
+`og:image` and `twitter:image` are site relative. Once the production domain is fixed, make them absolute
+so every crawler resolves them.
 
 ## Contracts
 

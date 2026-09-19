@@ -26,7 +26,8 @@ body.app { background: var(--platinum-light); }
   margin-inline: auto;
   padding-inline: 16px;
 }
-.app-bar .brand { font-size: 22px; margin-right: 4px; }
+.app-bar .brand { margin-right: 4px; }
+.app-bar .brand-lockup { width: 101px; height: 24px; }
 .app-nav { display: none; gap: 4px; }
 .app-nav a {
   padding: 8px 10px;
