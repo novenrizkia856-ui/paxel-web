@@ -2,12 +2,12 @@
  * Paxel design system
  *
  * Restrained and institutional. White pages, obsidian type, graphite structure,
- * champagne gold for the few things that deserve attention, platinum for lines and quiet surfaces.
+ * Varp orange for the few things that deserve attention, warm cream for lines and quiet surfaces.
  *   obsidian   #0B0B0D  type, dark surfaces, the passport card
  *   graphite   #2E3036  secondary surfaces and icons
- *   orange     #FF6702  the brand colour, carried by the Paxel mark and the sticker
- *   champagne  #C9B28A  primary action and accents, deep #A88F63, light #E9DDC6
- *   platinum   #E4E3DF  borders and quiet fills, light #F4F3EF
+ *   orange     #EA580C  the brand colour, carried by the Paxel mark and the sticker
+ *   champagne  #EA580C  primary action and accents, deep #C2410C, light #FFEDD5
+ *   platinum   #FFEDD5  borders and quiet fills, light #FFF7ED
  *   type       Manrope. Scale 13, 15, 19, 27, 40, 64, 88.
  *
  * Illustrations are toned to the same palette so the page reads as one system.
@@ -18,13 +18,13 @@
   --graphite: #2e3036;
   --graphite-2: #4a4d55;
   --slate: #6e7078;
-  --brand: #ff6702;
-  --brand-deep: #e25a00;
-  --champagne: #c9b28a;
-  --champagne-deep: #a88f63;
-  --champagne-light: #e9ddc6;
-  --platinum: #e4e3df;
-  --platinum-light: #f4f3ef;
+  --brand: #ea580c;
+  --brand-deep: #c2410c;
+  --champagne: #ea580c;
+  --champagne-deep: #c2410c;
+  --champagne-light: #ffedd5;
+  --platinum: #ffedd5;
+  --platinum-light: #fff7ed;
 
   --navy-100: #0b0b0d;
   --navy-90: #1a1b1f;
@@ -32,19 +32,19 @@
   --neutral-50: #6e7078;
   --neutral-40: #a3a4a8;
   --neutral-30: #d2d1cc;
-  --neutral-20: #e4e3df;
+  --neutral-20: #ffedd5;
   --neutral-10: #efeeea;
   --neutral-5: #f6f5f2;
   --white: #ffffff;
 
-  --blue: #a88f63;
-  --blue-hover: #8c7650;
+  --blue: #c2410c;
+  --blue-hover: #9a3412;
   --purple: #2e3036;
   --orange: var(--brand);
   --teal: #6e7078;
-  --pink: #8c7650;
+  --pink: #9a3412;
   --green: #4a4d55;
-  --success: #8c7650;
+  --success: #9a3412;
 
   --font: "Manrope", -apple-system, "Segoe UI", system-ui, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -164,8 +164,8 @@ b { font-weight: 600; }
 .btn--icon { width: 40px; padding: 0; }
 .btn--icon svg { width: 18px; height: 18px; }
 
-.btn--primary { background: var(--champagne); color: var(--obsidian); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35), 0 8px 24px -12px rgb(168 143 99 / 0.8); }
-.btn--primary:hover { background: #bfa57b; }
+.btn--primary { background: var(--champagne); color: var(--obsidian); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35), 0 8px 24px -12px rgb(194 65 12 / 0.8); }
+.btn--primary:hover { background: #f97316; }
 
 .btn--darkgrey { background: var(--platinum-light); border-color: var(--platinum); color: var(--obsidian); }
 .btn--darkgrey:hover { background: var(--platinum); }
@@ -505,7 +505,7 @@ b { font-weight: 600; }
     radial-gradient(120% 90% at 18% 0%, #34353b 0%, transparent 55%),
     linear-gradient(135deg, #1d1e22 0%, #0b0b0d 46%, #151619 72%, #26272c 100%);
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.09), inset 0 1px 0 rgb(255 255 255 / 0.14);
-  color: #d8d2c4;
+  color: #e7e5e4;
 }
 .card3d-grain {
   position: absolute;
@@ -532,7 +532,7 @@ b { font-weight: 600; }
   font-weight: 800;
   letter-spacing: -0.01em;
   line-height: 1;
-  background: linear-gradient(180deg, #f1e6cf 0%, #c9b28a 55%, #a88f63 100%);
+  background: linear-gradient(180deg, #ffedd5 0%, #ea580c 55%, #c2410c 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -554,7 +554,7 @@ b { font-weight: 600; }
   font-family: var(--mono);
   font-size: 3.7cqw;
   letter-spacing: 0.14em;
-  color: #cfc7b6;
+  color: #fdba74;
   text-shadow: 0 1px 0 rgb(0 0 0 / 0.9), 0 -1px 0 rgb(255 255 255 / 0.08);
 }
 .card3d-sheen {
@@ -595,7 +595,7 @@ b { font-weight: 600; }
 .own {
   position: relative;
   padding: 96px 0 96px;
-  background: radial-gradient(70% 45% at 50% 85%, rgb(201 178 138 / 0.09), transparent 75%);
+  background: radial-gradient(70% 45% at 50% 85%, rgb(234 88 12 / 0.09), transparent 75%);
 }
 @media (min-width: 900px) { .own { padding: 160px 0 120px; } }
 .own-stage {
@@ -1089,8 +1089,8 @@ b { font-weight: 600; }
   position: absolute;
   inset: -20%;
   background-image:
-    radial-gradient(#efe4cf 1.4px, transparent 2px),
-    radial-gradient(#d9c7a3 1px, transparent 1.6px);
+    radial-gradient(#fed7aa 1.4px, transparent 2px),
+    radial-gradient(#fdba74 1px, transparent 1.6px);
   background-size: 34px 29px, 21px 25px;
   background-position: 0 0, 11px 7px;
   opacity: 0.7;
@@ -1143,9 +1143,9 @@ b { font-weight: 600; }
   min-height: 420px;
   background:
     radial-gradient(circle at 18% 22%, rgb(46 48 54 / 0.18), transparent 42%),
-    radial-gradient(circle at 82% 78%, rgb(201 178 138 / 0.24), transparent 44%),
+    radial-gradient(circle at 82% 78%, rgb(234 88 12 / 0.24), transparent 44%),
     radial-gradient(circle at 80% 18%, rgb(110 112 120 / 0.16), transparent 40%),
-    radial-gradient(circle at 25% 85%, rgb(168 143 99 / 0.12), transparent 40%),
+    radial-gradient(circle at 25% 85%, rgb(194 65 12 / 0.12), transparent 40%),
     var(--neutral-5);
   overflow: hidden;
 }
@@ -1167,8 +1167,8 @@ b { font-weight: 600; }
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(#d9c7a3 1.3px, transparent 1.9px),
-    radial-gradient(#efe4cf 1px, transparent 1.5px);
+    radial-gradient(#fdba74 1.3px, transparent 1.9px),
+    radial-gradient(#fed7aa 1px, transparent 1.5px);
   background-size: 26px 22px, 17px 19px;
   background-position: 0 0, 9px 6px;
   opacity: 0.55;

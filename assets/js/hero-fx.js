@@ -1,7 +1,7 @@
 // Hero: one large passport card that floats, tilts toward the cursor and catches the light.
 // Toned illustration objects drift around the card only, and a fine champagne dust orbits it.
 const TAU = Math.PI * 2;
-const DUST_COLORS = ["#C9B28A", "#B89B6E", "#A88F63", "#D9C7A3", "#8C7650"];
+const DUST_COLORS = ["#EA580C", "#C2410C", "#C2410C", "#FDBA74", "#9A3412"];
 const clamp = (v, a = -1, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
 

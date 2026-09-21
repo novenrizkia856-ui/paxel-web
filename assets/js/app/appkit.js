@@ -36,7 +36,7 @@ export const modal = createAppKit({
   themeMode: "light",
   themeVariables: {
     "--w3m-accent": "#0b0b0d",
-    "--w3m-color-mix": "#c9b28a",
+    "--w3m-color-mix": "#ea580c",
     "--w3m-color-mix-strength": 8,
     "--w3m-font-family": "Manrope, -apple-system, 'Segoe UI', system-ui, sans-serif",
     "--w3m-border-radius-master": "3px",

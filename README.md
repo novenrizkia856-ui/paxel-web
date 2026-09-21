@@ -87,7 +87,7 @@ In the pages the logo is an SVG sprite, not an `<img>`. Two symbols are defined 
 
 Both take their colour from the element that uses them, so a white mark on a dark surface is
 `<use href="#logo" color="#fff"/>` and nothing else. The mark is 1.593:1 and the lockup 4.231:1, so
-any new placement needs a box in that ratio, not a square. Brand orange is `#FF6702`, the `--brand` token
+any new placement needs a box in that ratio, not a square. Brand orange is `#EA580C`, the `--brand` token
 in `assets/css/main.css`.
 
 `og:image` and `twitter:image` are site relative. Once the production domain is fixed, make them absolute
@@ -156,8 +156,8 @@ and platinum lines.
 | --- | --- | --- |
 | Obsidian | `#0B0B0D` | Type, the passport card, the dark preview band |
 | Graphite | `#2E3036`, `#4A4D55`, `#6E7078` | Secondary type, icons, quiet surfaces |
-| Champagne gold | `#C9B28A`, deep `#A88F63`, light `#E9DDC6` | Primary button, chip, accents |
-| Platinum | `#E4E3DF`, light `#F4F3EF` | Borders, dividers, quiet fills |
+| Champagne gold | `#EA580C`, deep `#C2410C`, light `#FFEDD5` | Primary button, chip, accents |
+| Platinum | `#FFEDD5`, light `#FFF7ED` | Borders, dividers, quiet fills |
 | White | `#FFFFFF` | Page background |
 
 Type: Manrope. JetBrains Mono for addresses and ids.
