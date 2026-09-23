@@ -1,13 +1,13 @@
 # Paxel Web
 
-Landing site and passport console for Paxel, the permanent digital passport for tokenized real world assets.
+Landing site and passport console for Paxel, the permanent digital passport for tokenized real world assets, built for Solana.
 
 Vite with plain HTML, CSS and ES modules. No framework, no backend. Two pages:
 
 | Route | File | Purpose |
 | --- | --- | --- |
 | `/` | `index.html` | Landing page |
-| `/app` | `app.html` | Passport console: look up passports, issuer actions, issuer role management |
+| `/app` | `app.html` | Passport console: Solana wallet, passport look up, issuer action previews |
 | `/docs` | `docs/*.html`, generated | Documentation, built from `content/docs/*.md` |
 | any other | `public/404.html` | Not found page, served by Vercel |
 
@@ -31,7 +31,7 @@ app.html                   Passport console markup.
 assets/css/main.css        Design tokens, layout and motion.
 assets/css/app.css         Console styles. Imports main.css for tokens and buttons.
 assets/js/main.js          Boots every landing module.
-assets/js/contract-bar.js  Token address block in the hero, reads config/contracts.config.js.
+assets/js/mint-bar.js      Token mint block and deploy note in the hero, reads config/solana.config.js.
 assets/js/nav.js           Static nav, floating glass nav, mobile menu.
 assets/js/reveal.js        Fade and rise entrances on scroll.
 assets/js/tilt.js          Pointer tilt on the passport preview card.
@@ -41,12 +41,9 @@ assets/js/ring.js          Hands section: dust stream, objects riding the loop, 
 assets/js/ring-data.js     Loop path and object positions traced from the hands illustration.
 assets/js/scroll-fx.js     Section transitions. Sets --p on [data-fx] elements as they scroll in.
 assets/js/app/app.js       Console page: look up, recent passports, issuer and admin forms.
-assets/js/app/paxel.js     Contract client. Reads over the public RPC, writes simulate first, then send.
-assets/js/app/wallet.js    Wallet store on Reown AppKit, loaded after first paint.
-assets/js/app/appkit.js    AppKit and wagmi setup for the active chain.
-assets/js/app/wallet-config.js  WalletConnect project id and app metadata.
-assets/js/app/chain.js     RPC, explorer and deploy block per chain id.
-assets/js/app/abi.js       PaxelRegistry and PaxelEventLog ABIs from paxel-contracts.
+assets/js/app/paxel.js     Passport helpers: asset ids, data hashes, statuses and event types.
+assets/js/app/wallet.js    Solana wallet store on the Wallet Standard. Connect, disconnect, account changes.
+assets/js/app/solana.js    Read only Solana RPC client: SOL and SPL token balances. Loads @solana/web3.js lazily.
 public/assets/img/         Hands illustration, stickers and cut out objects.
 public/assets/media/       Looping videos (mp4) and their poster images.
 public/assets/brand/       Logo, mark, banner and social card. See Brand assets.
@@ -55,7 +52,7 @@ content/docs/               Docs source, one markdown file per page.
 scripts/build-docs.mjs     Renders content/docs into docs/*.html and the search index. Runs before dev and build.
 assets/css/docs.css        Docs layout: sidebar, article, on this page, search.
 assets/js/docs/docs.js     Docs behaviour: mobile menu, section highlighting, code copy, search.
-config/contracts.config.js Network and contract addresses.
+config/solana.config.js    Solana network, RPC, explorer, program id, token mint and treasury.
 vite.config.js             Two page build. Hashed bundles go to /bundle.
 vercel.json                Vite build, clean URLs, cache and security headers.
 ```
@@ -93,59 +90,66 @@ in `assets/css/main.css`.
 `og:image` and `twitter:image` are site relative. Once the production domain is fixed, make them absolute
 so every crawler resolves them.
 
-## Contracts
+## Solana
 
-Every contract value lives in `config/contracts.config.js`. Nothing is hardcoded in the HTML.
+Paxel is built for Solana. Every network, program, token and explorer value lives in `config/solana.config.js`.
+Nothing is hardcoded in the HTML. Each field has a `VITE_` override for Vercel or a local `.env` (see `.env.example`).
+All of them ship to the browser: public values only.
 
-| Field | Purpose |
-| --- | --- |
-| `network` | Network name |
-| `chainId` | Chain id, as a string |
-| `tokenAddress` | Token contract. Drives the bar at the top of the page. |
-| `passportRegistry` | Passport registry |
-| `eventLog` | Passport history log |
-| `accessControl` | Role manager |
-| `attestationRegistry` | Attestation registry |
+| Field | Override | Purpose |
+| --- | --- | --- |
+| `network` | `VITE_SOLANA_NETWORK` | `mainnet-beta` (default), `devnet` or `testnet` |
+| `rpcUrl` | `VITE_SOLANA_RPC_URL` | JSON RPC endpoint. Empty uses the default for the network. |
+| `explorerUrl` | `VITE_SOLANA_EXPLORER_URL` | Explorer base. Links add `?cluster=` off mainnet. |
+| `programId` | `VITE_PAXEL_PROGRAM_ID` | Paxel program id. Empty: no program is deployed. |
+| `tokenMint` | `VITE_PAXEL_TOKEN_MINT` | Paxel SPL token mint. Drives the mint block in the hero. |
+| `treasury` | `VITE_TREASURY_ADDRESS` | Paxel treasury public key. |
 
-While `tokenAddress` is empty the hero shows **Coming soon** and the copy button stays hidden and disabled.
-Put the address in the file and redeploy. The hero shows the short form, and the copy button copies the full address.
-Once `passportRegistry` is set, the hero note and footer say the contracts are live on `network`, and the
-note button links to the registry on the block explorer for `chainId`. `tokenAddress` and
-`attestationRegistry` are not used yet.
+Values that are not valid base58 public keys are ignored. No address is invented: every empty value reads as
+not deployed, not created or not set.
+
+While `tokenMint` is empty the hero shows **Coming soon** and the copy button stays hidden and disabled.
+Set the mint and redeploy. The hero shows the short form linked to Solana Explorer, and the copy button copies
+the full mint address. The console shows the mint as a chip with a copy button, and the wallet panel shows
+the connected wallet's balance of it.
+
+While `programId` is empty the hero note and footers say Paxel is built for Solana and the program is not live
+yet. Once it is set they say the program is live, and the hero note button links to it on the explorer.
+
+`api.mainnet-beta.solana.com` refuses requests from browsers, so mainnet reads default to PublicNode's free
+endpoint (`https://solana-rpc.publicnode.com`). Devnet and testnet use their public RPCs. Free endpoints are rate
+limited: for production, set `VITE_SOLANA_RPC_URL` to a managed provider.
 
 ### Wallet
 
-The console connects wallets through Reown AppKit (WalletConnect): browser extensions, the WalletConnect
-QR code and mobile wallets, with a network switch to Robinhood Chain. The Paxel project id
-`ff24e7c4e7d10744e3ccd080e4307cad` is set in `assets/js/app/wallet-config.js`.
-`VITE_WALLETCONNECT_PROJECT_ID` overrides it at build time.
+The console finds Solana wallets through the Wallet Standard (`@wallet-standard/app`), so Phantom, Solflare,
+Backpack and any other standard Solana wallet appear without a wallet specific SDK. Wallets that are not
+installed are listed with an install link. The last used wallet reconnects quietly on the next visit when
+the wallet allows it.
 
-Add every domain the site runs on (the Vercel domain, any custom domain, and `localhost` for development)
-to the project's allowlist at https://dashboard.reown.com. Without it the connect modal refuses to load.
+Connected, the wallet button shows the short public key and opens a panel with the full key (click to copy),
+SOL balance, Paxel token balance when a mint is set, the network, a Solana Explorer link and Disconnect.
 
-The landing page never loads AppKit. It only links to the console.
+Only `standard:connect`, `standard:disconnect` and `standard:events` are used. The app never asks a wallet to
+sign a message or a transaction. The landing page never loads the wallet code. It only links to the console.
 
-### Passport console
+### Onchain execution
 
-- **Look up a passport.** No wallet needed. Enter an asset reference (hashed with keccak256 into the asset
-  id) or a 0x asset id. Shows status, issuer, tokenization time, metadata URI and the full history.
-  `app.html?asset=<reference or id>` opens a passport directly.
-- **Recent passports.** The latest `AssetRegistered` events since the registry deploy block.
-- **Issuer console.** Register, publish, update status and record events. Event data can be a file, text or a
-  0x hash. Files are hashed in the browser and never uploaded. Every write is simulated first, so a call
-  that would revert shows a plain explanation before the wallet opens.
-- **Manage issuers.** Visible only to the registry admin. Grant or revoke `ISSUER_ROLE` and check any address.
+No Paxel program is deployed on Solana and onchain execution is not active. The console keeps the full
+passport flow, but nothing is signed, sent or presented as onchain when it is not:
 
-The ABIs in `assets/js/app/abi.js` come from `paxel-contracts/out`. Regenerate them if the contracts change.
+- **Look up a passport.** No wallet needed. Enter an asset reference (hashed with SHA256 into the asset id)
+  or a 64 character hex id. Shows the asset id and says the Solana registry is not live yet.
+  `app.html?asset=<reference or id>` opens a look up directly.
+- **Recent passports.** Says passports appear once the Solana registry is live.
+- **Issuer console.** Register, publish, update status and record events. Needs a connected wallet. Each form
+  is validated, then shows a preview of the instruction it would send and says onchain execution is not
+  active yet. Event data can be a file, text or a hex hash. Files are hashed in the browser and never uploaded.
+- **Manage issuers.** Kept in the markup for when roles exist on chain. Hidden, since no admin role can be
+  read without a program.
 
-### Current deployment
-
-Robinhood Chain mainnet, chain id 4663.
-
-| Contract | Address |
-| --- | --- |
-| PaxelRegistry (`passportRegistry`, `accessControl`) | [`0x864427fd9De98a71eFFd239178726254E83054ed`](https://robinhoodchain.blockscout.com/address/0x864427fd9De98a71eFFd239178726254E83054ed) |
-| PaxelEventLog (`eventLog`) | [`0xB783c3b4119b2ed1290BC827727D1Aab8Ea6D985`](https://robinhoodchain.blockscout.com/address/0xB783c3b4119b2ed1290BC827727D1Aab8Ea6D985) |
+To make execution live later, deploy the program, set `programId`, and add the instruction building and
+signing to `assets/js/app/` behind the existing previews.
 
 ## Design system
 
@@ -169,7 +173,7 @@ Tokens are CSS variables at the top of `assets/css/main.css`.
 
 ## Layout and motion
 
-- White hero. The token contract address sits below the supporting line.
+- White hero. The token mint address sits below the supporting line.
 - A large obsidian passport card with a champagne chip floats, tilts toward the cursor and catches the light.
   Toned illustration objects drift around the card only, and fine champagne dust orbits it.
   On scroll the copy lifts away and the card sinks back.
@@ -198,15 +202,16 @@ No dashes or semicolons in visible text.
 ## Docs
 
 Pages live in `content/docs` as markdown. `scripts/build-docs.mjs` renders them into `docs/` (gitignored)
-with a layout modelled on the ethereum.org developer docs: grouped navigation on the left, the article in
+with a developer docs layout: grouped navigation on the left, the article in
 the middle, an on this page list on the right, previous and next cards, and search (Ctrl K or /). Below
 1024px the navigation opens from a sticky Documentation bar and the on this page list folds into the article.
 
 - Sidebar groups and page order are set in `GROUPS` at the top of the script. Every markdown file must be listed.
 - Titles come from `content/docs/SUMMARY.md`.
 - Links to `other-page.md` become `/docs/other-page`.
-- `{{passportRegistry}}`, `{{eventLog}}`, `{{network}}` and the other config keys are filled from
-  `config/contracts.config.js`. `live-contracts.md` uses them.
+- `{{network}}`, `{{networkLabel}}`, `{{programId}}`, `{{tokenMint}}`, `{{treasury}}` and `{{programStatus}}` are filled
+  from `config/solana.config.js`, with the same `VITE_` overrides. `solana-deployment.md` uses them.
+- Old doc URLs (`/docs/smart-contracts`, `/docs/live-contracts`) redirect to the renamed pages in `vercel.json`.
 - The two mermaid diagrams (lifecycle and architecture) render as responsive HTML diagrams defined in the script.
 - Visible docs text follows the copy rules below, so hyphenated words are written as separate words.
 
@@ -219,8 +224,8 @@ Replace the `href` and remove the attribute when the real link exists.
 
 1. Import the repository in Vercel. `vercel.json` sets the Vite framework, `npm ci`, `npm run build` and `dist`
    as the output directory. Node 22 comes from `package.json`.
-2. No environment variables are required. Optional, both public:
-   `VITE_WALLETCONNECT_PROJECT_ID` and `VITE_RPC_URL` (see `.env.example`).
-3. After the first deploy, add the Vercel domain to the Reown project allowlist.
+2. No environment variables are required. Optional, all public: `VITE_SOLANA_NETWORK`, `VITE_SOLANA_RPC_URL`,
+   `VITE_SOLANA_EXPLORER_URL`, `VITE_PAXEL_PROGRAM_ID`, `VITE_PAXEL_TOKEN_MINT` and `VITE_TREASURY_ADDRESS`
+   (see `.env.example`).
 
 Hashed bundles under `/bundle` are cached for a year. Images and videos under `/assets` are cached for a day.

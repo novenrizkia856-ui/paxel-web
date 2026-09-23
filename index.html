@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Paxel · The passport for tokenized assets</title>
-  <meta name="description" content="A permanent digital passport for tokenized real world assets. Identity, history and proof in one record.">
+  <meta name="description" content="A permanent digital passport for tokenized real world assets, built on Solana. Identity, history and proof in one record.">
   <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Paxel">
@@ -123,12 +123,12 @@
       Supporting: Identity, history and proof for tokenized real world assets. One permanent record.
       Primary button: Explore the passport
       Secondary button: Read the docs
-      Note, before deploy: Contracts are not deployed yet.
+      Note, before deploy: Built for Solana. The program is not live yet.
       Note button, before deploy: Follow the build
-      Note, after deploy: Contracts are live on Robinhood Chain.
-      Note button, after deploy: View the registry
-      The note switches automatically when passportRegistry is set in config/contracts.config.js.
-      Contract address sits below the supporting line.
+      Note, after deploy: The Paxel program is live on Solana.
+      Note button, after deploy: View the program
+      The note switches automatically when programId is set in config/solana.config.js.
+      Token mint address sits below the supporting line.
       Visual: a large obsidian passport card floats and tilts toward the cursor, objects drift around it.
       Card: paxel. Asset passport. PXL 0001 7342.
     -->
@@ -139,17 +139,18 @@
           <p class="hero-sub" data-reveal style="--d:80ms">Identity, history and proof for tokenized real world assets. One permanent record.</p>
 
           <!--
-            COPY · CONTRACT ADDRESS
-            Label: Token Contract Address
+            COPY · TOKEN MINT ADDRESS
+            Label: Token Mint Address
             Value: Coming soon
             Button: Copy
             Button, after copy: Copied
-            The value is read from config/contracts.config.js (tokenAddress). Never hardcode it here.
+            The value is read from config/solana.config.js (tokenMint). Never hardcode it here.
+            Once set, the short mint links to Solana Explorer.
           -->
-          <div class="hero-ca" id="contract-bar" role="region" aria-label="Token contract address" data-reveal style="--d:140ms">
-            <span class="ca-label">Token Contract Address</span>
+          <div class="hero-ca" id="mint-bar" role="region" aria-label="Token mint address" data-reveal style="--d:140ms">
+            <span class="ca-label">Token Mint Address</span>
             <span class="ca-value" data-ca-value>Coming soon</span>
-            <button class="ca-copy" type="button" data-ca-copy hidden disabled aria-label="Copy token contract address">
+            <button class="ca-copy" type="button" data-ca-copy hidden disabled aria-label="Copy token mint address">
               <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="2"/><path d="M10.5 3.5v-.5a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5"/></svg>
               <span data-ca-copy-label>Copy</span>
             </button>
@@ -166,7 +167,7 @@
           </div>
 
           <div class="hero-note" data-reveal style="--d:260ms">
-            <p data-deploy-note>Contracts are not deployed yet.</p>
+            <p data-deploy-note>Built for Solana. The program is not live yet.</p>
             <a class="btn btn--darkgrey btn--sm" href="#" data-placeholder data-deploy-link><span data-deploy-link-label>Follow the build</span><svg class="btn-icon btn-icon--end" aria-hidden="true"><use href="#i-arrow"/></svg></a>
           </div>
         </div>
@@ -547,10 +548,10 @@
       Supporting: One shared passport. No one can quietly change it.
       Note: Sample record. Illustrative data only.
       Card: Warehouse Unit 14. PXL 0001 7342. Verified.
-      Fields: Class, Real estate. Jurisdiction, Singapore. Issued, 2026.03.14. Issuer, Licensed issuer. Attestations, 3 signed. Network, Pending.
+      Fields: Class, Real estate. Jurisdiction, Singapore. Issued, 2026.03.14. Issuer, Licensed issuer. Attestations, 3 signed. Network, Solana.
       Tabs: History. Attestations. Documents.
       Rows: Ownership transferred, Registry. Title verified, Land office. Appraisal attested, Independent appraiser. Passport issued, Licensed issuer.
-      Footer: Fingerprint 0x7f3a 9b21 44d0 c91e. Button, Verify record.
+      Footer: Fingerprint 7f3a 9b21 44d0 c91e … Button, Verify record.
       Callouts: Identity. Fixed at issuance. Never rewritten.
       Callouts: History. An ordered log of every event.
       Callouts: Proof. Signed attestations from trusted parties.
@@ -585,7 +586,7 @@
               <div><dt>Issued</dt><dd>2026.03.14</dd></div>
               <div><dt>Issuer</dt><dd>Licensed issuer</dd></div>
               <div><dt>Attestations</dt><dd>3 signed</dd></div>
-              <div><dt>Network</dt><dd>Pending</dd></div>
+              <div><dt>Network</dt><dd>Solana</dd></div>
             </dl>
 
             <div class="app-tabs pp-tabs"><span class="is-active">History</span><span>Attestations</span><span>Documents</span></div>
@@ -598,7 +599,7 @@
             </ul>
 
             <footer class="pp-foot">
-              <span class="fp"><small>Fingerprint</small>0x7f3a 9b21 44d0 c91e</span>
+              <span class="fp"><small>Fingerprint</small>7f3a 9b21 44d0 c91e …</span>
               <span class="btn btn--primary">Verify record</span>
             </footer>
           </article>
@@ -757,8 +758,8 @@
     Supporting: The permanent record for tokenized real world assets.
     Buttons: Read the docs. Explore the passport.
     Columns: Product, Passport, How it works, Roles. Build, Docs. Follow, Telegram.
-    Legal: © 2026 Paxel. Contracts not yet deployed.
-    Legal, after deploy: © 2026 Paxel. Contracts live on Robinhood Chain.
+    Legal: © 2026 Paxel. Built for Solana. Not yet deployed.
+    Legal, after deploy: © 2026 Paxel. Program live on Solana.
     Toast for placeholder links: Link coming soon.
   -->
   <footer class="footer" id="docs">
@@ -804,7 +805,7 @@
       <div class="footer-legal">
         <span>© 2026 Paxel</span>
         <span class="footer-sep" aria-hidden="true">·</span>
-        <span data-deploy-legal>Contracts not yet deployed.</span>
+        <span data-deploy-legal>Built for Solana. Not yet deployed.</span>
       </div>
       <div class="footer-social">
         <a href="#" data-placeholder aria-label="Telegram"><svg aria-hidden="true"><use href="#i-telegram"/></svg></a>

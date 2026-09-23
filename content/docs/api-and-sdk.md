@@ -1,6 +1,6 @@
 # API & SDK Concepts
 
-Issuers and platforms are not expected to interact with contracts directly: they use an API/SDK layer that abstracts onchain and offchain writes into simple calls.
+Issuers and platforms are not expected to interact with the Solana program directly: they use an API/SDK layer that abstracts onchain and offchain writes into simple calls.
 
 ## Issuer Facing API (write access)
 
@@ -33,6 +33,6 @@ Issuers and platforms are not expected to interact with contracts directly: they
 
 - Thin wrappers (e.g. JS/TS, Python) around the API that also handle:
   - Local hashing of documents before upload
-  - Signing requests with the caller's key
+  - Signing requests with the caller's Solana wallet
   - Subscribing to real time passport update events (webhooks or onchain event streams)
-- Goal: an issuer or platform should be able to integrate Paxel in the time it takes to integrate any typical REST API, no direct contract knowledge required.
+- Goal: an issuer or platform should be able to integrate Paxel in the time it takes to integrate any typical REST API, no direct program knowledge required.

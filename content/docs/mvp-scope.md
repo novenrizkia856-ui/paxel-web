@@ -1,6 +1,6 @@
 # MVP Scope: Two Day Build
 
-This document is conceptual by design, but since implementation starts immediately after, here is the recommended cut down scope for a first working smart contract build.
+This document is conceptual by design, but since implementation starts immediately after, here is the recommended cut down scope for a first working Solana program build.
 
 ## In Scope for MVP
 
@@ -16,7 +16,7 @@ This document is conceptual by design, but since implementation starts immediate
 - Soulbound Passport Identity Token
 - Cross chain mirroring/bridging
 - Dispute resolution workflow
-- Full API/SDK layer (MVP can expose raw contract calls; SDK wrapper comes after)
+- Full API/SDK layer (MVP can expose raw program instructions; SDK wrapper comes after)
 
 ## Why This Cut
 

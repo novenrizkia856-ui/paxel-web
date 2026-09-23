@@ -5,7 +5,11 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": true,
-  "redirects": [{ "source": "/app.html", "destination": "/app", "permanent": true }],
+  "redirects": [
+    { "source": "/app.html", "destination": "/app", "permanent": true },
+    { "source": "/docs/smart-contracts", "destination": "/docs/program-design", "permanent": true },
+    { "source": "/docs/live-contracts", "destination": "/docs/solana-deployment", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/bundle/(.*)",

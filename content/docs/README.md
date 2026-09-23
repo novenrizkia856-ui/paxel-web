@@ -23,7 +23,7 @@ Every supported asset gets a **passport**: a permanent, append only record that 
 
 ## What Paxel Is
 
-- A **registry + history layer** for tokenized RWA lifecycle data.
+- A **registry + history layer** for tokenized RWA lifecycle data, built on Solana.
 - A set of **APIs/SDKs** issuers and RWA platforms use to write and read passport data.
 - A **verification framework** so third parties (auditors, custodians, other platforms) can attest to specific facts in a passport.
 
@@ -36,4 +36,4 @@ Every supported asset gets a **passport**: a permanent, append only record that 
 
 ## How to Read This Document
 
-This is a **conceptual design document**, written before implementation begins. It defines the mechanism, data model, and system boundaries, not code, contract addresses, or specific tech stack choices. Implementation should follow this document, not the other way around.
+This is a **conceptual design document**, written before implementation begins. It defines the mechanism, data model, and system boundaries, not code, program IDs, or implementation details. Implementation should follow this document, not the other way around.

@@ -187,7 +187,7 @@ b { font-weight: 600; }
   border-radius: 20px;
 }
 
-/* Contract address, below the hero supporting line */
+/* Token mint address, below the hero supporting line */
 .hero-ca {
   display: inline-flex;
   flex-wrap: wrap;
@@ -219,7 +219,7 @@ b { font-weight: 600; }
   white-space: nowrap;
 }
 .hero-ca.is-live .ca-value { color: var(--obsidian); font-family: var(--mono); font-size: 13px; font-weight: 500; }
-/* The short form is shown; the full address stays available to screen readers and the copy button */
+/* The short form is shown; the full mint address stays available to screen readers and the copy button */
 .ca-full {
   position: absolute;
   width: 1px; height: 1px;

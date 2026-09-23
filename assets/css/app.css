@@ -75,8 +75,8 @@ body.app { background: var(--platinum-light); }
   .app-intro { padding-top: 64px; padding-bottom: 32px; }
   .app-intro h1 { font-size: 3.5rem; letter-spacing: -0.08rem; }
 }
-.contract-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-.contract-chips li {
+.chain-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.chain-chips li {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -87,8 +87,11 @@ body.app { background: var(--platinum-light); }
   color: var(--slate);
   font-size: 13px;
 }
-.contract-chips a { color: var(--obsidian); }
-.contract-chips a:hover { color: var(--champagne-deep); }
+.chain-chips a { color: var(--obsidian); }
+.chain-chips a:hover { color: var(--champagne-deep); }
+.chip-copy { display: grid; place-items: center; width: 22px; height: 22px; margin-right: -4px; border: 0; border-radius: 6px; background: var(--platinum-light); color: var(--slate); cursor: copy; }
+.chip-copy:hover { color: var(--obsidian); }
+.chip-copy svg { width: 13px; height: 13px; }
 
 /* Panels */
 .app-grid { display: grid; gap: 16px; }
@@ -321,7 +324,7 @@ select.input { appearance: none; background-image: linear-gradient(45deg, transp
 .action-status { min-height: 0; font-size: 13px; overflow-wrap: anywhere; }
 .action-status:empty { display: none; }
 .action-status a { text-decoration: underline; text-underline-offset: 2px; }
-.action-status[data-tone="busy"] { color: var(--graphite-2); }
+.action-status[data-tone="busy"], .action-status[data-tone="info"] { color: var(--graphite-2); }
 .action-status[data-tone="ok"] { color: #9a3412; }
 .action-status[data-tone="error"] { color: #8a3b2c; }
 
@@ -339,3 +342,58 @@ select.input { appearance: none; background-image: linear-gradient(45deg, transp
 }
 .app-footer a { display: inline-flex; align-items: center; gap: 6px; color: var(--obsidian); font-weight: 500; }
 .app-footer a:hover { color: var(--champagne-deep); }
+
+/* Wallet dialog: picks a Solana wallet, then shows the connected account */
+.wallet-dialog {
+  width: min(420px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 20px;
+  border: 1px solid var(--platinum);
+  border-radius: 20px;
+  background: var(--white);
+  color: var(--obsidian);
+  box-shadow: var(--shadow-1);
+}
+.wallet-dialog::backdrop { background: rgb(11 11 13 / 0.4); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.wallet-dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.wallet-dialog-head h2 { font-size: 1.1875rem; font-weight: 700; letter-spacing: -0.02rem; }
+.wallet-close {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--platinum);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--slate);
+  cursor: pointer;
+}
+.wallet-close:hover { background: var(--platinum-light); color: var(--obsidian); }
+.wallet-close svg { width: 16px; height: 16px; }
+.wallet-list { display: grid; gap: 8px; }
+.wallet-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--platinum);
+  border-radius: 14px;
+  background: var(--white);
+  color: var(--obsidian);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s var(--ease-standard), background-color 0.15s var(--ease-standard);
+}
+.wallet-option:hover { border-color: var(--champagne); background: var(--platinum-light); }
+.wallet-option img, .wallet-glyph { flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; }
+.wallet-glyph { display: grid; place-items: center; background: var(--obsidian); color: var(--champagne); font-size: 14px; font-weight: 700; }
+.wallet-option small { margin-left: auto; color: var(--slate); font-size: 12px; font-weight: 500; }
+.wallet-note { margin-top: 14px; color: var(--slate); font-size: 13px; }
+.wallet-id { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-weight: 600; }
+.wallet-id img { width: 28px; height: 28px; border-radius: 8px; }
+.wallet-rows { margin-bottom: 16px; border: 1px solid var(--platinum); border-radius: 16px; }
+.wallet-rows > [hidden] { display: none; }

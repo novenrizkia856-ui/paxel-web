@@ -13,14 +13,12 @@
     "marked": "^18.0.13",
     "vite": "^8.3.0"
   },
-  "dependencies": {
-    "@reown/appkit": "^1.8.23",
-    "@reown/appkit-adapter-wagmi": "^1.8.23",
-    "@wagmi/core": "^3.6.5",
-    "viem": "^2.56.5",
-    "wagmi": "^3.7.7"
-  },
   "engines": {
     "node": "22.x"
+  },
+  "dependencies": {
+    "@solana/wallet-adapter-base": "^0.9.28",
+    "@solana/web3.js": "^1.99.0",
+    "@wallet-standard/app": "^1.1.1"
   }
 }

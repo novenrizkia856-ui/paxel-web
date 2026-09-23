@@ -6,11 +6,11 @@ Every passport is built from the same set of sections. Below is what each contai
 
 | Section | Contains | Typical storage |
 |---|---|---|
-| **Asset Identity** | Unique passport ID, asset type/category, jurisdiction, description, linked token contract(s) & chain(s) | Hash/pointer onchain, full detail offchain |
+| **Asset Identity** | Unique passport ID, asset type/category, jurisdiction, description, linked SPL token mint(s) & chain(s) | Hash/pointer onchain, full detail offchain |
 | **Issuer** | Issuer identifier, issuer verification status, registration references | Onchain identifier + offchain profile |
 | **Tokenization Date** | Date and reference of the original tokenization event | Onchain event |
 | **Ownership** | Current holder reference, custody model (self custody / custodial / fractional) | Onchain pointer; PII kept offchain if any |
-| **Transfers** | Log of transfer events: from, to, timestamp, transaction reference | Onchain event log |
+| **Transfers** | Log of transfer events: from, to, timestamp, transaction signature | Onchain event log |
 | **Valuation References** | Pointers to valuation reports/oracles: source, date, value, methodology reference | Offchain content, onchain hash + timestamp |
 | **Supporting Documentation** | Legal docs, appraisals, insurance, certificates, all hash anchored | Offchain storage (content addressed), onchain hash |
 | **Status Changes** | Active, Frozen, Disputed, Redeemed, Delisted, Defaulted, etc. | Onchain state + event log |

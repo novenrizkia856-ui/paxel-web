@@ -1,4 +1,4 @@
-import { initContractBar } from "./contract-bar.js";
+import { initMintBar } from "./mint-bar.js";
 import { initNav } from "./nav.js";
 import { initReveal } from "./reveal.js";
 import { initTilt } from "./tilt.js";
@@ -45,7 +45,7 @@ function splitWords() {
 
 function boot() {
   splitWords();
-  initContractBar();
+  initMintBar();
   initNav();
   initReveal({ reduced });
   initTilt({ reduced });

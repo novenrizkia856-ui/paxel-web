@@ -1,11 +1,26 @@
-// Wallet store on top of Reown AppKit. AppKit loads after first paint.
-import { ACTIVE_CHAIN } from "./chain.js";
+// Solana wallet store on top of the Wallet Standard. Phantom, Solflare, Backpack and other
+// Solana wallets register themselves here, so no wallet specific SDK is needed.
+//
+// Only standard:connect, standard:disconnect and standard:events are used. On chain execution is
+// not active: this module never asks a wallet to sign a message or a transaction.
+import { isWalletAdapterCompatibleStandardWallet } from "@solana/wallet-adapter-base";
+import { getWallets } from "@wallet-standard/app";
+
+const LAST_WALLET_KEY = "paxel:wallet";
+
+/** Wallets offered even when not installed, with where to get them. */
+export const KNOWN_WALLETS = [
+  { name: "Phantom", url: "https://phantom.com/download" },
+  { name: "Solflare", url: "https://solflare.com/download" },
+  { name: "Backpack", url: "https://backpack.app/download" },
+];
 
 const listeners = new Set();
-const state = { account: "", chainId: 0, connecting: false, loading: true, error: "" };
+const state = { account: "", walletName: "", walletIcon: "", connecting: false, error: "" };
 
-let kit = null;
-let kitPromise = null;
+let registry = null;
+let current = null;
+let stopEvents = null;
 
 function emit() {
   const snapshot = getWallet();
@@ -17,12 +32,27 @@ function set(patch) {
   emit();
 }
 
+const remember = (name) => {
+  try {
+    if (name) localStorage.setItem(LAST_WALLET_KEY, name);
+    else localStorage.removeItem(LAST_WALLET_KEY);
+  } catch {
+    // Storage blocked. Auto reconnect is a convenience only.
+  }
+};
+const remembered = () => {
+  try {
+    return localStorage.getItem(LAST_WALLET_KEY) || "";
+  } catch {
+    return "";
+  }
+};
+
+const isSolana = (wallet) =>
+  wallet.chains.some((chain) => chain.startsWith("solana:")) && isWalletAdapterCompatibleStandardWallet(wallet);
+
 export function getWallet() {
-  return {
-    ...state,
-    connected: Boolean(state.account),
-    onChain: Boolean(ACTIVE_CHAIN) && state.chainId === ACTIVE_CHAIN.id,
-  };
+  return { ...state, connected: Boolean(state.account) };
 }
 
 export function subscribeWallet(fn) {
@@ -31,56 +61,80 @@ export function subscribeWallet(fn) {
   return () => listeners.delete(fn);
 }
 
-function loadKit() {
-  if (!kitPromise) {
-    kitPromise = Promise.all([import("./appkit.js"), import("@wagmi/core")])
-      .then(([appkit, core]) => {
-        kit = { ...appkit, core };
-        const sync = (account) => set({ account: account.address || "", chainId: account.chainId || 0, loading: false });
-        sync(core.getAccount(appkit.wagmiConfig));
-        core.watchAccount(appkit.wagmiConfig, { onChange: sync });
-        appkit.modal.subscribeState(({ open }) => set({ connecting: Boolean(open) && !state.account }));
-        return kit;
-      })
-      .catch((error) => {
-        kitPromise = null;
-        set({ loading: false, error: "The wallet modal could not load." });
-        throw error;
-      });
+/** Installed Solana wallets, then the known ones that are not installed. */
+export function listWallets() {
+  const installed = (registry?.get() ?? []).filter(isSolana);
+  const names = new Set(installed.map((w) => w.name));
+  return [
+    ...installed.map((w) => ({ name: w.name, icon: w.icon, installed: true })),
+    ...KNOWN_WALLETS.filter((w) => !names.has(w.name)).map((w) => ({ ...w, icon: "", installed: false })),
+  ];
+}
+
+function useAccount(wallet, account) {
+  if (!account) {
+    current = null;
+    return set({ account: "", walletName: "", walletIcon: "" });
   }
-  return kitPromise;
+  current = wallet;
+  set({ account: account.address, walletName: wallet.name, walletIcon: wallet.icon });
 }
 
-export function initWallet() {
-  if (!ACTIVE_CHAIN) return set({ loading: false });
-  const go = () => loadKit().catch(() => {});
-  if ("requestIdleCallback" in window) requestIdleCallback(go, { timeout: 1500 });
-  else setTimeout(go, 200);
+function watch(wallet) {
+  stopEvents?.();
+  stopEvents = wallet.features["standard:events"].on("change", ({ accounts }) => {
+    if (accounts) useAccount(wallet, accounts[0]);
+  });
 }
 
-export async function connectWallet() {
-  set({ error: "" });
+async function connectTo(wallet, silent) {
+  const { accounts } = await wallet.features["standard:connect"].connect(silent ? { silent: true } : undefined);
+  const account = accounts[0] ?? wallet.accounts[0];
+  if (!account) throw new Error("No account was shared.");
+  watch(wallet);
+  useAccount(wallet, account);
+  remember(wallet.name);
+}
+
+export async function connectWallet(name) {
+  const wallet = (registry?.get() ?? []).filter(isSolana).find((w) => w.name === name);
+  if (!wallet) return;
+  set({ connecting: true, error: "" });
   try {
-    const { modal } = await loadKit();
-    await modal.open({ view: "Connect" });
-  } catch {
-    // loadKit already recorded the error
+    await connectTo(wallet, false);
+  } catch (error) {
+    set({ error: /reject|denied|cancel/i.test(error?.message ?? "") ? "Connection declined in your wallet." : "The wallet did not connect." });
+  } finally {
+    set({ connecting: false });
   }
 }
 
-export async function openAccount() {
-  const { modal } = await loadKit();
-  await modal.open({ view: "Account" });
+export async function disconnectWallet() {
+  const wallet = current;
+  stopEvents?.();
+  stopEvents = null;
+  remember("");
+  useAccount(null, null);
+  try {
+    await wallet?.features["standard:disconnect"]?.disconnect();
+  } catch {
+    // Already disconnected on the wallet side
+  }
 }
 
-export async function switchNetwork() {
-  set({ error: "" });
-  const { core, wagmiConfig } = await loadKit();
-  await core.switchChain(wagmiConfig, { chainId: ACTIVE_CHAIN.id });
-}
-
-/** Sends a contract call from the connected account. Resolves with the transaction hash. */
-export async function writeContract(request) {
-  const { core, wagmiConfig } = await loadKit();
-  return core.writeContract(wagmiConfig, { ...request, account: state.account, chainId: ACTIVE_CHAIN.id });
+/** Discovers wallets and quietly restores the last connection when the wallet allows it. */
+export function initWallet() {
+  registry = getWallets();
+  const tryRestore = () => {
+    const name = remembered();
+    if (!name || state.account) return;
+    const wallet = registry.get().filter(isSolana).find((w) => w.name === name);
+    if (wallet) connectTo(wallet, true).catch(() => {});
+  };
+  registry.on("register", () => {
+    tryRestore();
+    emit();
+  });
+  tryRestore();
+  emit();
 }
