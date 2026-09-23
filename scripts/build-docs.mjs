@@ -40,12 +40,11 @@ const keyCell = (value, empty) => (value ? `[\`${value}\`](${explorerLink("addre
 const TOKENS = {
   network: SOLANA.network,
   networkLabel: NETWORK.label,
-  programId: keyCell(SOLANA.programId, "Not deployed yet"),
   tokenMint: keyCell(SOLANA.tokenMint, "Not created yet"),
   treasury: keyCell(SOLANA.treasury, "Not set yet"),
   programStatus: PROGRAM_DEPLOYED
     ? `The Paxel program is deployed on ${NETWORK.label}. Onchain execution from the app is not active yet.`
-    : "The Paxel program is not deployed yet and onchain execution is not active.",
+    : "",
 };
 const fillTokens = (md) => md.replace(/\{\{(\w+)\}\}/g, (_, key) => String(TOKENS[key] ?? ""));
 

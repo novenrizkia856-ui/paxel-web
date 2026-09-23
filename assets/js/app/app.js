@@ -329,7 +329,6 @@ function renderChips() {
   const chips = $("[data-chain-chips]");
   chips.innerHTML = [
     `<li><span>Network</span>${NETWORK.label}</li>`,
-    SOLANA.programId ? keyChip("Program", SOLANA.programId) : `<li><span>Program</span>Not deployed yet</li>`,
     SOLANA.tokenMint ? keyChip("Token mint", SOLANA.tokenMint) : `<li><span>Token mint</span>Coming soon</li>`,
   ].join("");
   $("[data-footer-network]").textContent = DEPLOY_COPY.legal;
