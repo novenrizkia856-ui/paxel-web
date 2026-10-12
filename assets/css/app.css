@@ -226,7 +226,9 @@ select.input { appearance: none; background-image: linear-gradient(45deg, transp
 .history-list { display: grid; gap: 1px; padding: 8px 8px 12px; }
 .history-list li {
   display: grid;
-  grid-template-columns: 28px minmax(0, 1fr) auto;
+  grid-template-columns: 28px minmax(0, 1fr);
+  grid-auto-columns: auto;
+  grid-auto-flow: column;
   gap: 10px;
   align-items: center;
   padding: 10px 8px;
@@ -234,6 +236,25 @@ select.input { appearance: none; background-image: linear-gradient(45deg, transp
   background: var(--white);
 }
 .history-list li.empty { display: block; background: none; color: var(--slate); text-align: center; }
+.history-list li.is-revoked { opacity: 0.55; }
+.history-list li.is-revoked .h-body b { text-decoration: line-through; }
+
+/* Verification level of a history entry: L0 self reported, L1 attested, L2 multi attested */
+.level {
+  display: inline-grid;
+  place-items: center;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  cursor: help;
+}
+.level--0 { background: var(--platinum); color: var(--slate); }
+.level--1 { background: var(--champagne-light); color: #6b5530; }
+.level--2 { background: var(--obsidian); color: var(--champagne); }
 .h-index {
   display: grid;
   place-items: center;
@@ -249,8 +270,8 @@ select.input { appearance: none; background-image: linear-gradient(45deg, transp
 .h-body small { color: var(--slate); font-size: 12px; }
 .h-body small a:hover { color: var(--champagne-deep); }
 @media (max-width: 479px) {
-  .history-list li { grid-template-columns: 28px minmax(0, 1fr); }
-  .history-list .hash-chip { grid-column: 2; justify-self: start; }
+  .history-list li { grid-auto-flow: row; }
+  .history-list li > .hash-chip, .history-list li > .level { grid-column: 2; justify-self: start; }
   .passport-rows > div { grid-template-columns: 80px minmax(0, 1fr); }
 }
 

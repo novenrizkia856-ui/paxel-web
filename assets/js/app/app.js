@@ -1,13 +1,15 @@
-import { ACTIVE_CHAIN, CONTRACTS_READY, EVENT_LOG, REGISTRY, explorerLink } from "./chain.js";
+import { ACTIVE_CHAIN, ATTESTATIONS, ATTESTATIONS_READY, CONTRACTS_READY, EVENT_LOG, REGISTRY, explorerLink } from "./chain.js";
 import {
   EVENT_TYPES,
-  ISSUER_ROLE,
+  LEVELS,
+  ROLES,
   STATUSES,
   explainError,
   hashFile,
   hashText,
   isAddress,
   isBytes32,
+  readAttestations,
   readHistory,
   readPassport,
   readRecentPassports,
@@ -54,7 +56,8 @@ document.addEventListener("click", (event) => {
 
 /* Wallet and roles */
 let wallet = getWallet();
-let roles = { admin: false, issuer: false };
+const NO_ROLES = { admin: false, issuer: false, verifier: false };
+let roles = NO_ROLES;
 let rolesFor = "";
 
 function renderWallet() {
@@ -78,14 +81,22 @@ function renderWallet() {
   let gateText = "";
   if (!wallet.connected) gateText = "Connect a wallet to manage passports.";
   else if (!wallet.onChain) gateText = `Switch to ${ACTIVE_CHAIN.name} to continue.`;
-  else if (!roles.issuer && !roles.admin) gateText = "No role yet. Ask the Paxel admin for the issuer role.";
+  else if (!roles.issuer && !roles.admin) gateText = "No issuer role yet. Ask the Paxel admin for it.";
   gate.textContent = gateText;
   gate.hidden = !gateText;
 
   pill.textContent = !wallet.connected
     ? "Not connected"
-    : [roles.admin && "Admin", roles.issuer && "Issuer"].filter(Boolean).join(" · ") || "No role";
-  pill.classList.toggle("is-on", wallet.connected && (roles.admin || roles.issuer));
+    : [roles.admin && "Admin", roles.issuer && "Issuer", roles.verifier && "Verifier"].filter(Boolean).join(" · ") || "No role";
+  pill.classList.toggle("is-on", wallet.connected && (roles.admin || roles.issuer || roles.verifier));
+
+  const verifierGate = $("[data-verifier-gate]");
+  let verifierText = "";
+  if (!wallet.connected) verifierText = "Connect a wallet to attest passport facts.";
+  else if (!wallet.onChain) verifierText = `Switch to ${ACTIVE_CHAIN.name} to continue.`;
+  else if (!roles.verifier) verifierText = "No verifier role yet. Ask the Paxel admin for it.";
+  verifierGate.textContent = verifierText;
+  verifierGate.hidden = !verifierText;
 
   const ready = wallet.connected && wallet.onChain;
   $$("[data-action] button[type=submit]").forEach((b) => {
@@ -100,7 +111,7 @@ function renderWallet() {
 async function refreshRoles() {
   const account = wallet.connected ? wallet.account : "";
   if (!account) {
-    roles = { admin: false, issuer: false };
+    roles = NO_ROLES;
     rolesFor = "";
     return renderWallet();
   }
@@ -109,7 +120,7 @@ async function refreshRoles() {
   try {
     roles = await readRoles(account);
   } catch {
-    roles = { admin: false, issuer: false };
+    roles = NO_ROLES;
   }
   if (rolesFor === account) renderWallet();
 }
@@ -136,7 +147,28 @@ function initWalletUi() {
 }
 
 /* Look up */
-function passportCard(passport, history) {
+const levelBadge = (level) => `<span class="level level--${level}" title="${LEVELS[level]}">${LEVELS[level].slice(0, 2)}</span>`;
+
+function attestationRows(attestations) {
+  if (!attestations.list.length) return `<li class="empty">No attestations yet. Every fact is self reported.</li>`;
+  return attestations.list
+    .map(
+      (a) => `
+        <li class="${a.revokedAt ? "is-revoked" : ""}">
+          <span class="h-index">#${a.id}</span>
+          <div class="h-body">
+            <b>Fact <button class="hash-chip mono" type="button" data-copy="${a.factHash}" title="Copy fact hash">${short(a.factHash, 8, 6)}</button></b>
+            <small>${dateTime(a.attestedAt)} · by ${addressLink(a.verifier)}${a.revokedAt ? ` · revoked ${dateTime(a.revokedAt)}` : ""}</small>
+          </div>
+          <button class="hash-chip mono" type="button" data-copy="${a.evidenceHash}" title="Copy evidence hash">${short(a.evidenceHash, 8, 6)}</button>
+        </li>`,
+    )
+    .reverse()
+    .join("");
+}
+
+function passportCard(passport, history, attestations) {
+  const levelOf = (hash) => attestations.levels[hash.toLowerCase()] ?? 0;
   const uri = passport.metadataURI;
   const uriHtml = /^https?:\/\//i.test(uri)
     ? `<a href="${esc(uri)}" target="_blank" rel="noopener">${esc(uri)}</a>`
@@ -151,6 +183,7 @@ function passportCard(passport, history) {
             <b>${EVENT_TYPES[entry.eventType] ?? `Type ${entry.eventType}`}</b>
             <small>${dateTime(entry.timestamp)} · by ${addressLink(entry.submittedBy)}</small>
           </div>
+          ${ATTESTATIONS_READY ? levelBadge(levelOf(entry.dataHash)) : ""}
           <button class="hash-chip mono" type="button" data-copy="${entry.dataHash}" title="Copy data hash">${short(entry.dataHash, 8, 6)}</button>
         </li>`,
         )
@@ -174,6 +207,14 @@ function passportCard(passport, history) {
         <div class="history-head"><h3>History</h3><span>${history.length} ${history.length === 1 ? "entry" : "entries"}</span></div>
         <ol class="history-list">${rows}</ol>
       </div>
+      ${
+        ATTESTATIONS_READY
+          ? `<div class="history">
+        <div class="history-head"><h3>Attestations</h3><span>${attestations.list.length} ${attestations.list.length === 1 ? "attestation" : "attestations"}</span></div>
+        <ol class="history-list">${attestationRows(attestations)}</ol>
+      </div>`
+          : ""
+      }
     </article>`;
 }
 
@@ -199,9 +240,9 @@ async function lookup(input, { updateUrl = true } = {}) {
       box.innerHTML = `<p class="result-note">No passport found for this asset id.<br><span class="mono">${short(assetId, 10, 8)}</span></p>`;
       return;
     }
-    const entries = await readHistory(assetId);
+    const [entries, attestations] = await Promise.all([readHistory(assetId), readAttestations(assetId)]);
     if (token !== lookupToken) return;
-    box.innerHTML = passportCard(passport, entries);
+    box.innerHTML = passportCard(passport, entries, attestations);
   } catch {
     if (token === lookupToken) box.innerHTML = `<p class="result-note">The network did not respond. Please try again.</p>`;
   }
@@ -291,21 +332,31 @@ function setStatus(form, html, tone = "") {
 
 const txLink = (hash) => `<a href="${explorerLink("tx", hash)}" target="_blank" rel="noopener">View transaction</a>`;
 
-async function eventHash(form) {
-  const file = form.elements.file.files?.[0];
+/** A chosen file wins over the text field. A 0x 32 byte value is used as is; other text is hashed. */
+async function hashOf(form, textName, fileName) {
+  const file = form.elements[fileName].files?.[0];
   if (file) return hashFile(file);
-  const data = form.elements.data.value.trim();
+  const data = form.elements[textName].value.trim();
   if (!data) return "";
   return isBytes32(data) ? data.toLowerCase() : hashText(data);
 }
+
+const eventHash = (form) => hashOf(form, "data", "file");
 
 async function buildCall(form) {
   const kind = form.dataset.action;
   if (kind === "role") {
     const account = form.elements.account.value.trim();
     if (!isAddress(account)) throw new Error("Enter a valid wallet address.");
+    const role = form.elements.role.value === "verifier" ? "verifier" : "issuer";
+    const label = role === "verifier" ? "Verifier" : "Issuer";
     const op = form.dataset.op === "revoke" ? "revokeRole" : "grantRole";
-    return { target: "registry", functionName: op, args: [ISSUER_ROLE, account], done: op === "grantRole" ? "Issuer role granted." : "Issuer role revoked." };
+    return { target: "registry", functionName: op, args: [ROLES[role], account], done: op === "grantRole" ? `${label} role granted.` : `${label} role revoked.` };
+  }
+  if (kind === "revoke") {
+    const id = form.elements.id.value.trim();
+    if (!/^\d+$/.test(id)) throw new Error("Enter the attestation id, a whole number.");
+    return { target: "attestations", functionName: "revoke", args: [BigInt(id)], done: `Attestation #${id} revoked.` };
   }
 
   const assetId = toAssetId(form.elements.asset.value);
@@ -322,6 +373,13 @@ async function buildCall(form) {
   if (kind === "status") {
     const status = Number(form.elements.status.value);
     return { target: "registry", functionName: "updateStatus", args: [assetId, status], assetId, done: `Status set to ${STATUSES[status]}.` };
+  }
+  if (kind === "attest") {
+    const fact = await hashOf(form, "fact", "factFile");
+    if (!fact) throw new Error("Add the fact to attest: a file, text or hash.");
+    const evidence = await hashOf(form, "evidence", "evidenceFile");
+    if (!evidence) throw new Error("Add your evidence: a file, text or hash.");
+    return { target: "attestations", functionName: "attest", args: [assetId, fact, evidence], assetId, done: "Fact attested." };
   }
   const dataHash = await eventHash(form);
   if (!dataHash) throw new Error("Add a file, text or hash for this event.");
@@ -353,6 +411,25 @@ function initActions() {
   eventForm.elements.data.addEventListener("input", updateHash);
   eventForm.elements.file.addEventListener("change", updateHash);
 
+  const attestForm = $('[data-action="attest"]');
+  [
+    ["fact", "factFile", "[data-fact-preview]", "Fact hash"],
+    ["evidence", "evidenceFile", "[data-evidence-preview]", "Evidence hash"],
+  ].forEach(([text, file, selector, label]) => {
+    const preview = $(selector, attestForm);
+    const hint = preview.textContent;
+    const update = async () => {
+      try {
+        const hash = await hashOf(attestForm, text, file);
+        preview.textContent = hash ? `${label} ${short(hash, 10, 8)}` : hint;
+      } catch {
+        preview.textContent = "This file could not be read.";
+      }
+    };
+    attestForm.elements[text].addEventListener("input", update);
+    attestForm.elements[file].addEventListener("change", update);
+  });
+
   // Remember which admin button submitted the form
   $$('[data-action="role"] button[type=submit]').forEach((b) =>
     b.addEventListener("click", () => {
@@ -363,6 +440,7 @@ function initActions() {
   const roleInput = $("[data-role-account]");
   const roleCheck = $("[data-role-check]");
   let checkToken = 0;
+  $("[data-role-select]").addEventListener("change", () => roleInput.dispatchEvent(new Event("input")));
   roleInput.addEventListener("input", async () => {
     const account = roleInput.value.trim();
     const token = ++checkToken;
@@ -373,7 +451,8 @@ function initActions() {
     roleCheck.textContent = "Checking";
     try {
       const r = await readRoles(account);
-      if (token === checkToken) roleCheck.textContent = r.issuer ? "Holds the issuer role." : "Has no issuer role.";
+      const held = [r.issuer && "issuer", r.verifier && "verifier"].filter(Boolean);
+      if (token === checkToken) roleCheck.textContent = held.length ? `Holds the ${held.join(" and ")} role.` : "Has no role.";
     } catch {
       if (token === checkToken) roleCheck.textContent = "";
     }
@@ -412,6 +491,8 @@ function initActions() {
           const input = $("[data-asset-input]");
           input.value = call.assetId;
           lookup(call.assetId);
+        } else if (form.dataset.action === "revoke" && $("[data-asset-input]").value.trim()) {
+          lookup($("[data-asset-input]").value);
         }
         if (form.dataset.action === "register") loadRecent();
       } catch (error) {
@@ -433,13 +514,17 @@ function renderContracts() {
   chips.innerHTML = [
     ["Registry", REGISTRY],
     ["Event log", EVENT_LOG],
+    ATTESTATIONS_READY && ["Attestations", ATTESTATIONS],
   ]
+    .filter(Boolean)
     .map(
       ([label, address]) =>
         `<li><span>${label}</span><a class="mono" href="${explorerLink("address", address)}" target="_blank" rel="noopener">${short(address)}</a></li>`,
     )
     .join("");
   $("[data-footer-network]").textContent = `Contracts live on ${ACTIVE_CHAIN.name}.`;
+  $("[data-verifier-panel]").hidden = !ATTESTATIONS_READY;
+  $("[data-verifier-link]").hidden = !ATTESTATIONS_READY;
   return true;
 }
 

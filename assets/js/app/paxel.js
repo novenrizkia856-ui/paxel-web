@@ -1,4 +1,4 @@
-// Read and write client for PaxelRegistry and PaxelEventLog.
+// Read and write client for PaxelRegistry, PaxelEventLog and PaxelAttestationRegistry.
 // Reads go straight to the public RPC, so they work without a wallet.
 import {
   ContractFunctionRevertedError,
@@ -9,8 +9,8 @@ import {
   toBytes,
   zeroHash,
 } from "viem";
-import { PAXEL_EVENT_LOG_ABI, PAXEL_REGISTRY_ABI } from "./abi.js";
-import { ACTIVE_CHAIN, EVENT_LOG, FROM_BLOCK, REGISTRY } from "./chain.js";
+import { PAXEL_ATTESTATION_ABI, PAXEL_EVENT_LOG_ABI, PAXEL_REGISTRY_ABI } from "./abi.js";
+import { ACTIVE_CHAIN, ATTESTATIONS, ATTESTATIONS_READY, EVENT_LOG, FROM_BLOCK, REGISTRY } from "./chain.js";
 import { writeContract } from "./wallet.js";
 
 export const STATUSES = ["Draft", "Issued", "Active", "Frozen", "Disputed", "Redeemed", "Delisted", "Defaulted"];
@@ -18,6 +18,11 @@ export const EVENT_TYPES = ["Transfer", "Document added", "Valuation reference",
 
 export const ADMIN_ROLE = zeroHash;
 export const ISSUER_ROLE = keccak256(toBytes("ISSUER_ROLE"));
+export const VERIFIER_ROLE = keccak256(toBytes("VERIFIER_ROLE"));
+export const ROLES = { issuer: ISSUER_ROLE, verifier: VERIFIER_ROLE };
+
+/** Paxel verification levels, from the trust model. */
+export const LEVELS = ["L0 Self reported", "L1 Attested", "L2 Multi attested"];
 
 const client = ACTIVE_CHAIN
   ? createPublicClient({
@@ -33,6 +38,7 @@ const client = ACTIVE_CHAIN
 
 const registry = { address: REGISTRY, abi: PAXEL_REGISTRY_ABI };
 const eventLog = { address: EVENT_LOG, abi: PAXEL_EVENT_LOG_ABI };
+const attestations = { address: ATTESTATIONS, abi: PAXEL_ATTESTATION_ABI };
 
 export const isBytes32 = (value) => /^0x[0-9a-fA-F]{64}$/.test(value);
 export const isAddress = (value) => /^0x[0-9a-fA-F]{40}$/.test(value);
@@ -66,11 +72,38 @@ export async function readHistory(assetId) {
 }
 
 export async function readRoles(account) {
-  const [admin, issuer] = await Promise.all([
+  const [admin, issuer, verifier] = await Promise.all([
     client.readContract({ ...registry, functionName: "hasRole", args: [ADMIN_ROLE, account] }),
     client.readContract({ ...registry, functionName: "hasRole", args: [ISSUER_ROLE, account] }),
+    client.readContract({ ...registry, functionName: "hasRole", args: [VERIFIER_ROLE, account] }),
   ]);
-  return { admin, issuer };
+  return { admin, issuer, verifier };
+}
+
+/**
+ * Every attestation on a passport, oldest first, plus the verification level of each attested fact.
+ * Empty when the attestation registry is not configured.
+ */
+export async function readAttestations(assetId) {
+  if (!ATTESTATIONS_READY) return { list: [], levels: {} };
+  const [ids, page] = await client.readContract({
+    ...attestations,
+    functionName: "getAssetAttestations",
+    args: [assetId, 0n, 500n],
+  });
+  const list = page.map((a, i) => ({
+    id: Number(ids[i]),
+    factHash: a.factHash,
+    evidenceHash: a.evidenceHash,
+    verifier: a.verifier,
+    attestedAt: Number(a.attestedAt),
+    revokedAt: Number(a.revokedAt),
+  }));
+  const facts = [...new Set(list.map((a) => a.factHash))];
+  const levels = await Promise.all(
+    facts.map((fact) => client.readContract({ ...attestations, functionName: "verificationLevel", args: [assetId, fact] })),
+  );
+  return { list, levels: Object.fromEntries(facts.map((fact, i) => [fact.toLowerCase(), Number(levels[i])])) };
 }
 
 /** Most recent AssetRegistered events, newest first. Scans backwards in chunks. */
@@ -124,6 +157,14 @@ const ERROR_COPY = {
   EmptyMetadataURI: "Enter a metadata URI.",
   ZeroDataHash: "Add a file, text or hash for this event.",
   ZeroAddress: "Enter a valid wallet address.",
+  NotVerifier: "This wallet does not hold the verifier role.",
+  IssuerCannotAttest: "The issuer of a passport cannot attest its own facts.",
+  ZeroFactHash: "Add the fact to attest: a file, text or hash.",
+  ZeroEvidenceHash: "Add your evidence: a file, text or hash.",
+  AlreadyAttested: "You already attested this fact. Revoke it first to attest again.",
+  AttestationNotFound: "No attestation exists with this id.",
+  NotAttestationVerifier: "Only the verifier who signed an attestation can revoke it.",
+  AlreadyRevoked: "This attestation is already revoked.",
 };
 
 export function explainError(error) {
@@ -140,7 +181,7 @@ export function explainError(error) {
   return error?.shortMessage || "Something went wrong. Please try again.";
 }
 
-const TARGETS = { registry, eventLog };
+const TARGETS = { registry, eventLog, attestations };
 
 /**
  * Simulates the call first so a revert is explained before the wallet opens,

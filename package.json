@@ -7,7 +7,8 @@
     "docs": "node scripts/build-docs.mjs",
     "dev": "node scripts/build-docs.mjs && vite",
     "build": "node scripts/build-docs.mjs && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "contracts:sync": "node scripts/sync-contracts.mjs"
   },
   "devDependencies": {
     "marked": "^18.0.13",

@@ -47,6 +47,7 @@
       <nav class="app-nav" aria-label="Console">
         <a href="#lookup">Look up</a>
         <a href="#issuer">Issuer</a>
+        <a href="#verifier" data-verifier-link hidden>Verifier</a>
         <a href="#admin" data-admin-link hidden>Admin</a>
         <a href="/docs">Docs</a>
       </nav>
@@ -61,12 +62,12 @@
     <!--
       COPY · APP INTRO
       Headline: Passport console
-      Supporting: Look up any asset passport. Issuers register, publish and record history.
-      Contract links: Registry. Event log.
+      Supporting: Look up any asset passport. Issuers record history and verifiers attest facts.
+      Contract links: Registry. Event log. Attestations.
     -->
     <section class="app-intro container">
       <h1>Passport console</h1>
-      <p>Look up any asset passport. Issuers register, publish and record history.</p>
+      <p>Look up any asset passport. Issuers record history and verifiers attest facts.</p>
       <ul class="contract-chips" data-contract-chips></ul>
     </section>
 
@@ -79,8 +80,10 @@
         Hint: Text is hashed with keccak256 into the asset id.
         Button: Look up
         Empty result: No passport found for this asset id.
-        Result labels: Asset id. Issuer. Tokenized. Metadata. History.
+        Result labels: Asset id. Issuer. Tokenized. Metadata. History. Attestations.
         Empty history: No events recorded yet.
+        Levels: L0 Self reported. L1 Attested. L2 Multi attested.
+        Empty attestations: No attestations yet. Every fact is self reported.
         Result button: Use in issuer console
       -->
       <section class="panel" id="lookup" aria-labelledby="lookup-h">
@@ -210,27 +213,95 @@
       </section>
 
       <!--
+        COPY · VERIFIER CONSOLE
+        Headline: Verifier console
+        Supporting: Independent verifiers confirm passport facts. The issuer cannot attest its own passport.
+        Gate: Ask the Paxel admin for the verifier role.
+        Cards: Attest a fact. Revoke an attestation.
+        Attest fields: Asset reference or id. Fact: file, text or 0x hash. Evidence: file, text or 0x hash. Button: Attest.
+        Attest hint: Use the data hash of a history entry to attest that event.
+        Revoke fields: Attestation id. Button: Revoke.
+      -->
+      <section class="panel panel--wide" id="verifier" aria-labelledby="verifier-h" data-verifier-panel hidden>
+        <div class="panel-head">
+          <h2 id="verifier-h">Verifier console</h2>
+          <span class="panel-note">Verifier role</span>
+        </div>
+        <p class="gate" data-verifier-gate hidden></p>
+
+        <div class="action-grid">
+          <form class="action" data-action="attest" novalidate>
+            <h3>Attest a fact</h3>
+            <p>Confirms one passport fact under your signature. The issuer cannot attest its own passport.</p>
+            <label class="field">
+              <span class="field-label">Asset reference or id</span>
+              <input class="input" name="asset" autocomplete="off" spellcheck="false" placeholder="PXL 0001 7342" data-asset-field>
+              <span class="field-hint" data-id-preview></span>
+            </label>
+            <label class="field">
+              <span class="field-label">Fact: text or 0x hash</span>
+              <input class="input" name="fact" autocomplete="off" spellcheck="false" placeholder="0x data hash of a history entry">
+            </label>
+            <label class="field">
+              <span class="field-label">Or choose the fact file</span>
+              <input class="input input--file" name="factFile" type="file">
+              <span class="field-hint" data-fact-preview>Use the data hash of a history entry to attest that event.</span>
+            </label>
+            <label class="field">
+              <span class="field-label">Evidence: text or 0x hash</span>
+              <input class="input" name="evidence" autocomplete="off" spellcheck="false" placeholder="Audit report reference">
+            </label>
+            <label class="field">
+              <span class="field-label">Or choose the evidence file</span>
+              <input class="input input--file" name="evidenceFile" type="file">
+              <span class="field-hint" data-evidence-preview>Files are hashed in your browser. Nothing is uploaded.</span>
+            </label>
+            <button class="btn btn--primary" type="submit">Attest</button>
+            <p class="action-status" data-status aria-live="polite"></p>
+          </form>
+
+          <form class="action" data-action="revoke" novalidate>
+            <h3>Revoke an attestation</h3>
+            <p>Withdraws one of your attestations. The record stays visible, marked as revoked.</p>
+            <label class="field">
+              <span class="field-label">Attestation id</span>
+              <input class="input" name="id" inputmode="numeric" autocomplete="off" placeholder="0">
+            </label>
+            <button class="btn btn--outline-dark" type="submit">Revoke</button>
+            <p class="action-status" data-status aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <!--
         COPY · ADMIN
-        Headline: Manage issuers
+        Headline: Manage roles
         Supporting: Only the registry admin sees this panel.
-        Field: Wallet address
-        Live check: Holds the issuer role. Has no issuer role.
-        Buttons: Grant issuer role. Revoke issuer role.
+        Fields: Role (Issuer, Verifier). Wallet address.
+        Live check: Holds the issuer role. Holds the verifier role. Has no role.
+        Buttons: Grant role. Revoke role.
       -->
       <section class="panel panel--wide" id="admin" aria-labelledby="admin-h" data-admin-panel hidden>
         <div class="panel-head">
-          <h2 id="admin-h">Manage issuers</h2>
+          <h2 id="admin-h">Manage roles</h2>
           <span class="panel-note">Admin only</span>
         </div>
         <form class="action action--inline" data-action="role" novalidate>
+          <label class="field">
+            <span class="field-label">Role</span>
+            <select class="input" name="role" data-role-select>
+              <option value="issuer">Issuer</option>
+              <option value="verifier">Verifier</option>
+            </select>
+          </label>
           <label class="field">
             <span class="field-label">Wallet address</span>
             <input class="input" name="account" autocomplete="off" spellcheck="false" placeholder="0x wallet address" data-role-account>
             <span class="field-hint" data-role-check></span>
           </label>
           <div class="btn-row">
-            <button class="btn btn--primary" type="submit" name="op" value="grant">Grant issuer role</button>
-            <button class="btn btn--outline-dark" type="submit" name="op" value="revoke">Revoke issuer role</button>
+            <button class="btn btn--primary" type="submit" name="op" value="grant">Grant role</button>
+            <button class="btn btn--outline-dark" type="submit" name="op" value="revoke">Revoke role</button>
           </div>
           <p class="action-status" data-status aria-live="polite"></p>
         </form>

@@ -18,10 +18,13 @@ export const isAddress = (value) => /^0x[0-9a-fA-F]{40}$/.test(String(value ?? "
 
 export const REGISTRY = String(CONTRACTS.passportRegistry ?? "").trim();
 export const EVENT_LOG = String(CONTRACTS.eventLog ?? "").trim();
+export const ATTESTATIONS = String(CONTRACTS.attestationRegistry ?? "").trim();
 export const ACTIVE_CHAIN = CHAINS[String(CONTRACTS.chainId ?? "").trim()] ?? null;
 // Event scans start at the registry deployment block (deployBlock in the config), or at block 0 when it is empty
 export const FROM_BLOCK = /^\d+$/.test(String(CONTRACTS.deployBlock ?? "").trim()) ? BigInt(CONTRACTS.deployBlock) : 0n;
 export const CONTRACTS_READY = Boolean(ACTIVE_CHAIN && isAddress(REGISTRY) && isAddress(EVENT_LOG));
+// Attestations are optional: the console works without them and adds them once the address is set
+export const ATTESTATIONS_READY = CONTRACTS_READY && isAddress(ATTESTATIONS);
 
 export function explorerLink(kind, value) {
   if (!ACTIVE_CHAIN || !value) return "";

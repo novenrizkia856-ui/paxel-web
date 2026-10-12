@@ -114,8 +114,9 @@ Every contract value lives in `config/contracts.config.js`, except the token CA,
 1. Token: change `export const TOKEN_CA = null;` in `config/token.js` to the address in quotes, then push.
    While it is `null` the hero shows **Coming soon**. Any other value shows as is, with a copy button.
    A valid 0x address also links to the token on Blockscout.
-2. Contracts: paste `passportRegistry`, `eventLog` and `accessControl` (plus `deployBlock`) into
-   `config/contracts.config.js`, then push. Once the registry and event log are valid 0x addresses, the app
+2. Contracts: after `bash deploy-mainnet.sh` in paxel-contracts, run `npm run contracts:sync` here, then
+   push. It copies every address and the deploy block from `paxel-contracts/deployments/mainnet.json` into
+   `config/contracts.config.js`. Once the registry and event log are valid 0x addresses, the app
    goes live, the hero note and footers say the contracts are live on `network`, and the docs list the addresses.
    Until then the app shows that the contracts are not deployed yet and keeps every action disabled.
 
@@ -140,7 +141,12 @@ The landing page never loads AppKit. It only links to the console.
 - **Issuer console.** Register, publish, update status and record events. Event data can be a file, text or a
   0x hash. Files are hashed in the browser and never uploaded. Every write is simulated first, so a call
   that would revert shows a plain explanation before the wallet opens.
-- **Manage issuers.** Visible only to the registry admin. Grant or revoke `ISSUER_ROLE` and check any address.
+- **Verification levels.** Each history entry shows L0 self reported, L1 attested or L2 multi attested,
+  read from the attestation registry, and the passport lists every attestation, revoked ones included.
+- **Verifier console.** Shown once `attestationRegistry` is set. Holders of `VERIFIER_ROLE` attest a fact
+  (usually the data hash of a history entry) with an evidence hash, or revoke their own attestation.
+- **Manage roles.** Visible only to the registry admin. Grant or revoke `ISSUER_ROLE` or `VERIFIER_ROLE`
+  and check any address.
 
 The ABIs in `assets/js/app/abi.js` come from `paxel-contracts/out`. Regenerate them if the contracts change.
 
