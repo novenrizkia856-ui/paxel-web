@@ -960,6 +960,7 @@ b { font-weight: 600; }
   margin-bottom: 20px;
 }
 .tok--lg { width: 48px; font-size: 20px; }
+.tok svg { width: 52%; height: 52%; }
 .pp-title { display: block; font-size: 1.6875rem; line-height: 2rem; letter-spacing: -0.0354rem; font-weight: 700; }
 .pp-id { color: var(--neutral-50); font-family: var(--mono); font-size: 14px; }
 @media (max-width: 479px) {
@@ -1055,7 +1056,7 @@ b { font-weight: 600; }
 .avatar {
   display: grid;
   place-items: center;
-  width: 20px; height: 20px;
+  width: 22px; height: 22px;
   margin-right: 2px;
   border-radius: 50%;
   background: var(--av);
@@ -1064,6 +1065,7 @@ b { font-weight: 600; }
   font-style: normal;
   font-weight: 600;
 }
+.avatar svg { width: 13px; height: 13px; }
 .card-art {
   position: relative;
   display: grid;

@@ -220,8 +220,8 @@ the middle, an on this page list on the right, previous and next cards, and sear
 
 ## Placeholder links
 
-Telegram uses `href="#"` with `data-placeholder`. Clicking it shows a small "Link coming soon" toast.
-Replace the `href` and remove the attribute when the real link exists.
+None left. The hero "Follow the build" button starts with `data-placeholder` and turns into a link to the
+registry on Blockscout once the contracts are set. Any link with `data-placeholder` shows a "Link coming soon" toast.
 
 ## Deploy to Vercel
 
