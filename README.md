@@ -152,7 +152,8 @@ The ABIs in `assets/js/app/abi.js` come from `paxel-contracts/out`. Regenerate t
 
 ### Current deployment
 
-Robinhood Chain mainnet, chain id 4663. Not deployed yet.
+Robinhood Chain mainnet, chain id 4663, deployed 2026-10-12. Addresses are in `config/contracts.config.js`
+and in `paxel-contracts/deployments/mainnet.json`.
 
 ## Design system
 
