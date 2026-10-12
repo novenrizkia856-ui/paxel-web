@@ -53,7 +53,7 @@ export function initMintBar() {
   const button = bar.querySelector("[data-ca-copy]");
   const label = bar.querySelector("[data-ca-copy-label]");
   const status = bar.querySelector("[data-ca-status]");
-  const address = SOLANA.tokenMint;
+  const address = SOLANA.tokenCa;
 
   // Empty config keeps the "Coming soon" markup and a hidden, disabled copy button
   if (!address) {
@@ -65,13 +65,15 @@ export function initMintBar() {
   const full = document.createElement("span");
   full.className = "ca-full";
   full.textContent = address;
-  // The short form links to the mint on Solana Explorer
-  const short = document.createElement("a");
+  // The short form links to the mint on Solana Explorer when the CA is a valid public key
+  const short = document.createElement(SOLANA.tokenMint ? "a" : "span");
   short.className = "ca-short";
-  short.href = explorerLink("address", address);
-  short.target = "_blank";
-  short.rel = "noopener";
-  short.tabIndex = -1;
+  if (SOLANA.tokenMint) {
+    short.href = explorerLink("address", address);
+    short.target = "_blank";
+    short.rel = "noopener";
+    short.tabIndex = -1;
+  }
   short.setAttribute("aria-hidden", "true");
   short.textContent = shorten(address);
 

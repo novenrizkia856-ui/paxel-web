@@ -1,3 +1,5 @@
+import { TOKEN_CA } from "./token.js";
+
 /*
  * Paxel Solana configuration. Every network, program, token and explorer value lives here.
  *
@@ -9,7 +11,8 @@
  * rpcUrl       JSON RPC endpoint. Empty uses the default below.       VITE_SOLANA_RPC_URL
  * explorerUrl  Explorer base URL. Links add ?cluster= off mainnet.    VITE_SOLANA_EXPLORER_URL
  * programId    Paxel program id. Empty until a program is deployed.   VITE_PAXEL_PROGRAM_ID
- * tokenMint    Paxel SPL token mint. Empty until the token exists.    VITE_PAXEL_TOKEN_MINT
+ * tokenCa      Token CA shown on the site. Set it in config/token.js.  VITE_PAXEL_TOKEN_MINT
+ * tokenMint    tokenCa when it is a valid public key, used for explorer links and chain reads.
  * treasury     Paxel treasury public key. Empty until one is set.     VITE_TREASURY_ADDRESS
  *
  * No Paxel program is deployed and on chain execution is not active: the app reads public data
@@ -20,7 +23,6 @@ const DEFAULTS = {
   rpcUrl: "",
   explorerUrl: "https://explorer.solana.com",
   programId: "",
-  tokenMint: "",
   treasury: "",
 };
 
@@ -58,6 +60,9 @@ const publicKey = (key, fallback) => {
   return isPublicKey(value) ? value : "";
 };
 
+// config/token.js wins. Anything other than null or an empty string is shown as is.
+const tokenCa = String(TOKEN_CA ?? "").trim() || read("VITE_PAXEL_TOKEN_MINT", "");
+
 const networkKey = read("VITE_SOLANA_NETWORK", DEFAULTS.network);
 
 export const NETWORK = NETWORKS[networkKey] ?? NETWORKS[DEFAULTS.network];
@@ -67,12 +72,13 @@ export const SOLANA = {
   rpcUrl: read("VITE_SOLANA_RPC_URL", DEFAULTS.rpcUrl) || NETWORK.rpcUrl,
   explorerUrl: read("VITE_SOLANA_EXPLORER_URL", DEFAULTS.explorerUrl).replace(/\/+$/, ""),
   programId: publicKey("VITE_PAXEL_PROGRAM_ID", DEFAULTS.programId),
-  tokenMint: publicKey("VITE_PAXEL_TOKEN_MINT", DEFAULTS.tokenMint),
+  tokenCa,
+  tokenMint: isPublicKey(tokenCa) ? tokenCa : "",
   treasury: publicKey("VITE_TREASURY_ADDRESS", DEFAULTS.treasury),
 };
 
 export const PROGRAM_DEPLOYED = Boolean(SOLANA.programId);
-export const TOKEN_LIVE = Boolean(SOLANA.tokenMint);
+export const TOKEN_LIVE = Boolean(SOLANA.tokenCa);
 
 /** Explorer link for an account ("address") or a transaction signature ("tx"). */
 export function explorerLink(kind, value) {

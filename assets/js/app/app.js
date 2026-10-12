@@ -329,7 +329,9 @@ function renderChips() {
   const chips = $("[data-chain-chips]");
   chips.innerHTML = [
     `<li><span>Network</span>${NETWORK.label}</li>`,
-    SOLANA.tokenMint ? keyChip("Token mint", SOLANA.tokenMint) : `<li><span>Token mint</span>Coming soon</li>`,
+    SOLANA.tokenMint
+      ? keyChip("Token mint", SOLANA.tokenMint)
+      : `<li><span>Token mint</span>${SOLANA.tokenCa ? `<span class="mono" title="${esc(SOLANA.tokenCa)}">${esc(short(SOLANA.tokenCa))}</span><button class="chip-copy" type="button" data-copy="${esc(SOLANA.tokenCa)}" aria-label="Copy token mint"><svg aria-hidden="true"><use href="#i-copy"/></svg></button>` : "Coming soon"}</li>`,
   ].join("");
   $("[data-footer-network]").textContent = DEPLOY_COPY.legal;
 }

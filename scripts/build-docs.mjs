@@ -40,7 +40,7 @@ const keyCell = (value, empty) => (value ? `[\`${value}\`](${explorerLink("addre
 const TOKENS = {
   network: SOLANA.network,
   networkLabel: NETWORK.label,
-  tokenMint: keyCell(SOLANA.tokenMint, "Not created yet"),
+  tokenMint: SOLANA.tokenMint ? keyCell(SOLANA.tokenMint) : SOLANA.tokenCa ? `\`${SOLANA.tokenCa}\`` : "Not created yet",
   treasury: keyCell(SOLANA.treasury, "Not set yet"),
   programStatus: PROGRAM_DEPLOYED
     ? `The Paxel program is deployed on ${NETWORK.label}. Onchain execution from the app is not active yet.`
