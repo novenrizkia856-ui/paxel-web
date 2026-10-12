@@ -7,8 +7,8 @@
   "cleanUrls": true,
   "redirects": [
     { "source": "/app.html", "destination": "/app", "permanent": true },
-    { "source": "/docs/smart-contracts", "destination": "/docs/program-design", "permanent": true },
-    { "source": "/docs/live-contracts", "destination": "/docs/solana-deployment", "permanent": true }
+    { "source": "/docs/program-design", "destination": "/docs/smart-contracts", "permanent": true },
+    { "source": "/docs/solana-deployment", "destination": "/docs/live-contracts", "permanent": true }
   ],
   "headers": [
     {

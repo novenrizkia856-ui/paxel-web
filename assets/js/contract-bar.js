@@ -1,4 +1,5 @@
-import { DEPLOY_COPY, SOLANA, explorerLink } from "../../config/solana.config.js";
+import { CONTRACTS } from "../../config/contracts.config.js";
+import { CHAINS, CONTRACTS_READY, isAddress } from "./app/chain.js";
 
 const COPIED_MS = 1600;
 
@@ -27,33 +28,39 @@ async function copyText(text) {
   if (!ok) throw new Error("Copy failed");
 }
 
-// The hero note and footer say whether the Paxel program is live on Solana
+// Once the registry and event log are set, the hero note and footer say where the contracts live
 function initDeployStatus() {
+  if (!CONTRACTS_READY) return;
+  const registry = String(CONTRACTS.passportRegistry ?? "").trim();
+  const network = String(CONTRACTS.network ?? "").trim();
+  const where = network ? ` on ${network}` : "";
+
   const note = document.querySelector("[data-deploy-note]");
-  if (note) note.textContent = DEPLOY_COPY.note;
+  if (note) note.textContent = `Contracts are live${where}.`;
   const legal = document.querySelector("[data-deploy-legal]");
-  if (legal) legal.textContent = DEPLOY_COPY.legal;
+  if (legal) legal.textContent = `Contracts live${where}.`;
 
   const link = document.querySelector("[data-deploy-link]");
-  if (!link || !SOLANA.programId) return;
-  link.href = explorerLink("address", SOLANA.programId);
+  const explorer = CHAINS[String(CONTRACTS.chainId ?? "").trim()]?.explorerUrl;
+  if (!link || !explorer) return;
+  link.href = `${explorer}/address/${registry}`;
   link.target = "_blank";
   link.rel = "noopener";
   link.removeAttribute("data-placeholder");
   const label = link.querySelector("[data-deploy-link-label]");
-  if (label) label.textContent = "View the program";
+  if (label) label.textContent = "View the registry";
 }
 
-export function initMintBar() {
+export function initContractBar() {
   initDeployStatus();
-  const bar = document.getElementById("mint-bar");
+  const bar = document.getElementById("contract-bar");
   if (!bar) return;
 
   const value = bar.querySelector("[data-ca-value]");
   const button = bar.querySelector("[data-ca-copy]");
   const label = bar.querySelector("[data-ca-copy-label]");
   const status = bar.querySelector("[data-ca-status]");
-  const address = SOLANA.tokenCa;
+  const address = String(CONTRACTS.tokenAddress ?? "").trim();
 
   // Empty config keeps the "Coming soon" markup and a hidden, disabled copy button
   if (!address) {
@@ -65,11 +72,13 @@ export function initMintBar() {
   const full = document.createElement("span");
   full.className = "ca-full";
   full.textContent = address;
-  // The short form links to the mint on Solana Explorer when the CA is a valid public key
-  const short = document.createElement(SOLANA.tokenMint ? "a" : "span");
+  // The short form links to the block explorer when the CA is a valid 0x address
+  const explorer = CHAINS[String(CONTRACTS.chainId ?? "").trim()]?.explorerUrl;
+  const linked = Boolean(explorer && isAddress(address));
+  const short = document.createElement(linked ? "a" : "span");
   short.className = "ca-short";
-  if (SOLANA.tokenMint) {
-    short.href = explorerLink("address", address);
+  if (linked) {
+    short.href = `${explorer}/token/${address}`;
     short.target = "_blank";
     short.rel = "noopener";
     short.tabIndex = -1;
@@ -89,12 +98,12 @@ export function initMintBar() {
       await copyText(address);
       button.classList.add("is-copied");
       label.textContent = "Copied";
-      status.textContent = "Mint address copied";
+      status.textContent = "Address copied";
     } catch {
-      // Last resort: select the mint address so it can be copied by hand
+      // Last resort: select the address so it can be copied by hand
       window.getSelection()?.selectAllChildren(full);
       label.textContent = "Selected";
-      status.textContent = "Mint address selected";
+      status.textContent = "Address selected";
     }
     clearTimeout(timer);
     timer = setTimeout(() => {

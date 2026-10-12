@@ -9,24 +9,20 @@ import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "nod
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { Marked } from "marked";
-import { loadEnv } from "vite";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SRC = join(root, "content/docs");
 const OUT = join(root, "docs");
 const INDEX_OUT = join(root, "assets/js/docs/search-index.js");
 
-// .env files feed the same VITE_ overrides the site build sees. Values already set in the environment win.
-for (const [key, value] of Object.entries(loadEnv("production", root, "VITE_"))) process.env[key] ??= value;
-const { DEPLOY_COPY, NETWORK, PROGRAM_DEPLOYED, SOLANA, explorerLink } = await import(
-  pathToFileURL(join(root, "config/solana.config.js")).href
-);
+const { CONTRACTS } = await import(pathToFileURL(join(root, "config/contracts.config.js")).href);
+const { CHAINS, isAddress } = await import(pathToFileURL(join(root, "assets/js/app/chain.js")).href);
 
 // Sidebar groups, in reading order. Prev and next follow this order.
 const GROUPS = [
   { title: "Foundations", pages: ["README", "overview", "core-concepts", "data-model"] },
   { title: "Architecture", pages: ["architecture", "roles-and-actors", "trust-and-verification"] },
-  { title: "Building", pages: ["program-design", "solana-deployment", "api-and-sdk", "interoperability-and-standards"] },
+  { title: "Building", pages: ["smart-contracts", "live-contracts", "api-and-sdk", "interoperability-and-standards"] },
   { title: "Governance", pages: ["security-and-compliance", "mvp-scope", "glossary"] },
 ];
 
@@ -35,17 +31,27 @@ const strip = (html) => html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").repl
 const slugify = (text) => strip(text).toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, "-");
 const urlFor = (name) => (name === "README" ? "/docs" : `/docs/${name}`);
 
-/* Solana values for {{tokens}} in the markdown. Empty config reads as not deployed, never a made up address. */
-const keyCell = (value, empty) => (value ? `[\`${value}\`](${explorerLink("address", value)})` : empty);
-const TOKENS = {
-  network: SOLANA.network,
-  networkLabel: NETWORK.label,
-  tokenMint: SOLANA.tokenMint ? keyCell(SOLANA.tokenMint) : SOLANA.tokenCa ? `\`${SOLANA.tokenCa}\`` : "Not created yet",
-  treasury: keyCell(SOLANA.treasury, "Not set yet"),
-  programStatus: PROGRAM_DEPLOYED
-    ? `The Paxel program is deployed on ${NETWORK.label}. Onchain execution from the app is not active yet.`
-    : "",
+/* Contract values for {{tokens}} in the markdown. Empty config reads as not deployed, never a made up address. */
+const chain = CHAINS[String(CONTRACTS.chainId).trim()];
+const DEPLOYED = Boolean(chain && isAddress(CONTRACTS.passportRegistry) && isAddress(CONTRACTS.eventLog));
+const addressCell = (value, empty) => {
+  const address = String(value ?? "").trim();
+  if (!address) return empty;
+  return chain && isAddress(address) ? `[\`${address}\`](${chain.explorerUrl}/address/${address})` : `\`${address}\``;
 };
+const TOKENS = {
+  network: CONTRACTS.network,
+  chainId: CONTRACTS.chainId,
+  passportRegistry: addressCell(CONTRACTS.passportRegistry, "Not deployed yet"),
+  eventLog: addressCell(CONTRACTS.eventLog, "Not deployed yet"),
+  accessControl: addressCell(CONTRACTS.accessControl, "Not deployed yet"),
+  attestationRegistry: addressCell(CONTRACTS.attestationRegistry, "Not deployed yet"),
+  tokenAddress: addressCell(CONTRACTS.tokenAddress, "Coming soon"),
+  deployStatus: DEPLOYED
+    ? `The first Paxel build is live on **${CONTRACTS.network}** (chain id ${CONTRACTS.chainId}).`
+    : `Paxel is built for **${CONTRACTS.network}** (chain id ${CONTRACTS.chainId}). The contracts are not deployed yet.`,
+};
+const FOOTER_STATUS = DEPLOYED ? `Contracts live on ${CONTRACTS.network}.` : "Contracts not yet deployed.";
 const fillTokens = (md) => md.replace(/\{\{(\w+)\}\}/g, (_, key) => String(TOKENS[key] ?? ""));
 
 /* Diagrams. The source uses mermaid; the site renders responsive HTML versions instead. */
@@ -75,7 +81,7 @@ const DIAGRAMS = {
   <div class="dg-layer"><span class="dg-layer-name">Integration layer</span>
     <div class="dg-row"><div class="dg-box dg-box--wide">APIs and SDKs</div></div></div>
   <div class="dg-link" aria-hidden="true"></div>
-  <div class="dg-layer dg-layer--chain"><span class="dg-layer-name">Solana program layer</span>
+  <div class="dg-layer dg-layer--chain"><span class="dg-layer-name">Smart contract layer</span>
     <div class="dg-row dg-row--4"><div class="dg-box">Passport Registry</div><div class="dg-box">Event and History Log</div><div class="dg-box">Attestation Registry</div><div class="dg-box dg-box--gate">Access Control<small>Registry and Log check it</small></div></div></div>
   <div class="dg-link dg-link--dashed" aria-hidden="true"></div>
   <div class="dg-layer"><span class="dg-layer-name">Data and storage layer</span>
@@ -89,7 +95,7 @@ const titles = {};
 for (const m of readFileSync(join(SRC, "SUMMARY.md"), "utf8").matchAll(/\[([^\]]+)\]\(([^)]+)\.md\)/g)) {
   titles[m[2]] = m[1] === "Introduction" ? "Introduction" : m[1];
 }
-titles["solana-deployment"] = titles["solana-deployment"] ?? "Solana Deployment";
+titles["live-contracts"] = titles["live-contracts"] ?? "Live Contracts";
 
 const order = GROUPS.flatMap((g) => g.pages.map((name) => ({ name, group: g.title })));
 const known = new Set(order.map((p) => p.name));
@@ -241,7 +247,7 @@ function pageHtml(page, i) {
     Side navigation groups: Foundations. Architecture. Building. Governance.
     Table of contents: On this page. Back to top.
     Pager: Previous. Next.
-    Footer: © 2026 Paxel. Built for Solana. Not yet deployed.
+    Footer: © 2026 Paxel. Contracts not yet deployed. After deploy: Contracts live on Robinhood Chain.
     Search: Search the docs. Esc. No results for this search. Type to search every page.
     Page text comes from content/docs, generated by scripts/build-docs.mjs.
   -->
@@ -293,7 +299,7 @@ ${page.html}
       </nav>
 
       <footer class="docs-foot">
-        <span>© 2026 Paxel · ${esc(DEPLOY_COPY.legal)}</span>
+        <span>© 2026 Paxel · ${esc(FOOTER_STATUS)}</span>
         <a href="#" data-back-top>Back to top</a>
       </footer>
     </main>
